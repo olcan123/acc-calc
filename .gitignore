@@ -1,0 +1,52 @@
+# -------------------------------
+# Global
+# -------------------------------
+node_modules/
+dist/
+.env
+.DS_Store
+Thumbs.db
+
+# -------------------------------
+# Vue (VueFrontend)
+# -------------------------------
+VueFrontend/node_modules/
+VueFrontend/dist/
+VueFrontend/src/config/.env.local
+VueFrontend/src/config/.env.*.local
+VueFrontend/src/config/.env.production
+VueFrontend/src/config/.env.staging
+VueFrontend/.output/
+VueFrontend/.nuxt/
+VueFrontend/.vercel/
+VueFrontend/.vscode/
+
+# -------------------------------
+# .NET (NetCoreBackend)
+# -------------------------------
+
+# Build klasörleri
+NetCoreBackend/**/bin/
+NetCoreBackend/**/obj/
+
+# VS ve IDE config
+NetCoreBackend/.vs/
+NetCoreBackend/.vscode/
+NetCoreBackend/*.suo
+NetCoreBackend/*.user
+NetCoreBackend/*.userosscache
+NetCoreBackend/*.sln.docstates
+
+# appsettings - development dışındakileri ignore et
+NetCoreBackend/WebAPI/appsettings.json
+NetCoreBackend/WebAPI/appsettings.Production.json
+NetCoreBackend/WebAPI/appsettings.Staging.json
+
+# NOT: appsettings.Development.json tutulacak, bu yüzden listeye eklenmedi
+
+# log dosyaları
+*.log
+
+# JetBrains Rider ve VS Code proje dosyaları
+.idea/
+*.code-workspace
