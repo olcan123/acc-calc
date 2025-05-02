@@ -19,17 +19,15 @@ namespace Core.DataAccess
         T GetWithIncludeChain(Func<IQueryable<T>, IQueryable<T>> includeChain, Expression<Func<T, bool>> filter);
 
 
-        void AddWithExistingRelation<TRelated>(T entityToAdd, object relatedEntityId, string navigationPropertyName) where TRelated : class, new();
         void Add(T entity);
-        void AddWithChildren(T entity);
+        void AddRange(List<T> entityList);
 
         void Update(T entity);
-        void UpdateWithChildren(T entity);
-        void InsertOrUpdateWithChildren(T entity);
         void Delete(T entity);
 
-        void BulkAdd(List<T> entityList);
-        void BulkDelete(List<T> entityList);
-        void BulkUpdate(List<T> entityList);
+        void BulkAdd(List<T> entityList, BulkConfig bulkConfig = null);
+        void BulkDelete(List<T> entityList, BulkConfig bulkConfig = null);
+        void BulkUpdate(List<T> entityList, BulkConfig bulkConfig = null);
+        void BulkAddOrUpdate(List<T> entityList, BulkConfig bulkConfig = null);
     }
 }

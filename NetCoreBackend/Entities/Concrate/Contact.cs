@@ -11,15 +11,15 @@ namespace Entities.Concrate
         public Contact()
         {
             ContactDetails = new HashSet<ContactDetail>();
-            Warehouses = new HashSet<Warehouse>();
-            Partners = new HashSet<Partner>();
+            ContactPartners = new HashSet<ContactPartner>();
+            ContactWarehouses = new HashSet<ContactWarehouse>();
         }
 
         public int Id { get; set; }
         public string Name { get; set; }
 
         public ICollection<ContactDetail> ContactDetails { get; set; }
-        public ICollection<Warehouse> Warehouses { get; set; }
-        public ICollection<Partner> Partners { get; set; }
+        public ICollection<ContactWarehouse> ContactWarehouses { get; set; }
+        public ICollection<ContactPartner> ContactPartners { get; set; }
     }
 }

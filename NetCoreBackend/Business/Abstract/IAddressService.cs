@@ -9,12 +9,13 @@ namespace Business.Abstract
 {
     public interface IAddressService
     {
-        IDataResult<List<Address>> GetAll();
-        IDataResult<Address> Get(int id);
-        IResult Add(Address address);
-        IResult Update(Address address);
-        IResult Delete(Address address);
-        IResult BulkDelete(List<Address> addresses);
+        public IDataResult<List<Address>> GetList();
+        public IDataResult<Address> GetById(int id);
+        public IResult Add(Address address);
+        public IResult AddBulk(List<Address> addresses);
+        public IResult Delete(Address address);
+        public IResult DeleteBulk(List<Address> addresses);
+        public IResult Update(Address address);
+        public IResult UpdateBulk(List<Address> addresses);
     }
-
 }

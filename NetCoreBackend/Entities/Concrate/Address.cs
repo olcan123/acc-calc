@@ -11,8 +11,8 @@ namespace Entities.Concrate
 
         public Address()
         {
-            Warehouses = new HashSet<Warehouse>();
-            Partners = new HashSet<Partner>();
+            AddressWarehouses = new HashSet<AddressWarehouse>();
+            AddressPartners = new HashSet<AddressPartner>();
         }
         public int Id { get; set; }
         public string Location { get; set; }
@@ -23,7 +23,7 @@ namespace Entities.Concrate
         public string Country { get; set; }
         public string ZipCode { get; set; }
 
-        public ICollection<Warehouse> Warehouses { get; set; }
-        public ICollection<Partner> Partners { get; set; }
+        public ICollection<AddressWarehouse> AddressWarehouses { get; set; }
+        public ICollection<AddressPartner> AddressPartners { get; set; }
     }
 }

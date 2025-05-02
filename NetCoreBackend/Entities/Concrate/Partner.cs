@@ -5,9 +5,9 @@ public class Partner : BaseEntity
 {
     public Partner()
     {
-        BankAccounts = new HashSet<BankAccount>();
-        Contacts = new HashSet<Contact>();
-        Addresses = new HashSet<Address>();
+        BankAccountPartners = new HashSet<BankAccountPartner>();
+        ContactPartners = new HashSet<ContactPartner>();
+        AddressPartners = new HashSet<AddressPartner>();
     }
 
     public int Id { get; set; }
@@ -18,9 +18,9 @@ public class Partner : BaseEntity
     // Navigation Properties
     public Employee Employee { get; set; }
     public BusinessPartner BusinessPartner { get; set; }
-    public ICollection<BankAccount> BankAccounts { get; set; }
-    public ICollection<Contact> Contacts { get; set; }
-    public ICollection<Address> Addresses { get; set; }
+    public ICollection<BankAccountPartner> BankAccountPartners { get; set; }
+    public ICollection<ContactPartner> ContactPartners { get; set; }
+    public ICollection<AddressPartner> AddressPartners { get; set; }
 }
 
 

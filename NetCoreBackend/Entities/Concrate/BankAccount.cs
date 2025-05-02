@@ -10,9 +10,8 @@ namespace Entities.Concrate
     {
         public BankAccount()
         {
-            Companies = new HashSet<Company>();
-            Contacts = new HashSet<Contact>();
-            Partners = new HashSet<Partner>();
+            BankAccountCompanies = new HashSet<BankAccountCompany>();
+            BankAccountPartners = new HashSet<BankAccountPartner>();
         }
 
         public int Id { get; set; }
@@ -25,9 +24,8 @@ namespace Entities.Concrate
 
         public Bank Bank { get; set; } // Navigation property
 
-        public ICollection<Company> Companies { get; set; }
-        public ICollection<Contact> Contacts { get; set; }
-        public ICollection<Partner> Partners { get; set; }
+        public ICollection<BankAccountCompany> BankAccountCompanies { get; set; }
+        public ICollection<BankAccountPartner> BankAccountPartners { get; set; }
     }
 
 }

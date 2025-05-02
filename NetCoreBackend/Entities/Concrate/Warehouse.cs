@@ -10,8 +10,8 @@ namespace Entities.Concrate
     {
         public Warehouse()
         {
-            Addresses = new HashSet<Address>();
-            Contacts = new HashSet<Contact>();
+            AddressWarehouses = new HashSet<AddressWarehouse>();
+            ContactWarehouses = new HashSet<ContactWarehouse>();
         }
 
         public int Id { get; set; }
@@ -20,7 +20,7 @@ namespace Entities.Concrate
 
         public Company Company { get; set; }
 
-        public ICollection<Address> Addresses { get; set; }
-        public ICollection<Contact> Contacts { get; set; }
+        public ICollection<AddressWarehouse> AddressWarehouses { get; set; }
+        public ICollection<ContactWarehouse> ContactWarehouses { get; set; }
     }
 }

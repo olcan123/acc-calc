@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Concrate;
 using Microsoft.AspNetCore.Mvc;
@@ -18,14 +22,14 @@ namespace WebAPI.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            var result = _bankService.GetAll();
+            var result = _bankService.GetList();
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpGet("id/{id}")]
-        public IActionResult Get(int id)
+        [HttpGet("id/{Id:int}")] //id/1
+        public IActionResult GetById(int Id)
         {
-            var result = _bankService.Get(id);
+            var result = _bankService.GetById(Id);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
@@ -36,10 +40,10 @@ namespace WebAPI.Controllers
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpDelete("id/{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("id/{Id:int}")] //id/1
+        public IActionResult Delete(int Id)
         {
-            var result = _bankService.Delete(new Bank { Id = id });
+            var result = _bankService.Delete(new Bank { Id = Id });
             return result.Success ? Ok(result) : BadRequest(result);
         }
 

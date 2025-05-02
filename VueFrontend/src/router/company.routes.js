@@ -1,10 +1,8 @@
-const TableCompanyView = () => import("@/views/companies/TableCompanyView.vue");
+const TableCompanyView = () => import("@/views/Companies/TableCompanyView.vue");
 const CreateCompanyView = () =>
-  import("@/views/companies/CreateCompanyView.vue");
+  import("@/views/Companies/CreateCompanyView.vue");
 const UpdateCompanyView = () =>
-  import("@/views/companies/UpdateCompanyView.vue");
-
-import bankAccountRoutes from "./bank-account.routes";
+  import("@/views/Companies/UpdateCompanyView.vue");
 
 export default [
   {

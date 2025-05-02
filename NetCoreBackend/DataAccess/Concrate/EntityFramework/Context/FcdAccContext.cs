@@ -43,10 +43,16 @@ namespace DataAccess.Concrate.EntityFramework.Context
 
         public DbSet<Company> Companies { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<AddressPartner> AddressPartners { get; set; }
+        public DbSet<AddressWarehouse> AddressWarehouses { get; set; }
         public DbSet<Warehouse> Warehouses { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<BankAccountCompany> BankAccountCompanies { get; set; }
+        public DbSet<BankAccountPartner> BankAccountPartners { get; set; }
         public DbSet<Bank> Banks { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<ContactPartner> ContactPartners { get; set; }
+        public DbSet<ContactWarehouse> ContactWarehouses { get; set; }
         public DbSet<ContactDetail> ContactDetails { get; set; }
         public DbSet<Partner> Partners { get; set; }
         public DbSet<BusinessPartner> BusinessPartners { get; set; }

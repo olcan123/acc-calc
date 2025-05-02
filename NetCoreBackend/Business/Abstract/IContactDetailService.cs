@@ -1,15 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Core.Utilities.Results;
 using Entities.Concrate;
-using System.Collections.Generic;
 
 namespace Business.Abstract
 {
     public interface IContactDetailService
     {
-        IDataResult<List<ContactDetail>> GetAll();
-        IDataResult<ContactDetail> Get(int id);
-        IResult Add(ContactDetail detail);
-        IResult Update(ContactDetail detail);
-        IResult Delete(ContactDetail detail);
+        IDataResult<List<ContactDetail>> GetList();
+        IDataResult<List<ContactDetail>> GetListByContactId(int contactId);
+        IDataResult<ContactDetail> GetById(int id);
+        IResult Add(ContactDetail contactDetail);
+        IResult Delete(ContactDetail contactDetail);
+        IResult Update(ContactDetail contactDetail);
+
+        //Bulk
+        IResult AddBulk(List<ContactDetail> contactDetails);
+        IResult DeleteBulk(List<ContactDetail> contactDetails);
+        IResult UpdateBulk(List<ContactDetail> contactDetails);
+        IResult AddOrUpdateBulk(List<ContactDetail> contactDetails);
     }
 }

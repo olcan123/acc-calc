@@ -1,8 +1,10 @@
 using Business.Abstract;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using EFCore.BulkExtensions;
 using Entities.Concrate;
-using System.Collections.Generic;
 
 namespace Business.Concrate
 {
@@ -15,40 +17,50 @@ namespace Business.Concrate
             _bankAccountDal = bankAccountDal;
         }
 
-        public IDataResult<List<BankAccount>> GetAll()
+        public IDataResult<BankAccount> GetById(int id)
         {
-            var accounts = _bankAccountDal.GetAll();
-            return new SuccessDataResult<List<BankAccount>>(accounts);
+            var result = _bankAccountDal.Get(c => c.Id == id);
+            return new SuccessDataResult<BankAccount>(result);
         }
 
-        public IDataResult<BankAccount> Get(int id)
+        public IDataResult<List<BankAccount>> GetList()
         {
-            var account = _bankAccountDal.Get(x => x.Id == id);
-            return new SuccessDataResult<BankAccount>(account);
+            var result = _bankAccountDal.GetAll();
+            return new SuccessDataResult<List<BankAccount>>(result);
         }
 
+        [ValidationAspect(typeof(BankAccountValidator), Priority = 1)]
         public IResult Add(BankAccount bankAccount)
         {
             _bankAccountDal.Add(bankAccount);
-            return new SuccessResult("Bank account added.");
+            return new SuccessResult("Banka Hesabı Eklendi");
+        }
+
+        [ValidationAspect(typeof(BankAccountValidator), Priority = 1)]
+        public IResult AddBulk(List<BankAccount> bankAccounts)
+        {
+            _bankAccountDal.BulkAdd(bankAccounts, new BulkConfig { SetOutputIdentity = true });
+            return new SuccessResult("Banka Hesabı Eklendi");
         }
 
         public IResult Delete(BankAccount bankAccount)
         {
             _bankAccountDal.Delete(bankAccount);
-            return new SuccessResult("Bank account deleted.");
+            return new SuccessResult("Banka Hesabı Silindi");
         }
 
+        [ValidationAspect(typeof(BankAccountValidator), Priority = 1)]
         public IResult Update(BankAccount bankAccount)
         {
             _bankAccountDal.Update(bankAccount);
-            return new SuccessResult("Bank account updated.");
+            return new SuccessResult("Banka Hesabı Güncellendi");
         }
 
-        public IResult AddWithCompany(BankAccount bankAccount, int companyId, string companyName)
+        [ValidationAspect(typeof(BankAccountValidator), Priority = 1)]
+        public IResult UpdateBulk(List<BankAccount> bankAccounts)
         {
-            _bankAccountDal.AddWithExistingRelation<Company>(bankAccount, companyId, companyName);
-            return new SuccessResult("Bank account added.");
+            _bankAccountDal.BulkUpdate(bankAccounts);
+            return new SuccessResult("Banka Hesabı Güncellendi");
         }
     }
 }

@@ -28,20 +28,23 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<AuthManager>().As<IAuthService>();
             builder.RegisterType<JwtHelper>().As<ITokenHelper>();
 
-            builder.RegisterType<EfCompanyDal>().As<ICompanyDal>();
             builder.RegisterType<CompanyManager>().As<ICompanyService>();
+            builder.RegisterType<EfCompanyDal>().As<ICompanyDal>();
 
-            builder.RegisterType<EfWarehouseDal>().As<IWarehouseDal>();
             builder.RegisterType<WarehouseManager>().As<IWarehouseService>();
+            builder.RegisterType<EfWarehouseDal>().As<IWarehouseDal>();
 
-            builder.RegisterType<EfAddressDal>().As<IAddressDal>();
-            builder.RegisterType<AddressManager>().As<IAddressService>();
-
-            builder.RegisterType<BankManager>().As<IBankService>();
-            builder.RegisterType<EfBankDal>().As<IBankDal>();
-
-            builder.RegisterType<EfBankAccountDal>().As<IBankAccountDal>();
             builder.RegisterType<BankAccountManager>().As<IBankAccountService>();
+            builder.RegisterType<EfBankAccountDal>().As<IBankAccountDal>();
+
+            builder.RegisterType<BankAccountCompanyManager>().As<IBankAccountCompanyService>();
+            builder.RegisterType<EfBankAccountCompanyDal>().As<IBankAccountCompanyDal>();
+
+            builder.RegisterType<AddressManager>().As<IAddressService>();
+            builder.RegisterType<EfAddressDal>().As<IAddressDal>();
+
+            builder.RegisterType<AddressWarehouseManager>().As<IAddressWarehouseService>();
+            builder.RegisterType<EfAddressWarehouseDal>().As<IAddressWarehouseDal>();
 
             builder.RegisterType<EfContactDal>().As<IContactDal>();
             builder.RegisterType<ContactManager>().As<IContactService>();
@@ -49,6 +52,11 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EfContactDetailDal>().As<IContactDetailDal>();
             builder.RegisterType<ContactDetailManager>().As<IContactDetailService>();
 
+            builder.RegisterType<EfContactWarehouseDal>().As<IContactWarehouseDal>();
+            builder.RegisterType<ContactWarehouseManager>().As<IContactWarehouseService>();
+
+            builder.RegisterType<EfBankDal>().As<IBankDal>();
+            builder.RegisterType<BankManager>().As<IBankService>();
 
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();

@@ -1,27 +1,57 @@
-const TableWarehouseView = () =>
-  import("@/views/companies/warehouses/TableWarehouseView.vue");
 const CreateWarehouseView = () =>
-  import("@/views/companies/warehouses/CreateWarehouseView.vue");
+  import("@/views/Warehouses/CreateWarehouseView.vue");
+const TableWarehouseView = () =>
+  import("@/views/Warehouses/TableWarehouseView.vue");
 const UpdateWarehouseView = () =>
-  import("@/views/companies/warehouses/UpdateWarehouseView.vue");
+  import("@/views/Warehouses/UpdateWarehouseView.vue");
+
+//Contacts
+const CreateContactView = () =>
+  import("@/views/Warehouses/Contacts/CreateContactView.vue");
+
+const TableContactView = () =>
+  import("@/views/Warehouses/Contacts/TableContactView.vue");
+
+const UpdateContactView = () =>
+  import("@/views/Warehouses/Contacts/UpdateContactView.vue");
 
 export default [
   {
-    path: "companies/id/:id/warehouses",
-    name: "table-warehouse",
-    meta: { requiresAuth: false, breadcrumb: "warehouses" },
-    component: TableWarehouseView,
-  },
-  {
-    path: "companies/id/:id/warehouses/create",
+    path: "warehouses/create",
     name: "create-warehouse",
-    meta: { requiresAuth: false, breadcrumb: "create-warehouse" },
+    meta: { requiresAuth: true, breadcrumb: "create-warehouse" },
     component: CreateWarehouseView,
   },
   {
-    path: "companies/id/:id/warehouses/update/:warehouseId",
+    path: "warehouses",
+    name: "table-warehouse",
+    meta: { requiresAuth: true, breadcrumb: "table-warehouse" },
+    component: TableWarehouseView,
+  },
+  {
+    path: "warehouses/update/:id",
     name: "update-warehouse",
-    meta: { requiresAuth: false, breadcrumb: "update-warehouse" },
+    meta: { requiresAuth: true, breadcrumb: "update-warehouse" },
     component: UpdateWarehouseView,
   },
+
+  //Contacts
+  {
+    path: "warehouses/:warehouseId/contacts",
+    name: "table-contact-warehouse",
+    meta: { requiresAuth: true, breadcrumb: "table-contact-warehouse" },
+    component: TableContactView,
+  },
+  {
+    path: "warehouses/:warehouseId/contacts/create",
+    name: "warehouse-contacts-create",
+    meta: { requiresAuth: true, breadcrumb: "warehouse-contacts-create" },
+    component: CreateContactView,
+  },
+  {
+    path: "warehouses/:warehouseId/contacts/update/:contactId",
+    name: "warehouse-contacts-update",
+    meta: { requiresAuth: true, breadcrumb: "warehouse-contacts-update" },
+    component: UpdateContactView,
+  }
 ];

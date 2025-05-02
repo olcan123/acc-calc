@@ -16,5 +16,5 @@
 
 <script setup>
 import { RouterView } from "vue-router";
-import Loading from "@/components/loading/index.vue";
+import Loading from "@/components/Loading/index.vue";
 </script>

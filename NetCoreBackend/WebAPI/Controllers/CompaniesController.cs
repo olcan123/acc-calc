@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Business.Abstract;
 using Entities.Concrate;
 using Microsoft.AspNetCore.Mvc;
+using WebAPI.Models;
 
 namespace WebAPI.Controllers
 {
@@ -14,35 +15,22 @@ namespace WebAPI.Controllers
     {
         private readonly ICompanyService _companyService;
 
-        public CompaniesController(ICompanyService companyService) => _companyService = companyService;
+        public CompaniesController(ICompanyService companyService)
+        {
+            _companyService = companyService;
+        }
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var result = _companyService.GetAll();
-            if (result.Success)
-                return Ok(result);
-            return BadRequest(result);
-        }
-
-        [HttpGet("include")]
-        public IActionResult GetAllWithInclude()
-        {
-            var result = _companyService.GetAllWithInclude();
+            var result = _companyService.GetList();
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
-        [HttpGet("id/{id}")]
-        public IActionResult Get(int id)
+        [HttpGet("id/{Id:int}")]
+        public IActionResult GetById(int Id)
         {
-            var result = _companyService.Get(id);
-            return result.Success ? Ok(result) : BadRequest(result);
-        }
-
-        [HttpGet("include/id/{id}")]
-        public IActionResult GetWithInclude(int id)
-        {
-            var result = _companyService.GetWithInclude(id);
+            var result = _companyService.GetById(Id);
             return result.Success ? Ok(result) : BadRequest(result);
         }
 
@@ -51,12 +39,13 @@ namespace WebAPI.Controllers
         {
             var result = _companyService.Add(company);
             return result.Success ? Ok(result) : BadRequest(result);
+
         }
 
-        [HttpDelete("id/{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete("id/{Id:int}")]
+        public IActionResult Delete(int Id)
         {
-            var result = _companyService.Delete(new Company { Id = id });
+            var result = _companyService.Delete(new Company { Id = Id });
             return result.Success ? Ok(result) : BadRequest(result);
         }
 

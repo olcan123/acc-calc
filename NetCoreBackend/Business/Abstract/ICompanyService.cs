@@ -9,12 +9,12 @@ namespace Business.Abstract
 {
     public interface ICompanyService
     {
-        public IDataResult<List<Company>> GetAll();
-        public IDataResult<List<Company>> GetAllWithInclude();
-        public IDataResult<Company> Get(int id);
-        public IDataResult<Company> GetWithInclude(int id);
-        public IResult Add(Company company);
-        public IResult Update(Company company);
-        public IResult Delete(Company company);
+        IDataResult<List<Company>> GetList();
+        IDataResult<List<Company>> GetListInclude();
+        IDataResult<Company> GetById(int id);
+        IDataResult<Company> GetByIdInclude(int id);
+        IResult Add(Company company);
+        IResult Update(Company company);
+        IResult Delete(Company company);
     }
 }

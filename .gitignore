@@ -1,25 +1,53 @@
 # -------------------------------
-# Global
-# -------------------------------
-node_modules/
-dist/
-.env
-.DS_Store
-Thumbs.db
-
-# -------------------------------
-# Vue (VueFrontend)
+# Genel (Global)
 # -------------------------------
 VueFrontend/node_modules/
 VueFrontend/dist/
+VueFrontend/dist-ssr/
+VueFrontend/coverage/
+VueFrontend/*.log
+VueFrontend/*.local
+VueFrontend/.DS_Store
+VueFrontend/Thumbs.db
+VueFrontend/*.tsbuildinfo
+
+# -------------------------------
+# Vite/Vue Proje Yapısı (Özel)
+# -------------------------------
+VueFrontend/.nuxt/
+VueFrontend/.output/
+VueFrontend/.vercel/
+
+# Ortam dosyaları (env)
 VueFrontend/src/config/.env.local
 VueFrontend/src/config/.env.*.local
 VueFrontend/src/config/.env.production
 VueFrontend/src/config/.env.staging
-VueFrontend/.output/
-VueFrontend/.nuxt/
-VueFrontend/.vercel/
-VueFrontend/.vscode/
+
+# Cypress çıktıları (Varsa)
+VueFrontend/cypress/videos/
+VueFrontend/cypress/screenshots/
+
+# -------------------------------
+# Editor dosyaları
+# -------------------------------
+VueFrontend/.idea/
+VueFrontend/*.suo
+VueFrontend/*.ntvs*
+VueFrontend/*.njsproj
+VueFrontend/*.sln
+VueFrontend/*.sw?
+VueFrontend/.vscode/*
+VueFrontend/!.vscode/extensions.json
+
+# -------------------------------
+# Debug log dosyaları
+# -------------------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 # -------------------------------
 # .NET (NetCoreBackend)

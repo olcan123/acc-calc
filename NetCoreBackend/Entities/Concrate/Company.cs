@@ -10,7 +10,7 @@ namespace Entities.Concrate
     {
         public Company()
         {
-            BankAccounts = new HashSet<BankAccount>();
+            BankAccountCompanies = new HashSet<BankAccountCompany>();
             Warehouses = new HashSet<Warehouse>();
         }
         public int Id { get; set; }
@@ -20,7 +20,7 @@ namespace Entities.Concrate
         public string VatNumber { get; set; }
         public string Period { get; set; }
 
-        public ICollection<BankAccount> BankAccounts { get; set; }
+        public ICollection<BankAccountCompany> BankAccountCompanies { get; set; }
         public ICollection<Warehouse> Warehouses { get; set; }
 
     }

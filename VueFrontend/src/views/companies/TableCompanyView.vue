@@ -1,145 +1,108 @@
 <template>
-  <div class="p-6">
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Şirketler</h1>
-      <router-link
-        :to="{ name: 'create-company' }"
-        class="px-4 py-2 text-sm text-white bg-blue-700 hover:bg-blue-800 rounded-lg"
-      >
-        Yeni Şirket Ekle
-      </router-link>
-    </div>
-
-    <!-- Main DataTable -->
-    <DataTable
-      :value="companies.data"
-      v-model:expandedRows="expandedRows"
-      dataKey="id"
-      paginator
-      :rows="5"
-      stripedRows
-      responsiveLayout="scroll"
-      class="rounded-lg shadow border border-surface-300"
+  <!-- Header Section -->
+  <div class="flex justify-between items-center mb-4">
+    <!-- Yazıyı büyüt + y ekseninde hizala -->
+    <h2
+      class="text-4xl font-semibold text-gray-800 dark:text-white leading-tight"
     >
-      <!-- Expand Column -->
-      <Column expander style="width: 5rem" />
-      <!-- Basic Info -->
-      <Column field="id" header="ID" />
-      <Column field="name" header="Şirket Adı" />
-      <Column field="tradeName" header="Ticari Unvan" />
-      <Column field="uidNumber" header="UID No" />
-      <Column field="vatNumber" header="KDV No" />
-      <Column field="period" header="Dönem" />
+      Şirket Tablosu
+    </h2>
 
-      <!-- Action Column -->
-      <Column header="İşlem" headerClass="bg-surface-100 text-color-emphasis text-xs font-semibold text-center">
-        <template #body="{ data }">
-          <div class="flex justify-center">
-            <router-link
-              :to="{ name: 'update-company', params: { id: data.id } }"
-              class="px-4 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 rounded-lg"
-            >
-              Düzenle
-            </router-link>
+    <!-- Buton boyutunu koru, ama içerik dikey ortalansın -->
+    <button
+      :disabled="companies.length > 0"
+      @click="router.push({ name: 'create-company' })"
+      type="button"
+      class="flex items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    >
+      <span v-if="companies.length > 0">🚫</span>
+      Yeni Şirket Oluştur
+    </button>
+  </div>
 
-            <button
-              type="button"
-              @click="companyStore.deleteCompany(data.id)"
-              class="px-4 py-2 text-xs font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 rounded-lg"
-            >
-              Sil
-            </button>
-          </div>
-        </template>
-      </Column>
+  <!-- DataTable -->
+  <DataTable :value="companies" responsiveLayout="scroll" dataKey="id">
+    <Column header="ID">
+      <template #body="{ index }">
+        {{ index + 1 }}
+      </template>
+    </Column>
+    <Column field="name" header="Name" />
+    <Column field="tradeName" header="Trade Name" />
+    <Column field="uidNumber" header="UID Number" />
+    <Column field="vatNumber" header="VAT Number" />
+    <Column field="period" header="Period" />
 
-      <!-- Row Expansion Template -->
-      <template #expansion="slotProps">
-        <div class="p-4 bg-gray-50 rounded-md space-y-6 text-sm text-gray-800">
-          <!-- Bank Accounts Section -->
-          <div v-if="slotProps.data.bankAccounts?.length">
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="text-blue-700 font-semibold">🏦 Banka Hesapları</h3>
-              <router-link
-                :to="{ name: 'table-bank-account', params: { id: slotProps.data.id } }"
-                class="text-xs text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded"
-              >
-                Hesapları Görüntüle
-              </router-link>
-            </div>
-            <DataTable :value="slotProps.data.bankAccounts" class="text-sm border border-blue-200 rounded">
-              <Column header="Banka">
-                <template #body="{ data }">
-                  {{ getBankBankName(data.bankId) }}
-                </template>
-              </Column>
-              <Column field="branchName" header="Şube" />
-              <Column field="iban" header="IBAN" />
-              <Column field="accountNumber" header="Hesap No" />
-              <Column field="currency" header="Para Birimi" />
-            </DataTable>
-          </div>
+    <!-- İşlemler -->
+    <Column header="İşlemler" style="width: 180px">
+      <template #body="slotProps">
+        <div class="flex gap-2">
+          <!-- Düzenle Butonu -->
+          <button
+            @click="updateCompany(slotProps.data.id)"
+            type="button"
+            class="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-3 py-1.5 focus:outline-none dark:focus:ring-yellow-900"
+          >
+            Düzenle
+          </button>
 
-          <!-- Depolar ve Adresleri Listele -->
-          <div v-if="slotProps.data.warehouses?.length">
-            <div class="flex justify-between items-center mb-2">
-              <h3 class="text-green-700 font-semibold">🏬 Depolar ve Adresleri</h3>
-              <router-link
-                class="text-xs text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded"
-                  :to="{ name: 'table-warehouse', params: { id: slotProps.data.id } }"
-              >
-                Depoları Görüntüle
-              </router-link>
-            </div>
-
-            <DataTable
-              :value="flatWarehousesWithAddresses(slotProps.data.warehouses)"
-              class="text-sm border border-green-200 rounded"
-            >
-              <Column field="warehouseName" header="Depo Adı" />
-              <Column field="type" header="Adres Tipi" />
-              <Column field="street" header="Sokak" />
-              <Column field="city" header="Şehir" />
-              <Column field="country" header="Ülke" />
-              <Column field="zipCode" header="Posta Kodu" />
-            </DataTable>
-          </div>
+          <!-- Sil Butonu -->
+          <button
+            @click="confirmDeleteCompany(slotProps.data.id)"
+            type="button"
+            class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1.5 focus:outline-none dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+          >
+            Sil
+          </button>
+          <router-link :to="{ name:'table-warehouse' }"
+         class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900"
+          >Depolar</router-link>
         </div>
       </template>
-    </DataTable>
-  </div>
+    </Column>
+  </DataTable>
+  <!-- ConfirmDialog popup -->
+  <ConfirmDialog />
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { DataTable, Column, ConfirmDialog } from "primevue";
+import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useCompanyStore } from "@/stores/company.store";
-import { useBankStore } from "@/stores/bank.store";
-import { DataTable, Column } from "primevue";
-import router from "@/router";
+import { useConfirm } from "primevue/useconfirm";
 
-const expandedRows = ref([]);
-
+// Router & Store
+const router = useRouter();
 const companyStore = useCompanyStore();
-const bankStore = useBankStore();
 const { companies } = storeToRefs(companyStore);
-const { getSelectBanks } = storeToRefs(bankStore);
-await companyStore.fetchCompanies();
-await bankStore.fetchBanks();
 
-const getBankBankName = (bankId) => {
-  const bank = getSelectBanks.value.find((bank) => bank.value === bankId);
-  // return bank ? bank.value : 'Banka Bulunamadı'
-  return bank ? bank.label : "Banka Bulunamadı";
+// PrimeVue Confirm service
+const confirm = useConfirm();
+
+// Fetch companies
+await companyStore.fetchCompanies();
+
+// Silme işlemi onaylı
+const confirmDeleteCompany = (companyId) => {
+  confirm.require({
+    message: "Bu şirketi silmek istediğinize emin misiniz?",
+    header: "Silme Onayı",
+    acceptLabel: "Evet",
+    rejectLabel: "Hayır",
+    acceptClass: "p-button-danger",
+    rejectClass: "p-button-secondary",
+    accept: async () => {
+      await companyStore.deleteCompany(companyId);
+    },
+    reject: () => {
+      console.log("Silme işlemi iptal edildi.");
+    },
+  });
 };
 
-// Depolar ve Adresleri Listele
-function flatWarehousesWithAddresses(warehouses) {
-  return warehouses.flatMap((warehouse) => {
-    return (warehouse.addresses || []).map((address) => ({
-      warehouseName: warehouse.name,
-      ...address,
-    }));
-  });
-}
+// Düzenleme
+const updateCompany = (id) => {
+  router.push({ name: "update-company", params: { id } });
+};
 </script>
