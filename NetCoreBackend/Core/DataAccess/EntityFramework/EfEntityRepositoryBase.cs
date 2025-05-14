@@ -1,5 +1,7 @@
 ﻿using Core.Entities;
 using EFCore.BulkExtensions;
+using LinqToDB;
+using LinqToDB.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -139,6 +141,41 @@ namespace Core.DataAccess.EntityFramework
             using TContext context = new TContext();
             context.BulkInsertOrUpdate(entityList, bulkConfig);
         }
+
+        //SECTION - LINQ2DB
+
+        public void MergeLinq(List<TEntity> entities, Expression<Func<TEntity, TEntity, bool>> matchExpression)
+        {
+
+            using var context = new TContext();
+            context.Set<TEntity>().ToLinqToDBTable()
+                .Merge()
+                .Using(entities)
+                .On(matchExpression)
+                .InsertWhenNotMatched()
+                .UpdateWhenMatched()
+                .Merge();
+        }
+
+        public void MergeLinqWithDelete(
+            List<TEntity> entities,
+            Expression<Func<TEntity, TEntity, bool>> matchExpression,
+            Expression<Func<TEntity, TEntity, bool>> deleteMatchExpression = null)
+        {
+            if (deleteMatchExpression == null)
+                deleteMatchExpression = matchExpression;
+
+            using var context = new TContext();
+            context.Set<TEntity>().ToLinqToDBTable()
+                .Merge()
+                .Using(entities)
+                .On(matchExpression)
+                .InsertWhenNotMatched()
+                .UpdateWhenMatched()
+                .DeleteWhenMatchedAnd(deleteMatchExpression)
+                .Merge();
+        }
+
 
     }
 }

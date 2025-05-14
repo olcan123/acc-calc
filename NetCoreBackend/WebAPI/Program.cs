@@ -8,6 +8,7 @@ using Core.Extensions;
 using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.JWT;
+using LinqToDB.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -24,6 +25,8 @@ builder.Services.AddControllers()
         options.SerializerSettings.Formatting = Formatting.Indented;
     });
 
+
+
 // Autofac Service Provider Factory'yi kullan
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
 
@@ -31,7 +34,6 @@ builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
 {
     containerBuilder.RegisterModule(new AutofacBusinessModule());
 });
-
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddControllers(); // API Controller'lar�n� aktif eder
@@ -84,6 +86,8 @@ builder.Services.AddDependencyResolvers(new ICoreModule[]
 {
     new CoreModule()
 });
+
+LinqToDBForEFTools.Initialize();
 
 var app = builder.Build();
 

@@ -1,5 +1,7 @@
 <template>
-  <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+  <nav
+    class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+  >
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <!-- Sol taraf -->
@@ -19,17 +21,27 @@
             </svg>
           </button>
           <a href="#" class="flex items-center ms-2">
-            <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" />
-            <span class="self-center text-xl font-semibold dark:text-white">Flowbite</span>
+            <img
+              src="https://flowbite.com/docs/images/logo.svg"
+              class="h-8 me-3"
+            />
+            <span class="self-center text-xl font-semibold dark:text-white"
+              >Flowbite</span
+            >
           </a>
         </div>
 
         <!-- Orta Menü -->
-        <div class="hidden md:flex gap-6 text-sm font-medium text-gray-700 dark:text-white">
+        <div
+          class="hidden md:flex gap-6 text-sm font-medium text-gray-700 dark:text-white"
+        >
           <nav-link to="table-company"> Sirketler </nav-link>
-          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">About</a>
-          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">Services</a>
-          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">Contact</a>
+          <!-- <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400">About</a> -->
+          <nav-link to="table-partner"> Partnerler </nav-link>
+          <nav-link to="table-product"> Urunler </nav-link>
+          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400"
+            >Contact</a
+          >
         </div>
 
         <!-- Sağ taraf: Menü -->
@@ -38,11 +50,33 @@
             @click="toggleMobileMenu"
             class="md:hidden p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
           >
-            <svg v-if="!mobileMenuOpen" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              v-if="!mobileMenuOpen"
+              class="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
-            <svg v-else class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <svg
+              v-else
+              class="w-6 h-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           </button>
 
@@ -52,7 +86,10 @@
               class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             >
               <span class="sr-only">Open user menu</span>
-              <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-5.jpg" />
+              <img
+                class="w-8 h-8 rounded-full"
+                src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+              />
             </button>
             <div
               v-if="userMenuOpen"
@@ -60,7 +97,11 @@
             >
               <div class="px-4 py-3">
                 <p class="text-sm text-gray-900 dark:text-white">Neil Sims</p>
-                <p class="text-sm font-medium text-gray-900 truncate dark:text-gray-300">neil.sims@flowbite.com</p>
+                <p
+                  class="text-sm font-medium text-gray-900 truncate dark:text-gray-300"
+                >
+                  neil.sims@flowbite.com
+                </p>
               </div>
               <ul class="py-1">
                 <li>
@@ -99,11 +140,19 @@
 
       <!-- Mobil Menü -->
       <div v-if="mobileMenuOpen" class="mt-4 md:hidden">
-        <ul class="flex flex-col gap-2 text-sm font-medium border-t pt-4 border-gray-200 dark:border-gray-700">
+        <ul
+          class="flex flex-col gap-2 text-sm font-medium border-t pt-4 border-gray-200 dark:border-gray-700"
+        >
           <mobil-navlink to="table-company"> Sirketler </mobil-navlink>
-          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">About</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Services</a></li>
-          <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700">Contact</a></li>
+          <mobil-navlink to="table-partner"> Partnerler </mobil-navlink>
+          <mobil-navlink to="table-product"> Urunler </mobil-navlink>
+          <li>
+            <a
+              href="#"
+              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >Contact</a
+            >
+          </li>
         </ul>
       </div>
     </div>

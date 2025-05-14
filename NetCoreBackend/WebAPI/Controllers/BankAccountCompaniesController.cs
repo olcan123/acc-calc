@@ -28,17 +28,21 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("{bankaccountId:int}")] //id/1
-        public IActionResult GetByBankAccountId(int companyId, int bankaccountId)
+        public IActionResult GetByBankAccountId(int bankaccountId)
         {
-            var result = _bankAccountCompanyService.GetIncludeByBankAccountIdAndCompanyId(companyId, bankaccountId);
+            var result = _bankAccountCompanyService.GetByBankAccountId(bankaccountId);
             return result.Success ? Ok(result) : BadRequest(result);
         }
+
+        
+
 
         [HttpPost]
         public IActionResult Add(int companyId, [FromBody] BankAccount bankAccount)
         {
             var result = _bankAccountCompanyService.AddBankAccountCompany(companyId, bankAccount);
             return result.Success ? Ok(result) : BadRequest(result);
+            
         }
 
         [HttpDelete("{bankaccountId:int}")] //id/1
@@ -49,7 +53,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpPut("{bankaccountId:int}")] //id/1
-        public IActionResult Update(int companyId, int bankaccountId, [FromBody]BankAccount bankAccount)
+        public IActionResult Update(int companyId, int bankaccountId, [FromBody] BankAccount bankAccount)
         {
             bankAccount.Id = bankaccountId;
             var result = _bankAccountCompanyService.UpdateBankAccountCompany(companyId, bankAccount);

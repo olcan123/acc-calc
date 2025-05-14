@@ -58,6 +58,38 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EfBankDal>().As<IBankDal>();
             builder.RegisterType<BankManager>().As<IBankService>();
 
+            builder.RegisterType<EfPartnerDal>().As<IPartnerDal>();
+            builder.RegisterType<PartnerManager>().As<IPartnerService>();
+
+            builder.RegisterType<EfAddressPartnerDal>().As<IAddressPartnerDal>();
+            builder.RegisterType<AddressPartnerManager>().As<IAddressPartnerService>();
+
+            builder.RegisterType<EfBankAccountPartnerDal>().As<IBankAccountPartnerDal>();
+            builder.RegisterType<BankAccountPartnerManager>().As<IBankAccountPartnerService>();
+
+            builder.RegisterType<EfContactPartnerDal>().As<IContactPartnerDal>();
+            builder.RegisterType<ContactPartnerManager>().As<IContactPartnerService>();
+
+            builder.RegisterType<EfVatDal>().As<IVatDal>();
+            builder.RegisterType<VatManager>().As<IVatService>();
+
+            builder.RegisterType<EfUnitOfMeasureDal>().As<IUnitOfMeasureDal>();
+            builder.RegisterType<UnitOfMeasureManager>().As<IUnitOfMeasureService>();
+
+            builder.RegisterType<EfCategoryDal>().As<ICategoryDal>();
+            builder.RegisterType<CategoryManager>().As<ICategoryService>();
+
+            builder.RegisterType<EfProductDal>().As<IProductDal>();
+            builder.RegisterType<ProductManager>().As<IProductService>();
+
+            builder.RegisterType<EfProductPriceDal>().As<IProductPriceDal>();
+            builder.RegisterType<ProductPriceManager>().As<IProductPriceService>();
+
+            builder.RegisterType<EfBarcodeDal>().As<IBarcodeDal>();
+            builder.RegisterType<BarcodeManager>().As<IBarcodeService>();
+
+            builder.RegisterType<EfProductCategoryDal>().As<IProductCategoryDal>();
+            builder.RegisterType<ProductCategoryManager>().As<IProductCategoryService>();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

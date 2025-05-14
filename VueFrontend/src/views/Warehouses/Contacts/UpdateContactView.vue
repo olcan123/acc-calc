@@ -22,6 +22,7 @@
 
   <!-- Form -->
   <form @submit="onSubmit" id="contactForm" class="space-y-6">
+    <input type="number" v-model="values.contact.id" />
     <!-- Contact Name -->
     <FieldTextInput
       fieldName="contact.name"
@@ -36,7 +37,6 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import { nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/zod";
@@ -50,18 +50,17 @@ const { warehouseId, contactId } = useRoute().params;
 const contactWarehouseStore = useContactWarehouseStore();
 await contactWarehouseStore.fetchContactByIdIncludeDetails(contactId);
 const { error, contact } = storeToRefs(contactWarehouseStore);
-await nextTick();
 
 // Form setup
-const { handleSubmit, meta, submitCount, setValues } = useForm({
+const { handleSubmit, meta, submitCount, setValues, values } = useForm({
   validationSchema: toTypedSchema(contactSchema),
   initialValues: {
     contact: {
-      id: 0,
       name: "",
     },
     contactDetails: [
       {
+        id: 0,
         contactId: 0,
         name: "",
         value: "",
@@ -75,9 +74,10 @@ const { handleSubmit, meta, submitCount, setValues } = useForm({
 
 setValues({
   contact: {
+    id: contact.value.id,
     name: contact.value.name,
   },
-  contactDetails: contact.value.contactDetails,
+  contactDetails: contact.value.contactDetails ?? [],
 });
 
 // Submit işlemi

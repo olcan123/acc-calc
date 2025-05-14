@@ -83,7 +83,7 @@ namespace Business.Concrate
 
         // Warehouse and Address Relations CRUD Operations
 
-        //**Bu aslinda warehouse cagirmasina ragmen Contact bilgileri gostermesi icin kullanildi(Contact icin kullanilacak)
+        //**Bu aslinda warehouse cagirmasina ragmen Contact bilgileri gostermesi icin kullanildi(Contact icin kullanilacak) ContactWarehouseController icin gerekli
         public IDataResult<Warehouse> GetListContactsByWarehouseId(int warehouseId)
         {
             var warehouse = _warehouseDal.GetWithIncludeChain(x => x.Include(x => x.ContactWarehouses)

@@ -22,37 +22,6 @@ namespace DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("BusinessPartner", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("PartnerId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("PartnerRole")
-                        .HasColumnType("text");
-
-                    b.Property<string>("VatNumber")
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PartnerId")
-                        .IsUnique();
-
-                    b.ToTable("BusinessPartners");
-                });
-
             modelBuilder.Entity("Core.Entities.Concrete.OperationClaim", b =>
                 {
                     b.Property<int>("Id")
@@ -117,43 +86,6 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("UserOperationClaims");
-                });
-
-            modelBuilder.Entity("Employee", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("EmployeeNumber")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("HireDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime?>("Modified")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("PartnerId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("TerminationDate")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PartnerId")
-                        .IsUnique();
-
-                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("Entities.Concrate.Address", b =>
@@ -388,6 +320,67 @@ namespace DataAccess.Migrations
                     b.ToTable("BankAccountPartners");
                 });
 
+            modelBuilder.Entity("Entities.Concrate.Barcode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Barcodes", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_Barcodes_Id_Positive", "\"Id\" > 0");
+                        });
+                });
+
+            modelBuilder.Entity("Entities.Concrate.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("Entities.Concrate.Company", b =>
                 {
                     b.Property<int>("Id")
@@ -529,6 +522,163 @@ namespace DataAccess.Migrations
                     b.ToTable("ContactWarehouses");
                 });
 
+            modelBuilder.Entity("Entities.Concrate.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<float>("CustomsTaxRate")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<float>("ExciseTaxRate")
+                        .HasColumnType("real");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int>("UnitOfMeasureId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("VatId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UnitOfMeasureId");
+
+                    b.HasIndex("VatId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Entities.Concrate.ProductCategory", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("ProductId", "CategoryId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("Entities.Concrate.ProductPrice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<byte>("Category")
+                        .HasColumnType("smallint");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<byte>("Side")
+                        .HasColumnType("smallint");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime?>("ValidFrom")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("ValidTo")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductPrices");
+                });
+
+            modelBuilder.Entity("Entities.Concrate.UnitOfMeasure", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Abbreviation")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UnitOfMeasures");
+                });
+
+            modelBuilder.Entity("Entities.Concrate.Vat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<float>("Rate")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Vats");
+                });
+
             modelBuilder.Entity("Entities.Concrate.Warehouse", b =>
                 {
                     b.Property<int>("Id")
@@ -564,6 +714,9 @@ namespace DataAccess.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("BusinessPartnerType")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("Created")
                         .HasColumnType("timestamp with time zone");
 
@@ -579,31 +732,90 @@ namespace DataAccess.Migrations
                     b.Property<int>("PartnerType")
                         .HasColumnType("integer");
 
+                    b.Property<string>("TradeName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("VatNumber")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Partners");
                 });
 
-            modelBuilder.Entity("BusinessPartner", b =>
+            modelBuilder.Entity("ProductDocument", b =>
                 {
-                    b.HasOne("Partner", "Partner")
-                        .WithOne("BusinessPartner")
-                        .HasForeignKey("BusinessPartner", "PartnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
 
-                    b.Navigation("Partner");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("DocumentType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductDocuments");
                 });
 
-            modelBuilder.Entity("Employee", b =>
+            modelBuilder.Entity("ProductImage", b =>
                 {
-                    b.HasOne("Partner", "Partner")
-                        .WithOne("Employee")
-                        .HasForeignKey("Employee", "PartnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
 
-                    b.Navigation("Partner");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Label")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("Modified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("Entities.Concrate.AddressPartner", b =>
@@ -693,6 +905,17 @@ namespace DataAccess.Migrations
                     b.Navigation("Partner");
                 });
 
+            modelBuilder.Entity("Entities.Concrate.Barcode", b =>
+                {
+                    b.HasOne("Entities.Concrate.Product", "Product")
+                        .WithMany("Barcodes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Entities.Concrate.ContactDetail", b =>
                 {
                     b.HasOne("Entities.Concrate.Contact", "Contact")
@@ -742,6 +965,55 @@ namespace DataAccess.Migrations
                     b.Navigation("Warehouse");
                 });
 
+            modelBuilder.Entity("Entities.Concrate.Product", b =>
+                {
+                    b.HasOne("Entities.Concrate.UnitOfMeasure", "UnitOfMeasure")
+                        .WithMany("Products")
+                        .HasForeignKey("UnitOfMeasureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrate.Vat", "Vat")
+                        .WithMany("Products")
+                        .HasForeignKey("VatId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UnitOfMeasure");
+
+                    b.Navigation("Vat");
+                });
+
+            modelBuilder.Entity("Entities.Concrate.ProductCategory", b =>
+                {
+                    b.HasOne("Entities.Concrate.Category", "Category")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrate.Product", "Product")
+                        .WithMany("ProductCategories")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Entities.Concrate.ProductPrice", b =>
+                {
+                    b.HasOne("Entities.Concrate.Product", "Product")
+                        .WithMany("ProductPrices")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Entities.Concrate.Warehouse", b =>
                 {
                     b.HasOne("Entities.Concrate.Company", "Company")
@@ -751,6 +1023,28 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("ProductDocument", b =>
+                {
+                    b.HasOne("Entities.Concrate.Product", "Product")
+                        .WithMany("ProductDocuments")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ProductImage", b =>
+                {
+                    b.HasOne("Entities.Concrate.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Entities.Concrate.Address", b =>
@@ -772,6 +1066,11 @@ namespace DataAccess.Migrations
                     b.Navigation("BankAccountPartners");
                 });
 
+            modelBuilder.Entity("Entities.Concrate.Category", b =>
+                {
+                    b.Navigation("ProductCategories");
+                });
+
             modelBuilder.Entity("Entities.Concrate.Company", b =>
                 {
                     b.Navigation("BankAccountCompanies");
@@ -788,6 +1087,29 @@ namespace DataAccess.Migrations
                     b.Navigation("ContactWarehouses");
                 });
 
+            modelBuilder.Entity("Entities.Concrate.Product", b =>
+                {
+                    b.Navigation("Barcodes");
+
+                    b.Navigation("ProductCategories");
+
+                    b.Navigation("ProductDocuments");
+
+                    b.Navigation("ProductImages");
+
+                    b.Navigation("ProductPrices");
+                });
+
+            modelBuilder.Entity("Entities.Concrate.UnitOfMeasure", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Entities.Concrate.Vat", b =>
+                {
+                    b.Navigation("Products");
+                });
+
             modelBuilder.Entity("Entities.Concrate.Warehouse", b =>
                 {
                     b.Navigation("AddressWarehouses");
@@ -801,11 +1123,7 @@ namespace DataAccess.Migrations
 
                     b.Navigation("BankAccountPartners");
 
-                    b.Navigation("BusinessPartner");
-
                     b.Navigation("ContactPartners");
-
-                    b.Navigation("Employee");
                 });
 #pragma warning restore 612, 618
         }

@@ -23,13 +23,15 @@ namespace Business.Concrate
             _bankAccountService = bankAccountService;
         }
 
+        //SECTION - Bu sadece bankAccountManager kullanilarak yapildi...
+        public IDataResult<BankAccount> GetByBankAccountId(int bankAccountId)
+        {
+            var bankAccount = _bankAccountService.GetById(bankAccountId);
+            return new SuccessDataResult<BankAccount>(bankAccount.Data);
+        }
+
 
         //NOTE - Company Bank Account veri listelenme islemleri icin gerekli metot
-        public IDataResult<BankAccountCompany> GetByBankAccountId(int bankAccountId)
-        {
-            var bankAccountCompany = _bankAccountCompanyDal.Get(x => x.BankAccountId == bankAccountId);
-            return new SuccessDataResult<BankAccountCompany>(bankAccountCompany);
-        }
 
         public IDataResult<BankAccountCompany> GetByCompanyId(int companyId)
         {

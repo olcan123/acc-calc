@@ -12,12 +12,13 @@ public class Partner : BaseEntity
 
     public int Id { get; set; }
     public string Name { get; set; }
+    public string TradeName { get; set; }
     public PartnerType PartnerType { get; set; } // "Individual", "Company"
+    public BusinessPartnerType? BusinessPartnerType { get; set; }
     public string IdentityNumber { get; set; }
+    public string VatNumber { get; set; }
 
     // Navigation Properties
-    public Employee Employee { get; set; }
-    public BusinessPartner BusinessPartner { get; set; }
     public ICollection<BankAccountPartner> BankAccountPartners { get; set; }
     public ICollection<ContactPartner> ContactPartners { get; set; }
     public ICollection<AddressPartner> AddressPartners { get; set; }
@@ -26,6 +27,14 @@ public class Partner : BaseEntity
 
 public enum PartnerType
 {
+    Business,
     Individual,
-    Company
+    Employee,
+}
+
+public enum BusinessPartnerType
+{
+    Supplier,
+    Customer,
+    Both
 }

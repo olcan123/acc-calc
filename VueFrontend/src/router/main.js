@@ -4,12 +4,25 @@ import homeRoutes from "./home.routes";
 import companyRoutes from "./company.routes";
 import warehouseRoutes from "./warehouse.routes";
 import bankRoutes from "./bank.routes";
+import partnerRoutes from "./partner.routes";
+import vatRoutes from "./vat.routes";
+import unitOfMeasureRoutes from "./unit-of-measure.routes";
+import categoryRoutes from "./category.routes";
+import productRoutes from "./product.routes";
 
-const routes = [
-  {
+const routes = [  {
     path: "/",
-    component: DefaultLayout,
-    children: [...homeRoutes, ...companyRoutes, ...warehouseRoutes, ...bankRoutes],
+    component: DefaultLayout,    children: [
+      ...homeRoutes, 
+      ...companyRoutes, 
+      ...warehouseRoutes, 
+      ...bankRoutes, 
+      ...partnerRoutes,
+      ...vatRoutes,
+      ...unitOfMeasureRoutes,
+      ...categoryRoutes,
+      ...productRoutes
+    ],
   },
 ];
 

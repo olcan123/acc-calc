@@ -54,9 +54,23 @@
           >
             Sil
           </button>
-          <router-link :to="{ name:'table-warehouse' }"
-         class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-3 py-1.5 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900"
-          >Depolar</router-link>
+          <TableDropdownButton buttonText="İşlemler">
+            <router-link
+              :to="{ name: 'table-warehouse' }"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 dark:text-gray-200 dark:hover:bg-gray-700"
+            >
+              Depolar
+            </router-link>
+            <router-link
+              :to="{
+                name: 'table-bank-account-company',
+                params: { companyId: slotProps.data.id },
+              }"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-cyan-50 dark:text-gray-200 dark:hover:bg-gray-700"
+            >
+              Bankalar
+            </router-link>
+          </TableDropdownButton>
         </div>
       </template>
     </Column>
@@ -71,6 +85,7 @@ import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useCompanyStore } from "@/stores/company.store";
 import { useConfirm } from "primevue/useconfirm";
+import TableDropdownButton from "@/components/UI/Buttons/TableDropdownButton.vue";
 
 // Router & Store
 const router = useRouter();

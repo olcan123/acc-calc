@@ -38,6 +38,7 @@ namespace Core.Aspects.Autofac.Exception
                     Name = invocation.GetConcreteMethod().GetParameters()[i].Name,
                     Value = invocation.Arguments[i],
                     Type = invocation.Arguments[i].GetType().Name
+                    //Type = invocation.Arguments[i] != null ? invocation.Arguments[i].GetType().Name : "null"
                 });
             }
 

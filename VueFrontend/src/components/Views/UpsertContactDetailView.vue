@@ -73,16 +73,17 @@
 import { useFieldArray } from "vee-validate";
 import { useContactWarehouseStore } from "@/stores/contact-warehouse.store";
 import FieldTextInput from "@/components/Form/FieldTextInput.vue"; // Senin input componentin
-import FieldCheckbox from "../Form/FieldCheckbox.vue";
+import FieldCheckbox from "@/components/Form/FieldCheckbox.vue";
 
 const contactWarehouseStore = useContactWarehouseStore();
 
 // ContactDetails Array yönetimi
-const { fields, push, remove } = useFieldArray("contactDetails");
+const { fields, push, remove, replace } = useFieldArray("contactDetails");
 
 // Yeni ContactDetail eklemek
 const addContactDetail = () => {
   push({
+    id: 0,
     contactId: 0,
     name: "",
     value: "",

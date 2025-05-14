@@ -47,6 +47,7 @@ namespace Business.Concrate
             var result = _companyDal.GetAll();
             return new SuccessDataResult<List<Company>>(result);
         }
+        
 
         public IDataResult<List<Company>> GetListInclude()
         {

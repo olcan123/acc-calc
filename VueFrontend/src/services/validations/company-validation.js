@@ -2,6 +2,7 @@ import { z } from "zod";
 
 // Zod Schema
 export const companyValidationSchema = z.object({
+    id: z.number().optional(),
     name: z.string()
       .nonempty({ message: "Şirket Adı Boş Olamaz." })
       .max(700, { message: "Şirket Adı En Fazla 700 Karakterden Oluşmalıdır." }),

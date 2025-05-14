@@ -108,7 +108,7 @@ export const useContactWarehouseStore = defineStore("contact-warehouse", () => {
     loading.value = true;
     try {
       const response = await axiosInstance.delete(
-        `warehouses/contacts/${detailId}`
+        `contactdetails/id/${detailId}`
       );
       message.value = response.data.message;
       toast.success(message.value);
@@ -126,11 +126,9 @@ export const useContactWarehouseStore = defineStore("contact-warehouse", () => {
     loading.value = true;
     try {
       const response = await axiosInstance.put(
-        `warehouses/contacts/details`,
+        `contactdetails`,
         data
       );
-
-      // ➡️ LOCAL STORE GÜNCELLE
       updateContactDetailInStore(data);
       message.value = response.data.message;
       toast.success(message.value);

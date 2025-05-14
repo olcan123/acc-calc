@@ -10,7 +10,7 @@ namespace Business.Abstract
         public IDataResult<List<BankAccountCompany>> GetListIncludeByCompanyId(int companyId); //BankAccountCompany();
         public IDataResult<List<BankAccountCompany>> GetListIncludeByBankAccountId(int bankAccountId);
         public IDataResult<BankAccountCompany> GetIncludeByBankAccountIdAndCompanyId(int bankAccountId, int companyId);
-        public IDataResult<BankAccountCompany> GetByBankAccountId(int bankAccountId);
+        public IDataResult<BankAccount> GetByBankAccountId(int bankAccountId);
         public IDataResult<BankAccountCompany> GetByCompanyId(int companyId);
 
         public IResult Add(BankAccountCompany bankAccountCompany);
