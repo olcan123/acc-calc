@@ -9,8 +9,7 @@ using Entities.Concrate;
 using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concrate
-{
-    public class WarehouseManager : IWarehouseService
+{    public class WarehouseManager : IWarehouseService
     {
         private readonly IWarehouseDal _warehouseDal;
         private readonly IAddressService _addressService;
@@ -21,6 +20,16 @@ namespace Business.Concrate
             _warehouseDal = warehouseDal;
             _addressService = addressService;
             _addressWarehouseService = addressWarehouseService;
+        }
+        
+        //
+        // Async Methods
+        //
+        
+        public async Task<IDataResult<List<Warehouse>>> GetListAsync()
+        {
+            var result = await _warehouseDal.GetAllAsync();
+            return new SuccessDataResult<List<Warehouse>>(result);
         }
 
         public IDataResult<Warehouse> GetById(int id)

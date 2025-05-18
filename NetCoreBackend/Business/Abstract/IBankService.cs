@@ -9,6 +9,7 @@ namespace Business.Abstract
 {
     public interface IBankService
     {
+        Task<IDataResult<List<Bank>>> GetListAsync();
         IDataResult<List<Bank>> GetList();
         IDataResult<Bank> GetById(int id);
         IResult Add(Bank bank);

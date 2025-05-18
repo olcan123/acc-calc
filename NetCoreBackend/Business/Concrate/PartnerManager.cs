@@ -21,6 +21,16 @@ namespace Business.Concrate
             _partnerDal = partnerDal;
             _addressPartnerService = addressPartnerService;
         }
+        
+        //
+        // Async Methods
+        //
+        
+        public async Task<IDataResult<List<Partner>>> GetListAsync()
+        {
+            var result = await _partnerDal.GetAllAsync();
+            return new SuccessDataResult<List<Partner>>(result);
+        }
 
         public IDataResult<Partner> GetById(int id)
         {

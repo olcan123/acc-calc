@@ -19,6 +19,13 @@ namespace WebAPI.Controllers
             _currencyService = currencyService;
         }
 
+        [HttpGet("async")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var result = await _currencyService.GetListAsync();
+            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
+        }
+
         [HttpGet]
         public IActionResult GetAll()
         {

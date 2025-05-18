@@ -20,6 +20,19 @@ namespace Business.Concrate
             _bankDal = bankDal;
         }
 
+        //
+        // Async Methods
+        //
+        
+        public async Task<IDataResult<List<Bank>>> GetListAsync()
+        {
+            var banks = await _bankDal.GetAllAsync();
+            return new SuccessDataResult<List<Bank>>(banks);
+        }
+        
+        //
+        // Sync Methods
+        //
 
         public IDataResult<Bank> GetById(int id)
         {

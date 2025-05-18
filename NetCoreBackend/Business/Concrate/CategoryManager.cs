@@ -21,6 +21,15 @@ namespace Business.Concrate
             _categoryDal = categoryDal;
         }
 
+        // SECTION - ASYNC METHODS
+        public async Task<IDataResult<List<Category>>> GetListAsync()
+        {
+            var result = await _categoryDal.GetAllAsync();
+            return new SuccessDataResult<List<Category>>(result);
+        }
+
+        // SECTION - SYNC METHODS
+
         public IDataResult<List<Category>> GetList()
         {
             var result = _categoryDal.GetAll();

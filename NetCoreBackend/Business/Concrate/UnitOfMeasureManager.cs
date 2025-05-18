@@ -18,7 +18,18 @@ namespace Business.Concrate
         public UnitOfMeasureManager(IUnitOfMeasureDal unitOfMeasureDal)
         {
             _unitOfMeasureDal = unitOfMeasureDal;
-        }        public IDataResult<List<UnitOfMeasure>> GetList()
+        }
+
+        //SECTION - Async Methods
+        public async Task<IDataResult<List<UnitOfMeasure>>> GetListAsync()
+        {
+            var result = await _unitOfMeasureDal.GetAllAsync();
+            return new SuccessDataResult<List<UnitOfMeasure>>(result);
+        }
+
+        //SECTION - Sync Methods
+        
+        public IDataResult<List<UnitOfMeasure>> GetList()
         {
             var result = _unitOfMeasureDal.GetAll();
             return new SuccessDataResult<List<UnitOfMeasure>>(result);

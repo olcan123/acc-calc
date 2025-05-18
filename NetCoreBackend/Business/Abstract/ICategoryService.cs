@@ -8,6 +8,10 @@ namespace Business.Abstract
 {
     public interface ICategoryService
     {
+        //SECTION - ASYNC OPERATIONS
+        Task<IDataResult<List<Category>>> GetListAsync();
+
+        //SECTION - SYNC OPERATIONS
         IDataResult<List<Category>> GetList();
         IDataResult<Category> GetById(int id);
         IResult Add(Category category);

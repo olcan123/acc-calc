@@ -9,6 +9,10 @@ namespace Business.Abstract
 {
     public interface IWarehouseService
     {
+        //SECTION - ASYNC OPERATIONS
+        Task<IDataResult<List<Warehouse>>> GetListAsync();
+        
+        //SECTION - SYNC OPERATIONS
         IDataResult<List<Warehouse>> GetList();
         IDataResult<List<Warehouse>> GetListInclude();
         IDataResult<Warehouse> GetById(int id);

@@ -19,6 +19,21 @@ namespace Business.Concrate
         {
             _vatDal = vatDal;
         }
+        
+        //
+        // Async Methods
+        //
+        
+        public async Task<IDataResult<List<Vat>>> GetListAsync()
+        {
+            var result = await _vatDal.GetAllAsync();
+            return new SuccessDataResult<List<Vat>>(result);
+        }
+        
+        //
+        // Sync Methods
+        //
+        
         public IDataResult<List<Vat>> GetList()
         {
             var result = _vatDal.GetAll();

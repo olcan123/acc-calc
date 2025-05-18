@@ -12,8 +12,7 @@ using Entities.Concrate;
 using Microsoft.EntityFrameworkCore;
 
 namespace Business.Concrate
-{
-    public class ProductManager : IProductService
+{    public class ProductManager : IProductService
     {
         private readonly IProductDal _productDal;
         private readonly IBarcodeService _barcodeService;
@@ -27,7 +26,21 @@ namespace Business.Concrate
             _productPriceService = productPriceService;
             _productCategoryService = productCategoryService;
         }
-
+        
+        //
+        // Async Methods
+        //
+        
+        public async Task<IDataResult<List<Product>>> GetListAsync()
+        {
+            var result = await _productDal.GetAllAsync();
+            return new SuccessDataResult<List<Product>>(result);
+        }
+        
+        //
+        // Sync Methods
+        //
+        
         public IDataResult<List<Product>> GetList()
         {
             var result = _productDal.GetAll();

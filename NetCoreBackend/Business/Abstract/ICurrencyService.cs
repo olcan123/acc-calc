@@ -8,6 +8,10 @@ namespace Business.Abstract
 {
     public interface ICurrencyService
     {
+        //SECTION - ASYNC OPERATIONS
+        Task<IDataResult<List<Currency>>> GetListAsync();
+
+        //SECTION - SYNC OPERATIONS
         IDataResult<List<Currency>> GetList();
         IDataResult<Currency> GetById(int id);
         IDataResult<Currency> GetByCode(string code);

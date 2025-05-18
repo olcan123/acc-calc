@@ -18,7 +18,21 @@ namespace Business.Concrate
         {
             _accountTypeDal = accountTypeDal;
         }
-
+        
+        //
+        // Async Methods
+        //
+        
+        public async Task<IDataResult<List<AccountType>>> GetListAsync()
+        {
+            var result = await _accountTypeDal.GetAllAsync();
+            return new SuccessDataResult<List<AccountType>>(result);
+        }
+        
+        //
+        // Sync Methods
+        //
+        
         public IDataResult<List<AccountType>> GetList()
         {
             var result = _accountTypeDal.GetAll();

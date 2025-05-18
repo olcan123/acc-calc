@@ -8,6 +8,7 @@ namespace Business.Abstract
 {
     public interface IAccountService
     {
+        Task<IDataResult<List<Account>>> GetListAsync();
         IDataResult<List<Account>> GetList();
         IDataResult<Account> GetById(int id);
         IDataResult<List<Account>> GetByParentId(int parentId);

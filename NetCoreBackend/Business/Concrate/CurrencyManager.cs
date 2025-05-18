@@ -19,7 +19,21 @@ namespace Business.Concrate
         {
             _currencyDal = currencyDal;
         }
-
+        
+        //
+        // Async Methods
+        //
+        
+        public async Task<IDataResult<List<Currency>>> GetListAsync()
+        {
+            var result = await _currencyDal.GetAllAsync();
+            return new SuccessDataResult<List<Currency>>(result);
+        }
+        
+        //
+        // Sync Methods
+        //
+        
         public IDataResult<List<Currency>> GetList()
         {
             var result = _currencyDal.GetAll();

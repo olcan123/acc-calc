@@ -9,6 +9,11 @@ namespace Business.Abstract
 {
     public interface IVatService
     {
+
+        //SECTION - ASYNC OPERATIONS
+        Task<IDataResult<List<Vat>>> GetListAsync();
+
+        //SECTION - SYNC OPERATIONS
         IDataResult<List<Vat>> GetList();
         IDataResult<Vat> GetById(int id);
 

@@ -8,6 +8,7 @@ namespace Business.Abstract
 {
     public interface IAccountTypeService
     {
+        Task<IDataResult<List<AccountType>>> GetListAsync();
         IDataResult<List<AccountType>> GetList();
         IDataResult<AccountType> GetById(short id);
         IResult Add(AccountType accountType);

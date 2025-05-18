@@ -8,6 +8,10 @@ namespace Business.Abstract
 {
     public interface IProductService
     {
+        //SECTION - ASYNC OPERATIONS
+        Task<IDataResult<List<Product>>> GetListAsync();
+        
+        //SECTION - SYNC OPERATIONS
         IDataResult<List<Product>> GetList();
         IDataResult<List<Product>> GetListInclude();
         IDataResult<Product> GetById(int id);

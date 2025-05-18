@@ -2,11 +2,16 @@
 using Core.Utilities.Results;
 using Entities.Concrate;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Business.Abstract
 {
     public interface IPartnerService
     {
+        //SECTION - ASYNC OPERATIONS
+        Task<IDataResult<List<Partner>>> GetListAsync();
+        
+        //SECTION - SYNC OPERATIONS
         IDataResult<List<Partner>> GetList();
         IDataResult<List<Partner>> GetListInclude();
         IDataResult<Partner> GetById(int id);
