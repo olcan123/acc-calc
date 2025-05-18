@@ -20,9 +20,10 @@ namespace Entities.Concrate
         public string AccountNumber { get; set; }
         public string IBAN { get; set; }
         public string SwiftCode { get; set; }
-        public string Currency { get; set; }
+        public int CurrencyId { get; set; }
 
         public Bank Bank { get; set; } // Navigation property
+        public Currency Currency { get; set; } // Navigation property
 
         public ICollection<BankAccountCompany> BankAccountCompanies { get; set; }
         public ICollection<BankAccountPartner> BankAccountPartners { get; set; }

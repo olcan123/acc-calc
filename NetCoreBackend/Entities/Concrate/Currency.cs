@@ -16,5 +16,6 @@ namespace Entities.Concrate
         public string Name { get; set; }
         public ICollection<LedgerEntry> LedgerEntries { get; set; }
         public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; }
+        public ICollection<BankAccount> BankAccounts { get; set; } // Navigation property
     }
 }
