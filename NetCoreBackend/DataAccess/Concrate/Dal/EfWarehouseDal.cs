@@ -11,6 +11,6 @@ namespace DataAccess.Concrate.Dal
 {
     public class EfWarehouseDal : EfEntityRepositoryBase<Warehouse, FcdAccContext>, IWarehouseDal
     {
-        
+
     }
 }

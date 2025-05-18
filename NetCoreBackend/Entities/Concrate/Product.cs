@@ -24,10 +24,11 @@ namespace Entities.Concrate
         public int VatId { get; set; }
         public Vat Vat { get; set; } // KDV Oranı
 
+
+        public ProductType ProductType { get; set; }
+
         public int UnitOfMeasureId { get; set; }
         public UnitOfMeasure UnitOfMeasure { get; set; }
-
-
 
         public ICollection<Barcode> Barcodes { get; set; }             // 1 → N
         public ICollection<ProductCategory> ProductCategories { get; set; } // N → N
@@ -35,5 +36,17 @@ namespace Entities.Concrate
         public ICollection<ProductImage> ProductImages { get; set; }   // 1 → N
         public ICollection<ProductDocument> ProductDocuments { get; set; } // 1 → N
 
+    }
+
+    public enum ProductType : short
+    {
+        StockableMerchandise = 1,
+        RawMaterial = 2,
+        WorkInProgress = 3,
+        FinishedGoods = 4,
+        Service = 5,
+        FixedAsset = 7,
+        Expense = 8,
+        Advance = 9,
     }
 }

@@ -11,6 +11,6 @@ namespace DataAccess.Concrate.Dal
 {
     public class EfVatDal : EfEntityRepositoryBase<Vat, FcdAccContext>, IVatDal
     {
-        
+
     }
 }

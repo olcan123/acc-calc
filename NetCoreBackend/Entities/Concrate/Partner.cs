@@ -8,6 +8,9 @@ public class Partner : BaseEntity
         BankAccountPartners = new HashSet<BankAccountPartner>();
         ContactPartners = new HashSet<ContactPartner>();
         AddressPartners = new HashSet<AddressPartner>();
+        PurchaseInvoices = new HashSet<PurchaseInvoice>();
+        LedgerEntries = new HashSet<LedgerEntry>();
+        PurchaseInvoiceExpenses = new HashSet<PurchaseInvoiceExpense>();
     }
 
     public int Id { get; set; }
@@ -19,9 +22,12 @@ public class Partner : BaseEntity
     public string VatNumber { get; set; }
 
     // Navigation Properties
+    public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; }
+    public ICollection<PurchaseInvoiceExpense> PurchaseInvoiceExpenses { get;}
     public ICollection<BankAccountPartner> BankAccountPartners { get; set; }
     public ICollection<ContactPartner> ContactPartners { get; set; }
     public ICollection<AddressPartner> AddressPartners { get; set; }
+    public ICollection<LedgerEntry> LedgerEntries { get; set; }
 }
 
 

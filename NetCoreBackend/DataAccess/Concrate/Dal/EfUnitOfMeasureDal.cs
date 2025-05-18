@@ -11,6 +11,6 @@ namespace DataAccess.Concrate.Dal
 {
     public class EfUnitOfMeasureDal : EfEntityRepositoryBase<UnitOfMeasure, FcdAccContext>, IUnitOfMeasureDal
     {
-        
+
     }
 }

@@ -86,7 +86,14 @@ namespace DataAccess.Concrate.EntityFramework.Context
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductDocument> ProductDocuments { get; set; }
 
-
-
+        // SECTION - Fatura ve Muhasebe
+        public DbSet<Currency> Currencies { get; set; }
+        public DbSet<Account> Accounts { get; set; }
+        public DbSet<AccountType> AccountTypes { get; set; }
+        public DbSet<Ledger> Ledgers { get; set; }
+        public DbSet<LedgerEntry> LedgerEntries { get; set; }
+        public DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
+        public DbSet<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; }
+        public DbSet<PurchaseInvoiceExpense> PurchaseInvoiceExpenses { get; set; }
     }
 }

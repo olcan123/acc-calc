@@ -11,6 +11,6 @@ namespace DataAccess.Concrate.Dal
 {
     public class EfBankAccountCompanyDal : EfEntityRepositoryBase<BankAccountCompany, FcdAccContext>, IBankAccountCompanyDal
     {
-        
+
     }
 }

@@ -11,6 +11,6 @@ namespace DataAccess.Concrate.Dal
 {
     public class EfContactPartnerDal : EfEntityRepositoryBase<ContactPartner,FcdAccContext>,IContactPartnerDal
     {
-        
+
     }
 }
