@@ -23,13 +23,12 @@
     @submit="onSubmit"
     id="bankAccountForm"
     class="grid grid-cols-1 md:grid-cols-2 gap-6"
-  >
-    <FieldSelect fieldName="bankId" labelName="Banka" :options="optionBanks" />
+  >    <FieldSelect fieldName="bankId" labelName="Banka" :options="optionBanks" />
     <FieldTextInput fieldName="branchName" labelName="Şube Adı" />
     <FieldTextInput fieldName="accountNumber" labelName="Hesap No" />
     <FieldTextInput fieldName="iban" labelName="IBAN" />
     <FieldTextInput fieldName="swiftCode" labelName="Swift Kodu" />
-    <FieldTextInput fieldName="currency" labelName="Para Birimi" />
+    <FieldSelect fieldName="currencyId" labelName="Para Birimi" :options="optionCurrencies" />
   </form>
 </template>
 
@@ -40,6 +39,7 @@ import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useBankAccountPartnerStore } from "@/stores/bank-account-partner.store";
 import { useBankStore } from "@/stores/bank.store";
+import { useCurrencyStore } from "@/stores/currency.store";
 import FieldTextInput from "@/components/Form/FieldTextInput.vue";
 import FieldSelect from "@/components/Form/FieldSelect.vue";
 import { bankAccountSchema } from "@/services/validations/bank-account-validation";
@@ -48,8 +48,11 @@ const route = useRoute();
 const { partnerId, bankAccountId } = route.params;
 
 const bankStore = useBankStore();
+const currencyStore = useCurrencyStore();
 const { optionBanks } = storeToRefs(bankStore);
+const { optionCurrencies } = storeToRefs(currencyStore);
 await bankStore.fetchBanks();
+await currencyStore.fetchCurrencies();
 
 const bankAccountStore = useBankAccountPartnerStore();
 const { bankAccount } = storeToRefs(bankAccountStore);
@@ -63,7 +66,7 @@ const { handleSubmit, setValues, meta, submitCount } = useForm({
     accountNumber: "",
     swiftCode: "",
     iban: "",
-    currency: "",
+    currencyId: "",
   },
 });
 

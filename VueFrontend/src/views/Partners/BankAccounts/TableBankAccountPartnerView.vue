@@ -36,13 +36,15 @@
           banks.find((bank) => bank.id === data.bankAccount.bankId)?.name || "—"
         }}
       </template>
-    </Column>
-
-    <Column field="bankAccount.branchName" header="Şube" />
+    </Column>    <Column field="bankAccount.branchName" header="Şube" />
     <Column field="bankAccount.accountNumber" header="Hesap No" />
     <Column field="bankAccount.iban" header="IBAN" />
     <Column field="bankAccount.swiftCode" header="SWIFT Kodu" />
-    <Column field="bankAccount.currency" header="Para Birimi" />
+    <Column header="Para Birimi">
+      <template #body="{ data }">
+        {{ currencies.find((currency) => currency.id === data.bankAccount.currencyId)?.code || "—" }}
+      </template>
+    </Column>
 
     <Column header="İşlemler" style="width: 180px">
       <template #body="{ data }">
@@ -79,6 +81,7 @@ import { useConfirm } from "primevue/useconfirm";
 import ConfirmDialog from "primevue/confirmdialog";
 import { useBankAccountPartnerStore } from "@/stores/bank-account-partner.store";
 import { useBankStore } from "@/stores/bank.store";
+import { useCurrencyStore } from "@/stores/currency.store";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 
@@ -87,11 +90,13 @@ const router = useRouter();
 const confirm = useConfirm();
 const { partnerId } = route.params;
 
+const currencyStore = useCurrencyStore();
 const bankAccountStore = useBankAccountPartnerStore();
 const bankStore = useBankStore();
 
 const { bankAccounts } = storeToRefs(bankAccountStore);
 const { banks } = storeToRefs(bankStore);
+const { currencies } = storeToRefs(currencyStore);
 
 const confirmDelete = ({ partnerId, bankAccountId }) => {
   confirm.require({
@@ -107,6 +112,7 @@ const confirmDelete = ({ partnerId, bankAccountId }) => {
   });
 };
 
+await currencyStore.fetchCurrenciesOtions();
 await bankStore.fetchBanks();
 await bankAccountStore.fetchBankAccounts(partnerId);
 </script>

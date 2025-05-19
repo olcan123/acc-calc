@@ -17,7 +17,6 @@
       Kaydet
     </button>
   </div>
-
   <!-- Form -->
   <form
     @submit="onSubmit"
@@ -29,7 +28,7 @@
     <FieldTextInput fieldName="accountNumber" labelName="Hesap No" />
     <FieldTextInput fieldName="iban" labelName="IBAN" />
     <FieldTextInput field-name="swiftCode" label-name="Swift Kodu" />
-    <FieldTextInput fieldName="currency" labelName="Para Birimi" />
+    <FieldSelect fieldName="currencyId" labelName="Para Birimi" :options="optionCurrencies" />
   </form>
 </template>
 
@@ -39,6 +38,7 @@ import { toTypedSchema } from "@vee-validate/zod";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useBankStore } from "@/stores/bank.store";
+import { useCurrencyStore } from "@/stores/currency.store";
 import { useBankAccountCompanyStore } from "@/stores/bank-account-company.store";
 import FieldTextInput from "@/components/Form/FieldTextInput.vue";
 import FieldSelect from "@/components/Form/FieldSelect.vue";
@@ -47,9 +47,12 @@ import { bankAccountSchema } from "@/services/validations/bank-account-validatio
 const route = useRoute();
 const { companyId } = route.params;
 const bankStore = useBankStore();
+const currencyStore = useCurrencyStore();
 const bankAccountStore = useBankAccountCompanyStore();
 const { optionBanks } = storeToRefs(bankStore);
+const { optionCurrencies } = storeToRefs(currencyStore);
 await bankStore.fetchBanks();
+await currencyStore.fetchCurrencies();
 
 const { handleSubmit, meta, submitCount } = useForm({
   validationSchema: toTypedSchema(bankAccountSchema),
@@ -59,7 +62,7 @@ const { handleSubmit, meta, submitCount } = useForm({
     accountNumber: "",
     iban: "",
     swiftCode: "",
-    currency: "",
+    currencyId: "",
   },
 });
 

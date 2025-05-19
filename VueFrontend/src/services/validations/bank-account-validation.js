@@ -25,9 +25,9 @@ export const bankAccountSchema = z.object({
     .max(20, "SWIFT kodu en fazla 20 karakter olabilir.")
     .optional()
     .or(z.literal("")),
-
-  currency: z
-    .string()
-    .nonempty("Para birimi boş olamaz.")
-    .max(30, "Para birimi en fazla 30 karakter olabilir."),
+  currencyId: z
+    .number({
+      required_error: "Para birimi seçimi zorunludur."
+    })
+    .min(1, "Para birimi seçimi zorunludur."),
 });
