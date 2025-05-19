@@ -20,8 +20,7 @@ namespace Business.ValidationRules.FluentValidation
 
             RuleFor(b => b.SwiftCode).MaximumLength(20).WithMessage("SWIFT Kodu En Fazla 20 Karakterden Oluşmalıdır.");
 
-            RuleFor(b => b.Currency).NotEmpty().WithMessage("Para Birimi Boş Olamaz.");
-            RuleFor(b => b.Currency).MaximumLength(30).WithMessage("Para Birimi En Fazla 30 Karakterden Oluşmalıdır.");
+            RuleFor(b => b.CurrencyId).NotEmpty().WithMessage("Para Birimi Boş Olamaz.");
 
             RuleFor(b => b.BranchName).MaximumLength(200).WithMessage("Açıklama En Fazla 200 Karakterden Oluşmalıdır.");
         }

@@ -23,42 +23,42 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetAllAsync()
         {
             var result = await _currencyService.GetListAsync();
-            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
             var result = _currencyService.GetList();
-            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpGet("id/{id}")]
         public IActionResult GetById(int id)
         {
             var result = _currencyService.GetById(id);
-            return result.Success ? Ok(result.Data) : BadRequest(result.Message);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] Currency currency)
         {
             var result = _currencyService.Add(currency);
-            return result.Success ? Ok(result.Message) : BadRequest(result.Message);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpPut]
         public IActionResult Update([FromBody] Currency currency)
         {
             var result = _currencyService.Update(currency);
-            return result.Success ? Ok(result.Message) : BadRequest(result.Message);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
 
         [HttpDelete("id/{id}")]
         public IActionResult Delete(int id)
         {
             var result = _currencyService.Delete(new Currency { Id = id });
-            return result.Success ? Ok(result.Message) : BadRequest(result.Message);
+            return result.Success ? Ok(result) : BadRequest(result);
         }
     }
 }

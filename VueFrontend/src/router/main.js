@@ -9,6 +9,7 @@ import vatRoutes from "./vat.routes";
 import unitOfMeasureRoutes from "./unit-of-measure.routes";
 import categoryRoutes from "./category.routes";
 import productRoutes from "./product.routes";
+import currencyRoutes from "./currency.routes";
 
 const routes = [  {
     path: "/",
@@ -21,7 +22,8 @@ const routes = [  {
       ...vatRoutes,
       ...unitOfMeasureRoutes,
       ...categoryRoutes,
-      ...productRoutes
+      ...productRoutes,
+      ...currencyRoutes
     ],
   },
 ];
