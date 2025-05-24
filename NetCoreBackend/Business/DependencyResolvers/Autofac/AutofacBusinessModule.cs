@@ -101,9 +101,6 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<EfAccountDal>().As<IAccountDal>();
             builder.RegisterType<AccountManager>().As<IAccountService>();
 
-            builder.RegisterType<EfAccountTypeDal>().As<IAccountTypeDal>();
-            builder.RegisterType<AccountTypeManager>().As<IAccountTypeService>();
-
             builder.RegisterType<EfCurrencyDal>().As<ICurrencyDal>();
             builder.RegisterType<CurrencyManager>().As<ICurrencyService>();
 

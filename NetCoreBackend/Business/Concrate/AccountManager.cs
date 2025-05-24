@@ -39,14 +39,12 @@ namespace Business.Concrate
         {
             var result = _accountDal.GetAll();
             return new SuccessDataResult<List<Account>>(result);
-        }
-
-        public IDataResult<Account> GetById(int id)
+        }        public IDataResult<Account> GetById(int id)
         {
             var result = _accountDal.Get(x => x.Id == id);
             return new SuccessDataResult<Account>(result);
         }
-
+        //TODO - Burada ParentId ile filtreleme yapılıyor. Bu filtreleme işlemi için bir DTO oluşturulabilir.
         public IDataResult<List<Account>> GetByParentId(int parentId)
         {
             var result = _accountDal.GetAll(x => x.ParentAccountId == parentId);

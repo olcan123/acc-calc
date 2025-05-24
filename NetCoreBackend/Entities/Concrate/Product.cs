@@ -18,6 +18,9 @@ namespace Entities.Concrate
         public string Name { get; set; }
         public string Description { get; set; }
 
+        public string PurchaseAccountId { get; set; } // Alım Hesabı
+        public string SaleAccountId { get; set; } // Satış Hesabı
+
         //Vergiler
         public float CustomsTaxRate { get; set; } // Gümrük Vergisi Oranı
         public float ExciseTaxRate { get; set; } // ÖTV Oranı
@@ -29,6 +32,8 @@ namespace Entities.Concrate
 
         public int UnitOfMeasureId { get; set; }
         public UnitOfMeasure UnitOfMeasure { get; set; }
+        public Account PurchaseAccount { get; set; } // Alım Hesabı
+        public Account SaleAccount { get; set; } // Satış Hesabı
 
         public ICollection<Barcode> Barcodes { get; set; }             // 1 → N
         public ICollection<ProductCategory> ProductCategories { get; set; } // N → N

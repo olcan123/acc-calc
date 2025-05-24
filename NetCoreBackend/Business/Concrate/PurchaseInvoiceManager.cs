@@ -84,7 +84,7 @@ namespace Business.Concrate
 
         //SECTION - Purchase Invoice
         [TransactionScopeAspect]
-        public IResult AddLocalInvoice(Ledger ledger, List<LedgerEntry> ledgerEntries, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses)
+        public IResult AddInvoice(Ledger ledger, List<LedgerEntry> ledgerEntries, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses)
         {
             _ledgerService.Add(ledger);
             purchaseInvoice.LedgerId = ledger.Id;

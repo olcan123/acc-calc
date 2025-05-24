@@ -89,7 +89,6 @@ namespace DataAccess.Concrate.EntityFramework.Context
         // SECTION - Fatura ve Muhasebe
         public DbSet<Currency> Currencies { get; set; }
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<AccountType> AccountTypes { get; set; }
         public DbSet<Ledger> Ledgers { get; set; }
         public DbSet<LedgerEntry> LedgerEntries { get; set; }
         public DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }

@@ -18,6 +18,7 @@ namespace Entities.Concrate
         public int WarehouseId { get; set; }
         public int UnitOfMeasureId { get; set; }
         public int VatId { get; set; }
+        public int PurchaseAccountId { get; set; }
         public decimal Quantity { get; set; }
 
         //SECTION - Faturadaki degerleri
@@ -50,6 +51,7 @@ namespace Entities.Concrate
         public Warehouse Warehouse { get; set; } = null!;
         public UnitOfMeasure UnitOfMeasure { get; set; } = null!;
         public Vat Vat { get; set; } = null!;
+        public Account PurchaseAccount { get; set; } = null!;
 
     }
 }

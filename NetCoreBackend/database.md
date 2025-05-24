@@ -7,32 +7,25 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
 ### Account
 
 *   **Açıklama:** Muhasebe hesaplarını temsil eder.
+*   **Enum Tanımlamaları:**
+    *   `AccountTypeOption`: Hesap türlerini tanımlar (Asset=1, Liability=2, Equity=3, Revenue=4, Expense=5).
+    *   `NormalBalanceOption`: Normal bakiye türlerini tanımlar (Debit=1, Credit=2).
 *   **Alanlar:**
-    *   `Id` (int, PK): Hesap ID'si.
-    *   `Code` (string): Hesap kodu.
-    *   `Name` (string): Hesap adi.
-    *   `AccountTypeId` (short, FK): Hesap türü ID'si (`AccountType` tablosuna referans).
-    *   `ParentAccountId` (int, FK): Üst hesap ID'si (kendine referans).
-    *   `Status` (short): Hesap durumu.
+    *   `AccountId` (int, PK): Hesap ID'si.
+    *   `AccountCode` (string): Hesap kodu.
+    *   `AccountName` (string): Hesap adı.
+    *   `ParentAccountId` (int, FK, nullable): Üst hesap ID'si (kendine referans).
+    *   `IsActive` (bool): Hesap aktif mi? (Varsayılan: true)
+    *   `IsPostable` (bool): Hesaba kayıt yapılabilir mi? (Varsayılan: true)
+    *   `NormalBalance` (enum, nullable): Normal bakiye tipi (Debit=1, Credit=2)
+    *   `AccountType` (enum): Hesap türü (Asset=1, Liability=2, Equity=3, Revenue=4, Expense=5)
+    *   `Description` (string): Açıklama.
     *   `Created` (DateTime): Oluşturulma tarihi (BaseEntity'den).
     *   `Modified` (DateTime): Güncellenme tarihi (BaseEntity'den).
 *   **İlişkiler:**
-    *   `AccountType` (Many-to-One): İlişkili hesap türü.
     *   `ParentAccount` (Many-to-One): Üst hesap.
-    *   `ChildAccounts` (One-to-Many): Alt hesaplar.
-
-### AccountType
-
-*   **Açıklama:** Muhasebe hesap türlerini temsil eder.
-*   **Alanlar:**
-    *   `Id` (short, PK): Hesap türü ID'si.
-    *   `Name` (string): Hesap türü adı.
-    *   `Description` (string): Aciklama.
-    *   `IsDebitBalance` (bool): Normal bakiyesi borç mu?
-    *   `Created` (DateTime): Oluşturulma tarihi (BaseEntity'den).
-    *   `Modified` (DateTime): Güncellenme tarihi (BaseEntity'den).
-*   **İlişkiler:**
-    *   `Accounts` (One-to-Many): Bu türe ait hesaplar.
+    *   `Children` (One-to-Many): Alt hesaplar.
+    *   `LedgerEntries` (One-to-Many): Bu hesaba ait muhasebe kayıtları.
 
 ### Address
 
@@ -97,13 +90,14 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
     *   `AccountNumber` (string): Hesap numarası.
     *   `IBAN` (string): IBAN numarası.
     *   `SwiftCode` (string): Swift kodu.
-    *   `Currency` (string): Para birimi.
+    *   `CurrencyId` (int, FK): Para birimi ID'si (`Currency` tablosuna referans).
     *   `Created` (DateTime): Oluşturulma tarihi (BaseEntity'den).
     *   `Modified` (DateTime): Güncellenme tarihi (BaseEntity'den).
 *   **İlişkiler:**
     *   `Bank` (Many-to-One): İlişkili banka.
-    *   `BankAccountCompanies` (One-to-Many): Bu hesaba sahip sirketler.
-    *   `BankAccountPartners` (One-to-Many): Bu hesaba sahip is ortaklari.
+    *   `Currency` (Many-to-One): İlişkili para birimi.
+    *   `BankAccountCompanies` (One-to-Many): Bu hesaba sahip şirketler.
+    *   `BankAccountPartners` (One-to-Many): Bu hesaba sahip iş ortakları.
 
 ### BankAccountCompany
 
@@ -233,11 +227,14 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
     *   `Modified` (DateTime): Güncellenme tarihi (BaseEntity'den).
 *   **İlişkiler:**
     *   `LedgerEntries` (One-to-Many): Bu para biriminde yapılan defter hareketleri.
-    *   `PurchaseInvoices` (One-to-Many): Bu para biriminde düzenlenen satin alma faturalari.
+    *   `PurchaseInvoices` (One-to-Many): Bu para biriminde düzenlenen satın alma faturaları.
+    *   `BankAccounts` (One-to-Many): Bu para biriminde olan banka hesapları.
 
 ### Ledger
 
 *   **Açıklama:** Defter kayıtlarını temsil eder.
+*   **Enum Tanımlamaları:**
+    *   `LedgerDocumentType`: Belge türlerini tanımlar (PurchaseInvoice=1, SalesInvoice=2, Payment=3, Receipt=4, Journal=5).
 *   **Alanlar:**
     *   `Id` (int, PK): Defter ID'si.
     *   `DocumentType` (short): Belge türü.
@@ -282,23 +279,25 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
     *   `Id` (int, PK): İş ortağı ID'si.
     *   `Name` (string): İş ortağı adı.
     *   `TradeName` (string): Ticari unvan.
-    *   `PartnerType` (enum): İş ortağı türü (`Business`, `Individual`, `Employee`).
-    *   `BusinessPartnerType` (enum, nullable): İş ortağı iş türü (`Supplier`, `Customer`, `Both`).
+    *   `PartnerType` (enum): İş ortağı türü (Business, Individual, Employee).
+    *   `BusinessPartnerType` (enum, nullable): İş ortağı iş türü (Supplier, Customer, Both).
     *   `IdentityNumber` (string): Kimlik numarası.
     *   `VatNumber` (string): Vergi numarası.
     *   `Created` (DateTime): Oluşturulma tarihi (BaseEntity'den).
     *   `Modified` (DateTime): Güncellenme tarihi (BaseEntity'den).
 *   **İlişkiler:**
-    *   `PurchaseInvoices` (One-to-Many): Is ortagina ait satin alma faturalari.
-    *   `PurchaseInvoiceExpenses` (One-to-Many): Is ortagina ait satin alma faturasi giderleri.
-    *   `BankAccountPartners` (One-to-Many): Is ortaginin banka hesaplari.
-    *   `ContactPartners` (One-to-Many): Is ortaginin iletişim bilgileri.
-    *   `AddressPartners` (One-to-Many): Is ortaginin adresleri.
-    *   `LedgerEntries` (One-to-Many): Is ortagi ile ilgili defter hareketleri.
+    *   `PurchaseInvoices` (One-to-Many): İş ortağına ait satın alma faturaları.
+    *   `PurchaseInvoiceExpenses` (One-to-Many): İş ortağına ait satın alma faturası giderleri.
+    *   `BankAccountPartners` (One-to-Many): İş ortağının banka hesapları.
+    *   `ContactPartners` (One-to-Many): İş ortağının iletişim bilgileri.
+    *   `AddressPartners` (One-to-Many): İş ortağının adresleri.
+    *   `LedgerEntries` (One-to-Many): İş ortağı ile ilgili defter hareketleri.
 
 ### Product
 
 *   **Açıklama:** Ürünleri temsil eder.
+*   **Enum Tanımlamaları:**
+    *   `ProductType`: Ürün türlerini tanımlar (StockableMerchandise=1, RawMaterial=2, WorkInProgress=3, FinishedGoods=4, Service=5, FixedAsset=7, Expense=8, Advance=9).
 *   **Alanlar:**
     *   `Id` (int, PK): Ürün ID'si.
     *   `Name` (string): Ürün adı.
@@ -306,6 +305,7 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
     *   `CustomsTaxRate` (float): Gümrük vergisi orani.
     *   `ExciseTaxRate` (float): ÖTV oranı.
     *   `VatId` (int, FK): KDV ID'si (`Vat` tablosuna referans).
+    *   `ProductType` (enum): Ürün türü.
     *   `UnitOfMeasureId` (int, FK): Ölçü birimi ID'si (`UnitOfMeasure` tablosuna referans).
     *   `Created` (DateTime): Oluşturulma tarihi (BaseEntity'den).
     *   `Modified` (DateTime): Güncellenme tarihi (BaseEntity'den).
@@ -364,12 +364,15 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
 ### ProductPrice
 
 *   **Açıklama:** Ürün fiyatlarını temsil eder.
+*   **Enum Tanımlamaları:**
+    *   `PriceCategory`: Fiyat kategorilerini tanımlar (Regular=0, Promo=1).
+    *   `PriceSide`: Fiyat yönünü tanımlar (Purchase=0, Sales=1).
 *   **Alanlar:**
     *   `Id` (int, PK): Fiyat ID'si.
     *   `ProductId` (int, FK): Ürün ID'si (`Product` tablosuna referans).
     *   `UnitPrice` (decimal): Birim fiyat.
-    *   `Category` (enum): Fiyat kategorisi (`Regular`, `Promo`). 
-    *   `Side` (enum): Fiyat yönü (`Purchase`, `Sales`).
+    *   `Category` (enum): Fiyat kategorisi (Regular=0, Promo=1). 
+    *   `Side` (enum): Fiyat yönü (Purchase=0, Sales=1).
     *   `ValidFrom` (DateTime, nullable): Geçerlilik başlangıç tarihi.
     *   `ValidTo` (DateTime, nullable): Geçerlilik bitiş tarihi.
     *   `Created` (DateTime): Oluşturulma tarihi (BaseEntity'den).
@@ -383,8 +386,8 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
 *   **Alanlar:**
     *   `Id` (int, PK): Fatura ID'si.
     *   `LedgerId` (int, FK): Defter ID'si (`Ledger` tablosuna referans).
-    *   `InvoiceType` (short): Fatura türü.
-    *   `PartnerId` (int, FK): Is ortagi ID'si (`Partner` tablosuna referans).
+    *   `InvoiceType` (enum): Fatura türü (LocalInvoice=1, ImportInvoice=2, DebitNote=3, CreditNote=4).
+    *   `PartnerId` (int, FK): İş ortağı ID'si (`Partner` tablosuna referans).
     *   `InvoiceNo` (string): Fatura numarası.
     *   `InvoiceDate` (DateTime): Fatura tarihi.
     *   `ImportPartnerDocNo` (string): İthalatçı iş ortağı belge numarası.
@@ -392,10 +395,13 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
     *   `CurrencyId` (int, FK): Para birimi ID'si (`Currency` tablosuna referans).
     *   `ExchangeRate` (decimal): Kur.
     *   `Status` (short): Durum.
+    *   `Note` (string): Fatura notu.
+    *   `IsPaid` (bool): Ödenmiş mi?
+    *   `CashPaymentAmount` (decimal): Nakit ödeme tutarı.
     *   `Created` (DateTime): Oluşturulma tarihi (BaseEntity'den).
     *   `Modified` (DateTime): Güncellenme tarihi (BaseEntity'den).
 *   **İlişkiler:**
-    *   `Partner` (Many-to-One): İlişkili is ortagi.
+    *   `Partner` (Many-to-One): İlişkili iş ortağı.
     *   `Currency` (Many-to-One): İlişkili para birimi.
     *   `Ledger` (Many-to-One): İlişkili defter.
     *   `PurchaseInvoiceLines` (One-to-Many): Fatura satırları.
@@ -404,15 +410,20 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
 ### PurchaseInvoiceExpense 
 
 *   **Açıklama:** Satın alma faturası giderlerini temsil eder.
+*   **Enum Tanımlamaları:**
+    *   `ExpenseType`: Gider türlerini tanımlar (Freight=1, Insurance=2, CustomsExpense=3, OtherExpense=99).
 *   **Alanlar:**
     *   `Id` (int, PK): Gider ID'si.
     *   `PurchaseInvoiceId` (int, FK): Fatura ID'si (`PurchaseInvoice` tablosuna referans).
     *   `PartnerId` (int, FK): İş ortağı ID'si (`Partner` tablosuna referans).
     *   `PartnerInvoiceNo` (string): İş ortağı fatura numarası.
     *   `PartnerInvoiceDate` (DateTime): Is ortagi fatura tarihi.
-    *   `ExpenseType` (short): Gider türü.
+    *   `ExpenseType` (enum): Gider türü (Freight=1, Insurance=2, CustomsExpense=3, OtherExpense=99).
+    *   `RevaluationAmount` (decimal): Yeniden Değerleme Tutarı.
     *   `Amount` (decimal): Tutar (yerel para birimi).
     *   `AmountFc` (decimal): Tutar (yabancı para birimi).
+    *   `IsPaid` (bool): Ödenmiş mi?
+    *   `CashPaymentAmount` (decimal): Nakit ödeme tutarı.
     *   `Created` (DateTime): Oluşturulma tarihi (BaseEntity'den).
     *   `Modified` (DateTime): Güncellenme tarihi (BaseEntity'den).
 *   **İlişkiler:**
@@ -439,10 +450,13 @@ Bu belge, uygulamanın veritabanı şemasını tanımlar. Her tablo, ilgili enti
     *   `ExciseTaxAmount` (decimal): ÖTV tutarı.
     *   `CustomsRate` (decimal): Gümrük oranı.
     *   `CustomsAmount` (decimal): Gümrük tutarı.
+    *   `RevaluationAmount` (decimal): Yeniden Değerleme Tutarı.
     *   `VatTaxRate` (decimal): KDV oranı.
     *   `VatTaxAmount` (decimal): KDV tutarı.
     *   `CostPrice` (decimal): Maliyet fiyatı.
     *   `CostAmount` (decimal): Maliyet tutarı.
+    *   `TotalPrice` (decimal): Toplam birim fiyat.
+    *   `TotalAmount` (decimal): Toplam tutar.
     *   `Created` (DateTime): Oluşturulma tarihi (BaseEntity'den).
     *   `Modified` (DateTime): Güncellenme tarihi (BaseEntity'den).
 *   **İlişkiler:**
