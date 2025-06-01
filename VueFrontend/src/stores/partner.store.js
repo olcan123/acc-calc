@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { axiosInstance } from "@/services/api/axiosInstance";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
@@ -14,6 +14,13 @@ export const usePartnerStore = defineStore("partner", () => {
   const loading = ref(false);
   const error = ref(null);
   const message = ref("");
+
+  const optionPartners = computed(() => {
+    return partners.value.map((partner) => ({
+      value: partner.id,
+      label: `${partner.name} - ${partner.identityNumber} - ${partner.vatNumber}`,
+    }));
+  });
 
   const fetchPartners = async () => {
     loading.value = true;
@@ -90,6 +97,7 @@ export const usePartnerStore = defineStore("partner", () => {
     message,
     loading,
     error,
+    optionPartners,
     fetchPartners,
     getPartner,
     getPartnerDetails,

@@ -37,11 +37,29 @@
 
                 <!-- Gümrük Vergisi Oranı -->
                 <FieldNumberInput fieldName="product.customsTaxRate" labelName="Gümrük Vergisi Oranı (%)"
-                    placeholderName="Gümrük vergisi oranı giriniz" :min="0" :max="100" step="0.01" />
-
-                <!-- ÖTV Oranı -->
+                    placeholderName="Gümrük vergisi oranı giriniz" :min="0" :max="100" step="0.01" /> <!-- ÖTV Oranı -->
                 <FieldNumberInput fieldName="product.exciseTaxRate" labelName="ÖTV Oranı (%)"
                     placeholderName="ÖTV oranı giriniz" :min="0" :max="100" step="0.01" />
+
+                <!-- Ürün Tipi -->
+                <FieldSelect fieldName="product.productType" labelName="Ürün Tipi" placeholderName="Ürün tipi seçiniz"
+                    :options="productTypes" />
+            </div>
+        </div>
+
+        <!-- Hesap Bilgileri -->
+        <div class="border-b pb-3">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-3">
+                Hesap Bilgileri
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Alış Hesabı -->
+                <FieldSelect fieldName="product.purchaseAccountId" labelName="Alış Hesabı"
+                    placeholderName="Alış hesabı seçiniz" :options="accounts" />
+
+                <!-- Satış Hesabı -->
+                <FieldSelect fieldName="product.saleAccountId" labelName="Satış Hesabı"
+                    placeholderName="Satış hesabı seçiniz" :options="accounts" />
             </div>
         </div>
 
@@ -72,31 +90,36 @@ import { useProductStore } from '@/stores/product.store';
 import { useCategoryStore } from '@/stores/category.store';
 import { useVatStore } from '@/stores/vat.store';
 import { useUnitOfMeasureStore } from '@/stores/unit-of-measure.store';
+import { useAccountStore } from '@/stores/account.store';
 import { productValidationSchema } from '@/services/validations/product.validation';
 import FieldTextInput from "@/components/Form/FieldTextInput.vue";
 import FieldTextArea from "@/components/Form/FieldTextArea.vue";
 import FieldSelect from "@/components/Form/FieldSelect.vue";
 import FieldNumberInput from "@/components/Form/FieldNumberInput.vue";
-import UpsertBarcodeView from "@/components/Products/UpsertBarcodeView.vue";
-import UpsertProductCategoryView from "@/components/Products/UpsertProductCategoryView.vue";
-import UpsertProductPriceView from "@/components/Products/UpsertProductPriceView.vue";
+import UpsertBarcodeView from "@/components/Views/Products/UpsertBarcodeView.vue";
+import UpsertProductCategoryView from "@/components/Views/Products/UpsertProductCategoryView.vue";
+import UpsertProductPriceView from "@/components/Views/Products/UpsertProductPriceView.vue";
 
 const router = useRouter();
 const productStore = useProductStore();
 const categoryStore = useCategoryStore();
 const vatStore = useVatStore();
 const unitOfMeasureStore = useUnitOfMeasureStore();
+const accountStore = useAccountStore();
 
 const { createProduct } = productStore;
-const { categories } = storeToRefs(categoryStore);
+const { optionCategories: categories } = storeToRefs(categoryStore);
+const { optionProductTypes: productTypes } = storeToRefs(productStore);
 const { optionVats: vats } = storeToRefs(vatStore);
 const { optionUnitOfMeasures: unitOfMeasures } = storeToRefs(unitOfMeasureStore);
+const { optionAccounts: accounts } = storeToRefs(accountStore);
 
 // Fetch data
 await Promise.all([
     categoryStore.fetchCategories(),
     vatStore.fetchVats(),
-    unitOfMeasureStore.fetchUnitOfMeasures()
+    unitOfMeasureStore.fetchUnitOfMeasures(),
+    accountStore.fetchAccounts()
 ]);
 
 // Form setup with validation
@@ -110,6 +133,9 @@ const { handleSubmit, values, meta, submitCount } = useForm({
             exciseTaxRate: 0,
             vatId: '',
             unitOfMeasureId: '',
+            productType: '',
+            purchaseAccountId: '',
+            saleAccountId: '',
         },
         barcodes: [],
         productPrices: [],
@@ -126,4 +152,6 @@ const onSubmit = handleSubmit(async (formValues) => {
     await createProduct(formValues);
 
 });
+
+//
 </script>

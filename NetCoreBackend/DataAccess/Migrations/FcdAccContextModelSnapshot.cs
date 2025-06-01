@@ -100,25 +100,36 @@ namespace DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Code")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<bool>("IsPostable")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int?>("NormalBalance")
                         .HasColumnType("integer");
@@ -131,6 +142,935 @@ namespace DataAccess.Migrations
                     b.HasIndex("ParentAccountId");
 
                     b.ToTable("Accounts");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AccountType = 1,
+                            Code = "1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Kasa, bankalar ve diğer hazır değerleri içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Paraja dhe ekuivalentët e parasë (Nakit ve Nakit Benzerleri)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AccountType = 1,
+                            Code = "1050",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Bir yıldan kısa sürede nakde çevrilecek veya alınıp satılacak finansal yatırımları içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Investimet financiare afatshkurtra (Kısa Vadeli Finansal Yatırımlar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AccountType = 1,
+                            Code = "1100",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin ticari faaliyetlerinden kaynaklanan ve diğer çeşitli kısa vadeli alacaklarını içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Llogaritë e arkëtueshme tregtare dhe të tjera (Ticari ve Diğer Alacaklar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AccountType = 1,
+                            Code = "1150",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Satılmak veya üretimde kullanılmak üzere elde tutulan ticari mallar, mamuller, yarı mamuller, hammaddeler vb. varlıkları içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Stoget (Stoklar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AccountType = 1,
+                            Code = "1200",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Yukarıdaki gruplara girmeyen diğer dönen varlık kalemlerini içerir (Gelir tahakkukları, peşin ödenmiş giderler vb.).",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Pasuritë e tjera afatshkurtra (Diğer Dönen Varlıklar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            AccountType = 1,
+                            Code = "1300",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Başka işletmelerde önemli etki sahibi olunan uzun vadeli iştirak yatırımlarını içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Investimet në pjesëmarrje (İştiraklerdeki Yatırımlar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            AccountType = 1,
+                            Code = "1350",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Başka işletmeler üzerinde kontrol gücü sahibi olunan uzun vadeli bağlı ortaklık yatırımlarını içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Investimet në filiale (Bağlı Ortaklıklardaki Yatırımlar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            AccountType = 1,
+                            Code = "1400",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Bir yıldan uzun süreyle elde tutulacak diğer finansal yatırımları içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Investimet financiare afatgjata (Uzun Vadeli Finansal Yatırımlar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 9,
+                            AccountType = 1,
+                            Code = "1450",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletme faaliyetlerinde kullanılmak üzere elde tutulan arsa, bina, makine, teçhizat gibi maddi duran varlıkları içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Prona, pajisjet dhe impiantet (Maddi Duran Varlıklar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 10,
+                            AccountType = 1,
+                            Code = "1500",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Kira geliri elde etmek veya değer artışı sağlamak amacıyla elde tutulan gayrimenkulleri içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Prona investuese (Yatırım Amaçlı Gayrimenkuller)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 11,
+                            AccountType = 1,
+                            Code = "1550",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Henüz tamamlanmamış ve aktifleştirilmemiş maddi duran varlık yatırımlarını içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Investimet në vijim (Yapılmakta Olan Yatırımlar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 12,
+                            AccountType = 1,
+                            Code = "1600",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Fiziksel varlığı olmayan ancak işletmeye fayda sağlayan haklar, şerefiye, patent gibi varlıkları içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Pasuritë e paprekshme (Maddi Olmayan Duran Varlıklar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 13,
+                            AccountType = 1,
+                            Code = "1650",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Gelecekte vergi matrahından indirilebilecek veya daha az vergi ödenmesini sağlayacak unsurlardan kaynaklanan varlıkları içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Pasuritë e shtyra tatimore (Ertelenmiş Vergi Varlıkları)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 14,
+                            AccountType = 1,
+                            Code = "1700",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Yukarıdaki duran varlık gruarına girmeyen diğer uzun vadeli varlıkları içerir.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Pasuritë e tjera afatgjata (Diğer Uzun Vadeli Varlıklar)",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 15,
+                            AccountType = 2,
+                            Code = "2000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Banka Kredileri (Nakit Avansları) / Bank Overdraft",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Mbitërheqja bankare",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 16,
+                            AccountType = 2,
+                            Code = "2050",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Ticari ve Diğer Borçlar (Trade and Other Payables)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Llogaritë e pagueshme tregtare dhe të tjera",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 17,
+                            AccountType = 2,
+                            Code = "2100",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Krediler ve Borçlar, Kısa Vadeli Kısım (Loans and Borrowings, Short-term Portion)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Kreditë dhe huatë, pjesa afatshkurtër",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 18,
+                            AccountType = 2,
+                            Code = "2150",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Ödenecek Faiz (Interest Payable)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Interesi i pagueshëm",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 19,
+                            AccountType = 2,
+                            Code = "2200",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Ödenecek Kurumlar Vergisi (Income Tax Payable)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Tatimin në fitim i pagueshëm",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 20,
+                            AccountType = 2,
+                            Code = "2250",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Kısa Vadeli Karşılıklar (Short-term Provisions)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Provizionet afatshkurta",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 21,
+                            AccountType = 2,
+                            Code = "2300",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Finansal Kiralama Yükümlülükleri, Kısa Vadeli Kısım (Lease Liabilities, Short-term Portion)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet ndaj lizingut, pjesa afatshkurtër",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 22,
+                            AccountType = 2,
+                            Code = "2350",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Diğer Kısa Vadeli Yükümlülükler (Other Short-term Liabilities)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet e tjera afatshkurtra",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 23,
+                            AccountType = 2,
+                            Code = "2400",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Krediler ve Borçlar, Uzun Vadeli Kısım (Loans and Borrowings, Long-term Portion)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Kreditë dhe huatë, pjesa afatgjatë",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 24,
+                            AccountType = 2,
+                            Code = "2450",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Uzun Vadeli Karşılıklar (Long-term Provisions)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Provizionet afatgjata",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 25,
+                            AccountType = 2,
+                            Code = "2500",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Finansal Kiralama Yükümlülükleri, Uzun Vadeli Kısım (Lease Liabilities, Long-term Portion)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet ndaj lizingut, pjesa afatgjatë",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 26,
+                            AccountType = 2,
+                            Code = "2550",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Ertelenmiş Vergi Yükümlülükleri (Deferred Tax Liabilities)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet e shtyra tatimore",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 27,
+                            AccountType = 2,
+                            Code = "2600",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Diğer Uzun Vadeli Yükümlülükler (Other Long-term Liabilities)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet e tjera afatgjata",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 28,
+                            AccountType = 3,
+                            Code = "3000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Sermaye (Share Capital)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Kapitali aksionar",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 29,
+                            AccountType = 3,
+                            Code = "3100",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Birikmiş Karlar (Retained Earnings)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Fitimet e mbajtura",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 30,
+                            AccountType = 3,
+                            Code = "3200",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Diğer Yedekler (Other Reserves)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Rezervat e tjera",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 31,
+                            AccountType = 4,
+                            Code = "4000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Gelirler / Hasılat (Revenue)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Të Hyrat",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 32,
+                            AccountType = 4,
+                            Code = "4100",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Diğer Gelirler (Other Income)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Të ardhura tjera",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 33,
+                            AccountType = 4,
+                            Code = "4200",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Finansal Gelirler (Financial Income)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Të ardhurat financiare",
+                            NormalBalance = 2
+                        },
+                        new
+                        {
+                            Id = 34,
+                            AccountType = 5,
+                            Code = "5000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Satışların Maliyeti (Cost of Sales)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Kostoja e shitjes",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 35,
+                            AccountType = 5,
+                            Code = "5100",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Dağıtım Giderleri (Distribution Expenses)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Shpenzimet e shpërndarjes",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 36,
+                            AccountType = 5,
+                            Code = "5200",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İdari Giderler (Administrative Expenses)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Shpenzimet administrative",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 37,
+                            AccountType = 5,
+                            Code = "5300",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Diğer Giderler (Other Expenses)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Shpenzimet e tjera",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 38,
+                            AccountType = 5,
+                            Code = "5400",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Finansal Giderler (Financial Expenses)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Shpenzimet financiare",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 39,
+                            AccountType = 5,
+                            Code = "5500",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Kurumlar Vergisi Gideri (Income Tax Expense)",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Shpenzimet e tatimit në fitim",
+                            NormalBalance = 1
+                        },
+                        new
+                        {
+                            Id = 40,
+                            AccountType = 1,
+                            Code = "1000.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Kasada bulunan nakit para.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Kasë (Kasa)",
+                            NormalBalance = 1,
+                            ParentAccountId = 1
+                        },
+                        new
+                        {
+                            Id = 41,
+                            AccountType = 1,
+                            Code = "1000.2000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Banka hesapları.",
+                            IsActive = true,
+                            IsPostable = false,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Banka (Banka)",
+                            NormalBalance = 1,
+                            ParentAccountId = 1
+                        },
+                        new
+                        {
+                            Id = 42,
+                            AccountType = 1,
+                            Code = "1100.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin çeşitli faaliyetlerinden doğan alacakları.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Llogaritë e arkëtueshme (Alacak Hesapları)",
+                            NormalBalance = 1,
+                            ParentAccountId = 3
+                        },
+                        new
+                        {
+                            Id = 43,
+                            AccountType = 1,
+                            Code = "1150.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Satın alınıp üzerinde değişiklik yapılmadan satılan mallar.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Mallra Tregtare (Ticari Mallar)",
+                            NormalBalance = 1,
+                            ParentAccountId = 4
+                        },
+                        new
+                        {
+                            Id = 44,
+                            AccountType = 1,
+                            Code = "1150.2000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Üretimde kullanılacak temel hammaddeler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Lëndë e parë (Hammadde)",
+                            NormalBalance = 1,
+                            ParentAccountId = 4
+                        },
+                        new
+                        {
+                            Id = 45,
+                            AccountType = 1,
+                            Code = "1150.3000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Henüz üretim süreci tamamlanmamış ürünler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Produkte në proces (Yarı Mamuller)",
+                            NormalBalance = 1,
+                            ParentAccountId = 4
+                        },
+                        new
+                        {
+                            Id = 46,
+                            AccountType = 1,
+                            Code = "1150.4000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Üretim süreci tamamlanmış, satışa hazır ürünler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Produkte të gatshme (Mamuller)",
+                            NormalBalance = 1,
+                            ParentAccountId = 4
+                        },
+                        new
+                        {
+                            Id = 47,
+                            AccountType = 1,
+                            Code = "1200.7008",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "%8 oranında alım ve giderler üzerinden hesaplanan ve indirilecek KDV.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "TVSH e zbritshme 8% (İndirilecek KDV %8)",
+                            NormalBalance = 1,
+                            ParentAccountId = 5
+                        },
+                        new
+                        {
+                            Id = 48,
+                            AccountType = 1,
+                            Code = "1200.7018",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "%18 oranında alım ve giderler üzerinden hesaplanan ve indirilecek KDV.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "TVSH e zbritshme 18% (İndirilecek KDV %18)",
+                            NormalBalance = 1,
+                            ParentAccountId = 5
+                        },
+                        new
+                        {
+                            Id = 49,
+                            AccountType = 1,
+                            Code = "1450.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletme faaliyetlerinde kullanılan demirbaşlar, makine ve teçhizat.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Nënshkrime dhe pajisje (Demirbaşlar ve Tesisat)",
+                            NormalBalance = 1,
+                            ParentAccountId = 9
+                        },
+                        new
+                        {
+                            Id = 50,
+                            AccountType = 6,
+                            Code = "1450.6000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Pajisje ve demirbaşlar için ayrılan birikmiş amortisman.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Amortizimi i pajisjeve (Ekipman Amortismanı)",
+                            NormalBalance = 2,
+                            ParentAccountId = 9
+                        },
+                        new
+                        {
+                            Id = 51,
+                            AccountType = 2,
+                            Code = "2050.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin ticari faaliyetlerinden doğan borçları.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Furnitorët (Tedarikçiler)",
+                            NormalBalance = 2,
+                            ParentAccountId = 16
+                        },
+                        new
+                        {
+                            Id = 52,
+                            AccountType = 2,
+                            Code = "2200.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin kazançları üzerinden ödenecek kurumlar vergisi.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Tatimi mbi fitimin (Kurumlar Vergisi)",
+                            NormalBalance = 2,
+                            ParentAccountId = 19
+                        },
+                        new
+                        {
+                            Id = 53,
+                            AccountType = 2,
+                            Code = "2350.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Finansal kiralama sözleşmelerinden doğan yükümlülükler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet për Qira (Kira Yükümlülükleri)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 54,
+                            AccountType = 2,
+                            Code = "2350.1100",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Finansal kiralama sözleşmelerinden doğan vergi yükümlülükleri.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet Tatim mbi Qirën (Kira Vergisi Yükümlülükleri)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 55,
+                            AccountType = 2,
+                            Code = "2350.2000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin personeline ödenecek ücret ve maaşlardan doğan yükümlülükler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet për Paga ndaj Personelit (Personel Ücret Yükümlülükleri)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 56,
+                            AccountType = 2,
+                            Code = "2350.2100",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin personeline ödenecek ücret ve maaşlardan doğan vergi yükümlülükleri.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet për Tatimin mbi Paga (Ücret Vergisi Yükümlülükleri)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 57,
+                            AccountType = 2,
+                            Code = "2350.2200",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin sosyal güvenlik primlerinden doğan yükümlülükler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet për Kontributer (Sosyal Güvenlik Prim Yükümlülükleri)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 58,
+                            AccountType = 2,
+                            Code = "2350.7000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin gümrük vergilerinden doğan yükümlülükler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet per Dogan (Gümrük Yükümlülükleri)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 59,
+                            AccountType = 2,
+                            Code = "2350.7008",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin gümrük vergilerinden doğan yükümlülükler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet për Doganë TVSH 8% (Gümrük KDV Yükümlülükleri %8)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 60,
+                            AccountType = 2,
+                            Code = "2350.7018",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin gümrük vergilerinden doğan yükümlülükler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet për Doganë TVSH 18% (Gümrük KDV Yükümlülükleri %18)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 61,
+                            AccountType = 2,
+                            Code = "2350.7100",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin akçiz vergilerinden doğan yükümlülükler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet per Akciza (ÖTV Yükümlülükleri)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 62,
+                            AccountType = 2,
+                            Code = "2350.6218",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin KDV yükümlülükleri.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet për Llogaritje TVSH 18% (KDV Hesap Yükümlülükleri %18)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 63,
+                            AccountType = 2,
+                            Code = "2350.6208",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin KDV yükümlülükleri.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet për Llogaritje TVSH 8% (KDV Hesap Yükümlülükleri %8)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 64,
+                            AccountType = 2,
+                            Code = "2350.6200",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin KDV yükümlülükleri.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Detyrimet për TVSH 0% (KDV Hesap Yükümlülükleri %0)",
+                            NormalBalance = 2,
+                            ParentAccountId = 22
+                        },
+                        new
+                        {
+                            Id = 65,
+                            AccountType = 3,
+                            Code = "3000.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin kuruluşunda veya sonraki sermaye artırımlarında ortaklar tarafından taahhüt edilen ve ödenen sermaye tutarı.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Kapitali Fillestar (Başlangıç Sermayesi)",
+                            NormalBalance = 2,
+                            ParentAccountId = 28
+                        },
+                        new
+                        {
+                            Id = 66,
+                            AccountType = 3,
+                            Code = "3100.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin içinde bulunulan hesap dönemine ait net kar veya zarar tutarı. Yıl sonunda bu hesap kapanarak birikmiş karlara veya zararlara aktarılır.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Fitimi/Humbja e Vitit Rrjedhës (Bu Yılın Karı/Zararı)",
+                            NormalBalance = 2,
+                            ParentAccountId = 29
+                        },
+                        new
+                        {
+                            Id = 67,
+                            AccountType = 3,
+                            Code = "3000.1500",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "İşletmenin önceki hesap dönemlerinden devreden ve henüz dağıtılmamış veya kapatılmamış birikmiş kar veya zarar tutarları.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Fitimet/Humbjet e Mbartura (Geçmiş Yıllar Karları/Zararları)",
+                            NormalBalance = 2,
+                            ParentAccountId = 29
+                        },
+                        new
+                        {
+                            Id = 68,
+                            AccountType = 4,
+                            Code = "4000.1000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Ticari malların satışından elde edilen gelirler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Të ardhura nga shitja e mallrave (Ticari Mal Satış Gelirleri)",
+                            NormalBalance = 2,
+                            ParentAccountId = 31
+                        },
+                        new
+                        {
+                            Id = 69,
+                            AccountType = 4,
+                            Code = "4000.2000",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Sunulan hizmetlerden elde edilen gelirler.",
+                            IsActive = true,
+                            IsPostable = true,
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Të ardhura nga ofrimi i shërbimeve (Hizmet Satış Gelirleri)",
+                            NormalBalance = 2,
+                            ParentAccountId = 31
+                        });
                 });
 
             modelBuilder.Entity("Entities.Concrate.Address", b =>
@@ -142,31 +1082,40 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Country")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Location")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("State")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Street")
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("ZipCode")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
@@ -289,32 +1238,43 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("AccountNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("BankId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("BankId1")
+                        .HasColumnType("integer");
+
                     b.Property<string>("BranchName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("CurrencyId")
                         .HasColumnType("integer");
 
                     b.Property<string>("IBAN")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("SwiftCode")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BankId");
+
+                    b.HasIndex("BankId1");
 
                     b.HasIndex("CurrencyId");
 
@@ -437,29 +1397,50 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Period")
-                        .HasColumnType("text");
+                        .HasMaxLength(5)
+                        .HasColumnType("character varying(5)");
 
                     b.Property<string>("TradeName")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("UidNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("VatNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Companies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Pintech d.o.o.",
+                            Period = "2024",
+                            TradeName = "Pintech Solutions",
+                            UidNumber = "123456789",
+                            VatNumber = "AL123456789"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Concrate.Contact", b =>
@@ -578,20 +1559,52 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Currencies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Code = "EUR",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Euro"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Code = "USD",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "US Dollar"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Code = "ALL",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Albanian Lek"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Concrate.Ledger", b =>
@@ -603,25 +1616,32 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateTime>("DocumentDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<short>("DocumentType")
-                        .HasColumnType("smallint");
+                        .HasColumnType("smallint")
+                        .HasComment("1=PurchaseInvoice, 2=SalesInvoice, 3=Payment, 4=Receipt, 5=Journal");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ReferenceNo")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<short>("Status")
-                        .HasColumnType("smallint");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((short)0);
 
                     b.HasKey("Id");
 
@@ -639,29 +1659,29 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("AccountId1")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("Credit")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
 
-                    b.Property<decimal>("CreditFc")
-                        .HasColumnType("numeric");
-
-                    b.Property<int>("CurrencyId")
+                    b.Property<int?>("CurrencyId")
                         .HasColumnType("integer");
 
-                    b.Property<decimal>("CurrencyRate")
-                        .HasColumnType("numeric");
-
                     b.Property<decimal>("Debit")
-                        .HasColumnType("numeric");
-
-                    b.Property<decimal>("DebitFc")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<int>("LedgerId")
                         .HasColumnType("integer");
@@ -670,14 +1690,17 @@ namespace DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("PartnerId")
+                    b.Property<int?>("PartnerId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
+
+                    b.HasIndex("AccountId1");
 
                     b.HasIndex("CurrencyId");
 
@@ -697,25 +1720,36 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<float>("CustomsTaxRate")
-                        .HasColumnType("real");
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<float>("ExciseTaxRate")
-                        .HasColumnType("real");
+                        .HasColumnType("decimal(5,2)");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
-                    b.Property<short>("ProductType")
-                        .HasColumnType("smallint");
+                    b.Property<int>("ProductType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PurchaseAccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SaleAccountId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("UnitOfMeasureId")
                         .HasColumnType("integer");
@@ -724,6 +1758,10 @@ namespace DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PurchaseAccountId");
+
+                    b.HasIndex("SaleAccountId");
 
                     b.HasIndex("UnitOfMeasureId");
 
@@ -765,9 +1803,11 @@ namespace DataAccess.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ProductId")
@@ -777,7 +1817,7 @@ namespace DataAccess.Migrations
                         .HasColumnType("smallint");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<DateTime?>("ValidFrom")
                         .HasColumnType("timestamp with time zone");
@@ -801,49 +1841,64 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("CashPaymentAmount")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("CurrencyId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("ExchangeRate")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
-                    b.Property<DateTime>("ImportPartnerDocDate")
+                    b.Property<DateTime?>("ImportPartnerDocDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ImportPartnerDocNo")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("InvoiceNo")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<short>("InvoiceType")
-                        .HasColumnType("smallint");
+                    b.Property<int>("InvoiceType")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsPaid")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<int>("LedgerId")
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Note")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<int>("PartnerId")
                         .HasColumnType("integer");
 
                     b.Property<short>("Status")
-                        .HasColumnType("smallint");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((short)0);
+
+                    b.Property<int>("VendorAccountId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -852,6 +1907,8 @@ namespace DataAccess.Migrations
                     b.HasIndex("LedgerId");
 
                     b.HasIndex("PartnerId");
+
+                    b.HasIndex("VendorAccountId");
 
                     b.ToTable("PurchaseInvoices");
                 });
@@ -865,24 +1922,32 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("AmountFc")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<decimal>("CashPaymentAmount")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<short>("ExpenseType")
-                        .HasColumnType("smallint");
+                    b.Property<int>("ExpenseType")
+                        .HasColumnType("integer");
 
                     b.Property<bool>("IsPaid")
-                        .HasColumnType("boolean");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("PartnerId")
@@ -892,19 +1957,27 @@ namespace DataAccess.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PartnerInvoiceNo")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("PurchaseInvoiceId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("RevaluationAmount")
-                        .HasColumnType("numeric");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18,2)")
+                        .HasDefaultValue(0m);
+
+                    b.Property<int>("VendorAccountId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PartnerId");
 
                     b.HasIndex("PurchaseInvoiceId");
+
+                    b.HasIndex("VendorAccountId");
 
                     b.ToTable("PurchaseInvoiceExpenses");
                 });
@@ -918,73 +1991,78 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("CostAmount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("CostPrice")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<decimal>("CustomsAmount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("CustomsRate")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("DiscountRate")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("ExciseTaxAmount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("ExciseTaxRate")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("ExpenseAmount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("ProductId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PurchaseAccountId")
                         .HasColumnType("integer");
 
                     b.Property<int>("PurchaseInvoiceId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Quantity")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("RevaluationAmount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("TotalAmount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("TotalPrice")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<int>("UnitOfMeasureId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("UnitPrice")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<int>("VatId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("VatTaxAmount")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<decimal>("VatTaxRate")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(18,6)");
 
                     b.Property<int>("WarehouseId")
                         .HasColumnType("integer");
@@ -992,6 +2070,8 @@ namespace DataAccess.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("PurchaseAccountId");
 
                     b.HasIndex("PurchaseInvoiceId");
 
@@ -1013,20 +2093,76 @@ namespace DataAccess.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Abbreviation")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
                     b.ToTable("UnitOfMeasures");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Abbreviation = "AD",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Adet"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Abbreviation = "KG",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Kilogram"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Abbreviation = "LT",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Litre"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Abbreviation = "MT",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Metre"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Abbreviation = "PK",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Paket"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Abbreviation = "KT",
+                            Created = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Modified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Name = "Kutu"
+                        });
                 });
 
             modelBuilder.Entity("Entities.Concrate.Vat", b =>
@@ -1111,18 +2247,27 @@ namespace DataAccess.Migrations
                     b.Property<int>("CompanyId")
                         .HasColumnType("integer");
 
+                    b.Property<int?>("CompanyId1")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
+
+                    b.HasIndex("CompanyId1");
 
                     b.ToTable("Warehouses");
                 });
@@ -1139,25 +2284,32 @@ namespace DataAccess.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("Created")
+                        .ValueGeneratedOnUpdate()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("IdentityNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<DateTime?>("Modified")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
-                        .HasColumnType("text");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<int>("PartnerType")
                         .HasColumnType("integer");
 
                     b.Property<string>("TradeName")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("VatNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -1243,7 +2395,8 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("Entities.Concrate.Account", "ParentAccount")
                         .WithMany("Children")
-                        .HasForeignKey("ParentAccountId");
+                        .HasForeignKey("ParentAccountId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ParentAccount");
                 });
@@ -1289,15 +2442,19 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Entities.Concrate.BankAccount", b =>
                 {
                     b.HasOne("Entities.Concrate.Bank", "Bank")
-                        .WithMany("BankAccounts")
+                        .WithMany()
                         .HasForeignKey("BankId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Entities.Concrate.Bank", null)
+                        .WithMany("BankAccounts")
+                        .HasForeignKey("BankId1");
 
                     b.HasOne("Entities.Concrate.Currency", "Currency")
                         .WithMany("BankAccounts")
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Bank");
@@ -1406,32 +2563,31 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Entities.Concrate.LedgerEntry", b =>
                 {
                     b.HasOne("Entities.Concrate.Account", "Account")
-                        .WithMany("LedgerEntries")
+                        .WithMany()
                         .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Entities.Concrate.Currency", "Currency")
+                    b.HasOne("Entities.Concrate.Account", null)
                         .WithMany("LedgerEntries")
-                        .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AccountId1");
+
+                    b.HasOne("Entities.Concrate.Currency", null)
+                        .WithMany("LedgerEntries")
+                        .HasForeignKey("CurrencyId");
 
                     b.HasOne("Entities.Concrate.Ledger", "Ledger")
                         .WithMany("LedgerEntries")
                         .HasForeignKey("LedgerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Partner", "Partner")
                         .WithMany("LedgerEntries")
                         .HasForeignKey("PartnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Account");
-
-                    b.Navigation("Currency");
 
                     b.Navigation("Ledger");
 
@@ -1440,17 +2596,33 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("Entities.Concrate.Product", b =>
                 {
+                    b.HasOne("Entities.Concrate.Account", "PurchaseAccount")
+                        .WithMany("PurchaseProducts")
+                        .HasForeignKey("PurchaseAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrate.Account", "SaleAccount")
+                        .WithMany("SaleProducts")
+                        .HasForeignKey("SaleAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Entities.Concrate.UnitOfMeasure", "UnitOfMeasure")
                         .WithMany("Products")
                         .HasForeignKey("UnitOfMeasureId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Concrate.Vat", "Vat")
                         .WithMany("Products")
                         .HasForeignKey("VatId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("PurchaseAccount");
+
+                    b.Navigation("SaleAccount");
 
                     b.Navigation("UnitOfMeasure");
 
@@ -1492,7 +2664,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Entities.Concrate.Currency", "Currency")
                         .WithMany("PurchaseInvoices")
                         .HasForeignKey("CurrencyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Concrate.Ledger", "Ledger")
@@ -1504,6 +2676,12 @@ namespace DataAccess.Migrations
                     b.HasOne("Partner", "Partner")
                         .WithMany("PurchaseInvoices")
                         .HasForeignKey("PartnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrate.Account", "VendorAccount")
+                        .WithMany("PurchaseInvoices")
+                        .HasForeignKey("VendorAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1512,6 +2690,8 @@ namespace DataAccess.Migrations
                     b.Navigation("Ledger");
 
                     b.Navigation("Partner");
+
+                    b.Navigation("VendorAccount");
                 });
 
             modelBuilder.Entity("Entities.Concrate.PurchaseInvoiceExpense", b =>
@@ -1519,7 +2699,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Partner", "Partner")
                         .WithMany("PurchaseInvoiceExpenses")
                         .HasForeignKey("PartnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Concrate.PurchaseInvoice", "PurchaseInvoice")
@@ -1528,17 +2708,31 @@ namespace DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Entities.Concrate.Account", "VendorAccount")
+                        .WithMany("PurchaseInvoiceExpenses")
+                        .HasForeignKey("VendorAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Partner");
 
                     b.Navigation("PurchaseInvoice");
+
+                    b.Navigation("VendorAccount");
                 });
 
             modelBuilder.Entity("Entities.Concrate.PurchaseInvoiceLine", b =>
                 {
                     b.HasOne("Entities.Concrate.Product", "Product")
-                        .WithMany()
+                        .WithMany("PurchaseInvoiceLines")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Concrate.Account", "PurchaseAccount")
+                        .WithMany("PurchaseInvoiceLines")
+                        .HasForeignKey("PurchaseAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Concrate.PurchaseInvoice", "PurchaseInvoice")
@@ -1548,24 +2742,26 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.HasOne("Entities.Concrate.UnitOfMeasure", "UnitOfMeasure")
-                        .WithMany()
+                        .WithMany("PurchaseInvoiceLines")
                         .HasForeignKey("UnitOfMeasureId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Concrate.Vat", "Vat")
-                        .WithMany()
+                        .WithMany("PurchaseInvoiceLines")
                         .HasForeignKey("VatId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Entities.Concrate.Warehouse", "Warehouse")
-                        .WithMany()
+                        .WithMany("PurchaseInvoiceLines")
                         .HasForeignKey("WarehouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Product");
+
+                    b.Navigation("PurchaseAccount");
 
                     b.Navigation("PurchaseInvoice");
 
@@ -1579,10 +2775,14 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Entities.Concrate.Warehouse", b =>
                 {
                     b.HasOne("Entities.Concrate.Company", "Company")
-                        .WithMany("Warehouses")
+                        .WithMany()
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Entities.Concrate.Company", null)
+                        .WithMany("Warehouses")
+                        .HasForeignKey("CompanyId1");
 
                     b.Navigation("Company");
                 });
@@ -1614,6 +2814,16 @@ namespace DataAccess.Migrations
                     b.Navigation("Children");
 
                     b.Navigation("LedgerEntries");
+
+                    b.Navigation("PurchaseInvoiceExpenses");
+
+                    b.Navigation("PurchaseInvoiceLines");
+
+                    b.Navigation("PurchaseInvoices");
+
+                    b.Navigation("PurchaseProducts");
+
+                    b.Navigation("SaleProducts");
                 });
 
             modelBuilder.Entity("Entities.Concrate.Address", b =>
@@ -1683,6 +2893,8 @@ namespace DataAccess.Migrations
                     b.Navigation("ProductImages");
 
                     b.Navigation("ProductPrices");
+
+                    b.Navigation("PurchaseInvoiceLines");
                 });
 
             modelBuilder.Entity("Entities.Concrate.PurchaseInvoice", b =>
@@ -1695,11 +2907,15 @@ namespace DataAccess.Migrations
             modelBuilder.Entity("Entities.Concrate.UnitOfMeasure", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("PurchaseInvoiceLines");
                 });
 
             modelBuilder.Entity("Entities.Concrate.Vat", b =>
                 {
                     b.Navigation("Products");
+
+                    b.Navigation("PurchaseInvoiceLines");
                 });
 
             modelBuilder.Entity("Entities.Concrate.Warehouse", b =>
@@ -1707,6 +2923,8 @@ namespace DataAccess.Migrations
                     b.Navigation("AddressWarehouses");
 
                     b.Navigation("ContactWarehouses");
+
+                    b.Navigation("PurchaseInvoiceLines");
                 });
 
             modelBuilder.Entity("Partner", b =>

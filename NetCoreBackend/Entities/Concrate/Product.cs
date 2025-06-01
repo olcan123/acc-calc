@@ -13,13 +13,15 @@ namespace Entities.Concrate
             ProductPrices = new HashSet<ProductPrice>();
             ProductImages = new HashSet<ProductImage>();
             ProductDocuments = new HashSet<ProductDocument>();
+            PurchaseInvoiceLines = new HashSet<PurchaseInvoiceLine>();
+            
         }
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
 
-        public string PurchaseAccountId { get; set; } // Alım Hesabı
-        public string SaleAccountId { get; set; } // Satış Hesabı
+        public int PurchaseAccountId { get; set; } // Alım Hesabı
+        public int SaleAccountId { get; set; } // Satış Hesabı
 
         //Vergiler
         public float CustomsTaxRate { get; set; } // Gümrük Vergisi Oranı
@@ -40,6 +42,7 @@ namespace Entities.Concrate
         public ICollection<ProductPrice> ProductPrices { get; set; }          // 1 → N
         public ICollection<ProductImage> ProductImages { get; set; }   // 1 → N
         public ICollection<ProductDocument> ProductDocuments { get; set; } // 1 → N
+        public ICollection<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; } = new HashSet<PurchaseInvoiceLine>();
 
     }
 

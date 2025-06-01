@@ -37,11 +37,29 @@
 
                 <!-- Gümrük Vergisi Oranı -->
                 <FieldNumberInput fieldName="product.customsTaxRate" labelName="Gümrük Vergisi Oranı (%)"
-                    placeholderName="Gümrük vergisi oranı giriniz" :min="0" :max="100" step="0.01" />
-
-                <!-- ÖTV Oranı -->
+                    placeholderName="Gümrük vergisi oranı giriniz" :min="0" :max="100" step="0.01" />                <!-- ÖTV Oranı -->
                 <FieldNumberInput fieldName="product.exciseTaxRate" labelName="ÖTV Oranı (%)"
                     placeholderName="ÖTV oranı giriniz" :min="0" :max="100" step="0.01" />
+
+                <!-- Ürün Tipi -->
+                <FieldSelect fieldName="product.productType" labelName="Ürün Tipi" 
+                    placeholderName="Ürün tipi seçiniz" :options="productTypes" />
+            </div>
+        </div>
+
+        <!-- Hesap Bilgileri -->
+        <div class="border-b pb-3">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-white mb-3">
+                Hesap Bilgileri
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Alış Hesabı -->
+                <FieldSelect fieldName="product.purchaseAccountId" labelName="Alış Hesabı" 
+                    placeholderName="Alış hesabı seçiniz" :options="accounts" />
+
+                <!-- Satış Hesabı -->
+                <FieldSelect fieldName="product.saleAccountId" labelName="Satış Hesabı" 
+                    placeholderName="Satış hesabı seçiniz" :options="accounts" />
             </div>
         </div>
 
@@ -70,13 +88,14 @@ import { useProductStore } from '@/stores/product.store';
 import { useCategoryStore } from '@/stores/category.store';
 import { useVatStore } from '@/stores/vat.store';
 import { useUnitOfMeasureStore } from '@/stores/unit-of-measure.store';
+import { useAccountStore } from '@/stores/account.store';
 import FieldTextInput from "@/components/Form/FieldTextInput.vue";
 import FieldTextArea from "@/components/Form/FieldTextArea.vue";
 import FieldSelect from "@/components/Form/FieldSelect.vue";
 import FieldNumberInput from "@/components/Form/FieldNumberInput.vue";
-import UpsertBarcodeView from "@/components/Products/UpsertBarcodeView.vue";
-import UpsertProductCategoryView from "@/components/Products/UpsertProductCategoryView.vue";
-import UpsertProductPriceView from "@/components/Products/UpsertProductPriceView.vue";
+import UpsertBarcodeView from "@/components/Views/Products/UpsertBarcodeView.vue";
+import UpsertProductCategoryView from "@/components/Views/Products/UpsertProductCategoryView.vue";
+import UpsertProductPriceView from "@/components/Views/Products/UpsertProductPriceView.vue";
 
 const route = useRoute();
 const productId = Number(route.params.id);
@@ -85,10 +104,13 @@ const productStore = useProductStore();
 const categoryStore = useCategoryStore();
 const vatStore = useVatStore();
 const unitOfMeasureStore = useUnitOfMeasureStore();
+const accountStore = useAccountStore();
 
 const { fetchProduct, updateProduct } = productStore;
+const { optionProductTypes: productTypes } = storeToRefs(productStore);
 const { optionVats: vats } = storeToRefs(vatStore);
 const { optionUnitOfMeasures: unitOfMeasures } = storeToRefs(unitOfMeasureStore);
+const { optionAccounts: accounts } = storeToRefs(accountStore);
 const { product: productData } = storeToRefs(productStore);
 
 //Fetch data for setValues
@@ -96,7 +118,8 @@ await Promise.all([
     fetchProduct(productId),
     categoryStore.fetchCategories(),
     vatStore.fetchVats(),
-    unitOfMeasureStore.fetchUnitOfMeasures()
+    unitOfMeasureStore.fetchUnitOfMeasures(),
+    accountStore.fetchAccounts()
 ]);
 
 
@@ -105,8 +128,7 @@ await Promise.all([
 
 // Form setup with validation
 const { handleSubmit, values, meta, submitCount, setValues } = useForm({
-    initialValues: {
-        product: {
+    initialValues: {        product: {
             id: productId,
             name: '',
             description: '',
@@ -114,6 +136,9 @@ const { handleSubmit, values, meta, submitCount, setValues } = useForm({
             exciseTaxRate: 0,
             vatId: '',
             unitOfMeasureId: '',
+            productType: '',
+            purchaseAccountId: '',
+            saleAccountId: '',
         },
         barcodes: [],
         productPrices: [],
@@ -121,8 +146,7 @@ const { handleSubmit, values, meta, submitCount, setValues } = useForm({
     }
 });
 
-setValues({
-    product: {
+setValues({    product: {
         id: productData.value.id,
         name: productData.value.name,
         description: productData.value.description,
@@ -130,6 +154,9 @@ setValues({
         exciseTaxRate: productData.value.exciseTaxRate,
         vatId: productData.value.vatId,
         unitOfMeasureId: productData.value.unitOfMeasureId,
+        productType: productData.value.productType,
+        purchaseAccountId: productData.value.purchaseAccountId,
+        saleAccountId: productData.value.saleAccountId,
     },
     barcodes: productData.value.barcodes || [],
     productPrices: productData.value.productPrices || [],

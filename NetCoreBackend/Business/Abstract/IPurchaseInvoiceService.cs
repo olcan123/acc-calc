@@ -17,7 +17,7 @@ namespace Business.Abstract
         IResult Delete(PurchaseInvoice purchaseInvoice);
 
         //SECTION - Purchase Invoice
-        IResult AddInvoice(Ledger ledger, List<LedgerEntry> ledgerEntries, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses);
+        IResult AddInvoice(Ledger ledger, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses);
         //    IResult UpdateLocalInvoice(Ledger ledger, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses);
     }
 }

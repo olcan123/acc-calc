@@ -10,6 +10,8 @@ import unitOfMeasureRoutes from "./unit-of-measure.routes";
 import categoryRoutes from "./category.routes";
 import productRoutes from "./product.routes";
 import currencyRoutes from "./currency.routes";
+import accountRoutes from "./account.routes";
+import purchaseRoutes from "./purchase.routes";
 
 const routes = [  {
     path: "/",
@@ -23,7 +25,9 @@ const routes = [  {
       ...unitOfMeasureRoutes,
       ...categoryRoutes,
       ...productRoutes,
-      ...currencyRoutes
+      ...currencyRoutes,
+      ...accountRoutes,
+      ...purchaseRoutes
     ],
   },
 ];

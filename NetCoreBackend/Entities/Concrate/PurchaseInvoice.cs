@@ -17,10 +17,11 @@ namespace Entities.Concrate
         public int LedgerId { get; set; }
         public InvoiceType InvoiceType { get; set; }
         public int PartnerId { get; set; }
+        public int VendorAccountId { get; set; } // Tedarikçi Hesap Kodu
         public string InvoiceNo { get; set; }
         public DateTime InvoiceDate { get; set; }
         public string ImportPartnerDocNo { get; set; }
-        public DateTime ImportPartnerDocDate { get; set; }
+        public DateTime? ImportPartnerDocDate { get; set; }
         public int CurrencyId { get; set; }
         public decimal ExchangeRate { get; set; }
         public short Status { get; set; }
@@ -32,6 +33,7 @@ namespace Entities.Concrate
         public Partner Partner { get; set; }
         public Currency Currency { get; set; }
         public Ledger Ledger { get; set; }
+        public Account VendorAccount { get; set; } // Tedarikçi Hesapları
 
         public ICollection<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; }
         public ICollection<PurchaseInvoiceExpense> PurchaseInvoiceExpenses { get; set; }

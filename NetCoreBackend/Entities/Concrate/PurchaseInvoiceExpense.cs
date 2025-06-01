@@ -8,6 +8,7 @@ namespace Entities.Concrate
         public int Id { get; set; }
         public int PurchaseInvoiceId { get; set; }
         public int PartnerId { get; set; }
+        public int VendorAccountId { get; set; } // Tedarikçi Hesap Kodu
         public string PartnerInvoiceNo { get; set; }
         public DateTime PartnerInvoiceDate { get; set; }
         public ExpenseType ExpenseType { get; set; }
@@ -18,6 +19,7 @@ namespace Entities.Concrate
         public decimal CashPaymentAmount { get; set; }
         public PurchaseInvoice PurchaseInvoice { get; set; }
         public Partner Partner { get; set; }
+        public Account VendorAccount { get; set; } // Tedarikçi Hesap Kodu ile ilişkilendirilmiş hesap
     }
 
     public enum ExpenseType : short // Temel tip olarak short kalabilir veya int olabilir.

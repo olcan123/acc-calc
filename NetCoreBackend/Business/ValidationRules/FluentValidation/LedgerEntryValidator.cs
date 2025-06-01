@@ -18,12 +18,7 @@ namespace Business.ValidationRules.FluentValidation
             RuleFor(l => l.AccountId).GreaterThan(0).WithMessage("Geçerli bir hesap seçilmelidir.");
             
             RuleFor(l => l.Description).MaximumLength(200).WithMessage("Açıklama en fazla 200 karakter olmalıdır.");
-            
-            RuleFor(l => l.CurrencyId).NotEmpty().WithMessage("Para birimi boş olamaz.");
-            RuleFor(l => l.CurrencyId).GreaterThan(0).WithMessage("Geçerli bir para birimi seçilmelidir.");
-            
-            RuleFor(l => l.CurrencyRate).NotEmpty().WithMessage("Kur bilgisi boş olamaz.");
-            RuleFor(l => l.CurrencyRate).GreaterThan(0).WithMessage("Kur değeri sıfırdan büyük olmalıdır.");
+        
             
             // Borç ve alacak tutarı aynı anda girilmemeli
             RuleFor(l => l)

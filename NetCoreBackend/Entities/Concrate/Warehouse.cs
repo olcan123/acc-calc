@@ -12,6 +12,7 @@ namespace Entities.Concrate
         {
             AddressWarehouses = new HashSet<AddressWarehouse>();
             ContactWarehouses = new HashSet<ContactWarehouse>();
+            PurchaseInvoiceLines = new HashSet<PurchaseInvoiceLine>();
         }
 
         public int Id { get; set; }
@@ -22,5 +23,6 @@ namespace Entities.Concrate
 
         public ICollection<AddressWarehouse> AddressWarehouses { get; set; }
         public ICollection<ContactWarehouse> ContactWarehouses { get; set; }
+        public ICollection<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; }
     }
 }

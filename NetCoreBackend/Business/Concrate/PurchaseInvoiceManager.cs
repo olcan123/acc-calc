@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Business.Abstract;
+using Business.Ledgerization.Strategies;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
@@ -84,8 +85,10 @@ namespace Business.Concrate
 
         //SECTION - Purchase Invoice
         [TransactionScopeAspect]
-        public IResult AddInvoice(Ledger ledger, List<LedgerEntry> ledgerEntries, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses)
+        public IResult AddInvoice(Ledger ledger, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses)
         {
+
+            var ledgerEntries = new List<LedgerEntry>();
             _ledgerService.Add(ledger);
             purchaseInvoice.LedgerId = ledger.Id;
             _purchaseInvoiceDal.Add(purchaseInvoice);
@@ -107,16 +110,13 @@ namespace Business.Concrate
             });
             _purchaseInvoiceLineService.BulkAdd(purchaseInvoiceLines);
 
-            //SECTION - Ledger Entries
-            if (ledgerEntries != null)
-            {
-                ledgerEntries.ForEach(x =>
-                {
-                    x.LedgerId = ledger.Id;
-                });
-                _ledgerEntryService.BulkAdd(ledgerEntries);
-            }
+            //SECTION - Ledgerations
+            var ledgerizations = new LedgerizationPurchaseInvoice();
 
+            ledgerEntries = ledgerizations.CreateAllPurchaseInvoiceLedgerEntries(ledger.Id, purchaseInvoice, purchaseInvoiceLines, purchaseInvoiceExpenses);
+            _ledgerEntryService.BulkAdd(ledgerEntries);
+
+            //SECTION - Ledger Entries
             return new SuccessResult("Satınalma faturası oluşturuldu");
         }
     }

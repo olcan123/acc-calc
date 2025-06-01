@@ -37,7 +37,6 @@ namespace Entities.Concrate
         public decimal CustomsRate { get; set; }
         public decimal CustomsAmount { get; set; }
         public decimal RevaluationAmount { get; set; } // Yeniden Değerleme Tutarı
-        public decimal VatTaxRate { get; set; }
         public decimal VatTaxAmount { get; set; }
 
         public decimal CostPrice { get; set; }

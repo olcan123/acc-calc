@@ -23,6 +23,8 @@ builder.Services.AddControllers()
     {
         options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
         options.SerializerSettings.Formatting = Formatting.Indented;
+        options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+        options.SerializerSettings.DateFormatString = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK"; // veya "yyyy-MM-ddTHH:mm:ss.sssZ" gibi ISO 8601 formatı
     });
 
 

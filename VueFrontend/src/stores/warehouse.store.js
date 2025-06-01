@@ -27,6 +27,15 @@ export const useWarehouseStore = defineStore("warehouse", () => {
     );
   });
 
+  const optionWarehouses = computed(() => {
+    return warehouses.value.map((warehouse) => ({
+      value: warehouse.id,
+      label: `${warehouse.name}`,
+    }));
+  });
+  
+  // 📦 Actions
+
   const fetchIncludeWarehouses = async () => {
     loading.value = true;
     try {
@@ -105,6 +114,8 @@ export const useWarehouseStore = defineStore("warehouse", () => {
     loading,
     error,
     flattenedWarehouses,
+    optionWarehouses,
+    // 📦 Actions
     fetchIncludeWarehouses,
     fetchIncludeWarehouse,
     createWarehouse,

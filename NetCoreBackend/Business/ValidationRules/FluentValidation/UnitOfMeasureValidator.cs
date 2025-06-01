@@ -8,11 +8,11 @@ using FluentValidation;
 namespace Business.ValidationRules.FluentValidation
 {
     public class UnitOfMeasureValidator : AbstractValidator<UnitOfMeasure>
-    {
-        public UnitOfMeasureValidator()
+    {        public UnitOfMeasureValidator()
         {
             RuleFor(u => u.Name).NotEmpty().WithMessage("Birim adı boş olamaz.");
-            RuleFor(u => u.Name).MaximumLength(100).WithMessage("Birim adı en fazla 100 karakterden oluşmalıdır.");
+            RuleFor(u => u.Name).MaximumLength(50).WithMessage("Birim adı en fazla 50 karakterden oluşmalıdır.");
+            
             RuleFor(u => u.Abbreviation).NotEmpty().WithMessage("Birim kısaltması boş olamaz.");
             RuleFor(u => u.Abbreviation).MaximumLength(10).WithMessage("Birim kısaltması en fazla 10 karakterden oluşmalıdır.");
         }

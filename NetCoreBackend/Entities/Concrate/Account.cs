@@ -15,7 +15,11 @@ namespace Entities.Concrate
         {
             Children = new HashSet<Account>();
             LedgerEntries = new HashSet<LedgerEntry>();
+            PurchaseInvoices = new HashSet<PurchaseInvoice>();
+            PurchaseInvoiceExpenses = new HashSet<PurchaseInvoiceExpense>();
             PurchaseInvoiceLines = new HashSet<PurchaseInvoiceLine>();
+            PurchaseProducts = new HashSet<Product>();
+            SaleProducts = new HashSet<Product>();
             // Koleksiyonlar burada başlatılır eğer varsa
         }
 
@@ -34,6 +38,8 @@ namespace Entities.Concrate
         public Account ParentAccount { get; set; } // Üst hesaba navigasyon özelliği
         public ICollection<Account> Children { get; set; } // Alt hesaplara navigasyon özelliği
         public ICollection<LedgerEntry> LedgerEntries { get; set; }
+        public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; } = null!; // Alım faturaları
+        public ICollection<PurchaseInvoiceExpense> PurchaseInvoiceExpenses { get; set; } = null!; // Alım faturası giderleri
         public ICollection<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; } = null!;
 
         public ICollection<Product> PurchaseProducts { get; set; } = null!; // Alım hesapları için ürünler
