@@ -21,9 +21,8 @@
   </div>
 
   <!-- Main Form -->
-  <form @submit="onSubmit" id="purchaseForm" class="space-y-6">
-    <!-- Purchase Invoice Info Button -->
-    <PurchaseInvoiceInfoCard @open-modal="showInvoiceModal = true" />
+  <form @submit="onSubmit" id="purchaseForm" class="space-y-6">    <!-- Purchase Invoice Info Button -->
+    <PurchaseInvoiceInfoCard />
 
     <!-- Purchase Invoice Lines Section -->
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -56,13 +55,12 @@
       <PurchaseTotalSummary />
     </div>
   </form>
-
   <!-- Purchase Invoice Modal - Always rendered to preserve form state -->
-  <PurchaseInvoiceModal v-model="showInvoiceModal" @save="saveInvoiceData" />
+  <PurchaseInvoiceModal />
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import {  computed, watch } from "vue";
 import { useForm, useFieldArray } from "vee-validate";
 import { storeToRefs } from "pinia";
 import { usePurchaseStore } from "@/stores/purchase.store";
@@ -72,6 +70,7 @@ import { useWarehouseStore } from "@/stores/warehouse.store";
 import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";
 import { useVatStore } from "@/stores/vat.store";
 import { useAccountStore } from "@/stores/account.store";
+import { useModalStore } from "@/stores/modal.store";
 
 // Components
 import PurchaseInvoiceModal from "@/components/Views/Purchase/PurchaseInvoiceModal.vue";
@@ -88,12 +87,13 @@ const warehouseStore = useWarehouseStore();
 const unitOfMeasureStore = useUnitOfMeasureStore();
 const vatStore = useVatStore();
 const accountStore = useAccountStore();
+const modalStore = useModalStore();
 
 // Store reactive data
 const { loading } = storeToRefs(purchaseStore);
 
-// Modal states
-const showInvoiceModal = ref(true); // Auto-open modal on page load
+// Auto-open modal on page load
+modalStore.openInvoiceModal();
 
 // Computed property for default warehouse ID
 const defaultWarehouseId = computed(() => {
@@ -209,11 +209,6 @@ const addNewLine = () => {
     totalPrice: 0,
     totalAmount: 0,
   });
-};
-
-// Modal handlers
-const saveInvoiceData = () => {
-  showInvoiceModal.value = false;
 };
 
 // Form submission

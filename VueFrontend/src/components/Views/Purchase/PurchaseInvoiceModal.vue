@@ -1,5 +1,5 @@
 <template>
-  <BaseModalPersistent v-model="isVisible" size="lg">
+  <BaseModalPersistent v-model="modalStore.isInvoiceModalOpen" size="lg">
     <template #header>
       <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
         Satın Alma Faturası Bilgileri
@@ -71,14 +71,14 @@
     <template #footer>
       <button
         type="button"
-        @click="closeModal"
+        @click="modalStore.closeInvoiceModal()"
         class="px-4 py-2 text-sm text-gray-800 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700"
       >
         İptal
       </button>
       <button
         type="button"
-        @click="saveModal"
+        @click="modalStore.closeInvoiceModal()"
         class="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
       >
         Kaydet
@@ -88,7 +88,7 @@
 </template>
 
 <script setup>
-import { computed, toRefs, watchEffect } from "vue";
+import { watchEffect } from "vue";
 import { storeToRefs } from "pinia";
 import { useFormContext } from "vee-validate";
 import BaseModalPersistent from "@/components/UI/Modal/BaseModalPersistent.vue";
@@ -101,11 +101,13 @@ import FieldCheckbox from "@/components/Form/FieldCheckbox.vue";
 import { usePartnerStore } from "@/stores/partner.store";
 import { useAccountStore } from "@/stores/account.store";
 import { useWarehouseStore } from "@/stores/warehouse.store";
+import { useModalStore } from "@/stores/modal.store";
 
 // Stores
 const partnerStore = usePartnerStore();
 const accountStore = useAccountStore();
 const warehouseStore = useWarehouseStore();
+const modalStore = useModalStore();
 
 // Store reactive data
 const { optionPartners } = storeToRefs(partnerStore);
@@ -121,30 +123,4 @@ watchEffect(() => {
     parentAccountFilterOptions.value(16)?.[0]?.value || null
   );
 });
-
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    default: false,
-  },
-});
-
-const { modelValue } = toRefs(props);
-
-const emit = defineEmits(["update:modelValue", "save"]);
-
-const isVisible = computed({
-  get: () => modelValue.value,
-  set: (value) => emit("update:modelValue", value),
-});
-
-const closeModal = () => {
-  isVisible.value = false;
-};
-
-const saveModal = () => {
-  // Form verilerini emit et
-  emit("save");
-  isVisible.value = false;
-};
 </script>

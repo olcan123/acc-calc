@@ -69,7 +69,7 @@
       <TableFieldNumberInput
         :fieldName="`purchaseInvoiceLines[${index}].unitPrice`"
         placeholder="0.00"
-        step="0.01"
+        step="0.000001"
         @input="handleUnitPriceChange(index, $event)"
       />
     </td>
@@ -78,7 +78,7 @@
       <TableFieldNumberInput
         :fieldName="`purchaseInvoiceLines[${index}].discountRate`"
         placeholder="0"
-        step="0.01"
+        step="0.000001"
         :max="100"
         @input="handleDiscountRateChange(index, $event)"
       />
@@ -89,7 +89,7 @@
       <TableFieldNumberInput
         :fieldName="`purchaseInvoiceLines[${index}].costPrice`"
         placeholder="0.00"
-        step="0.01"
+        step="0.000001"
         @input="handleCostPriceChange(index, $event)"
       />
     </td>
@@ -98,7 +98,7 @@
       <TableFieldNumberInput
         :fieldName="`purchaseInvoiceLines[${index}].totalPrice`"
         placeholder="0.00"
-        step="0.01"
+        step="0.000001"
         @input="handleTotalPriceChange(index, $event)"
       />
     </td>
@@ -107,7 +107,7 @@
       <TableFieldNumberInput
         :fieldName="`purchaseInvoiceLines[${index}].amount`"
         placeholder="0.00"
-        step="0.01"
+        step="0.000001"
         @input="handleAmountChange(index, $event)"
       />
     </td>
@@ -124,7 +124,7 @@
       <TableFieldNumberInput
         :fieldName="`purchaseInvoiceLines[${index}].costAmount`"
         placeholder="0.00"
-        step="0.01"
+        step="0.000001"
         @input="handleCostAmountChange(index, $event)"
       />
     </td>
@@ -144,7 +144,7 @@
       <TableFieldNumberInput
         :fieldName="`purchaseInvoiceLines[${index}].totalAmount`"
         placeholder="0.00"
-        step="0.01"
+        step="0.000001"
         @input="handleTotalAmountChange(index, $event)"
       />
     </td>
@@ -254,37 +254,31 @@ const handleDiscountRateChange = (index, event) => {
 
 const handleVatChange = (index, event) => {
   const newVatId = Number(event.target.value) || null;
-  console.log(`VAT changed for line ${index}:`, newVatId);
   onVatChange(setFieldValue, index, formValues, newVatId);
 };
 
 const handleAmountChange = (index, event) => {
   const newAmount = Number(event.target.value) || 0;
-  console.log(`Amount changed for line ${index}:`, newAmount);
   onAmountChange(setFieldValue, index, formValues, newAmount);
 };
 
 const handleTotalPriceChange = (index, event) => {
   const newTotalPrice = Number(event.target.value) || 0;
-  console.log(`Total Price changed for line ${index}:`, newTotalPrice);
   onTotalPriceChange(setFieldValue, index, formValues, newTotalPrice);
 };
 
 const handleTotalAmountChange = (index, event) => {
   const newTotalAmount = Number(event.target.value) || 0;
-  console.log(`Total Amount changed for line ${index}:`, newTotalAmount);
   onTotalAmountChange(setFieldValue, index, formValues, newTotalAmount);
 };
 
 const handleCostPriceChange = (index, event) => {
   const newCostPrice = Number(event.target.value) || 0;
-  console.log(`Cost Price changed for line ${index}:`, newCostPrice);
   onCostPriceChange(setFieldValue, index, formValues, newCostPrice);
 };
 
 const handleCostAmountChange = (index, event) => {
   const newCostAmount = Number(event.target.value) || 0;
-  console.log(`Cost Amount changed for line ${index}:`, newCostAmount);
   onCostAmountChange(setFieldValue, index, formValues, newCostAmount);
 };
 

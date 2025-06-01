@@ -1,8 +1,7 @@
 <template>
-  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
-    <button
+  <div class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">    <button
       type="button"
-      @click="$emit('openModal')"
+      @click="modalStore.openInvoiceModal()"
       class="w-full p-6 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
     >
       <div class="text-left space-y-4">
@@ -140,18 +139,17 @@ import { storeToRefs } from "pinia";
 import { useFormContext } from "vee-validate";
 import { usePartnerStore } from "@/stores/partner.store";
 import { useAccountStore } from "@/stores/account.store";
+import { useModalStore } from "@/stores/modal.store";
 
 // Stores
 const partnerStore = usePartnerStore();
 const accountStore = useAccountStore();
+const modalStore = useModalStore();
 
 const { optionPartners } = storeToRefs(partnerStore);
 const { optionAccounts } = storeToRefs(accountStore);
 
-const { values:formValues } = useFormContext();
-
-// Events
-const emit = defineEmits(["openModal"]);
+const { values: formValues } = useFormContext();
 
 // Helper functions
 const formatDate = (date) => {
