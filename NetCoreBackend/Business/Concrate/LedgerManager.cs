@@ -26,6 +26,13 @@ namespace Business.Concrate
             return new SuccessDataResult<List<Ledger>>(result);
         }
 
+        public IDataResult<List<Ledger>> GetListWithEntries()
+        {
+            var result = _ledgerDal.GetAllWithIncludeChain(
+                q => q.Include(l => l.LedgerEntries));
+            return new SuccessDataResult<List<Ledger>>(result);
+        }
+
         public IDataResult<Ledger> GetById(int id)
         {
             var result = _ledgerDal.Get(x => x.Id == id);

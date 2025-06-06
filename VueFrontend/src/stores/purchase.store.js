@@ -55,100 +55,6 @@ export const usePurchaseStore = defineStore("purchase", () => {
     }
   };
 
-  // ✅ Create Purchase Invoice
-  const createPurchase = async (purchaseData) => {
-    loading.value = true;
-    try {
-      const response = await axiosInstance.post("purchases", purchaseData);
-      message.value = response.data.message;
-      toast.success(
-        message.value || "Satın alma faturası başarıyla oluşturuldu"
-      );
-      //    router.push({ name: "table-purchase" });
-    } catch (err) {
-      error.value = err;
-      toast.error("Satın alma faturası oluşturulurken bir hata oluştu");
-      console.error("Purchase create error:", err);
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  // ✅ Update Purchase Invoice
-  const updatePurchase = async (purchaseData) => {
-    loading.value = true;
-    try {
-      const response = await axiosInstance.put("purchases", purchaseData);
-      message.value = response.data.message;
-      toast.success(
-        message.value || "Satın alma faturası başarıyla güncellendi"
-      );
-      router.push({ name: "table-purchase" });
-    } catch (err) {
-      error.value = err;
-      toast.error("Satın alma faturası güncellenirken bir hata oluştu");
-      console.error("Purchase update error:", err);
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  // ✅ Delete Purchase Invoice
-  const deletePurchase = async (id) => {
-    loading.value = true;
-    try {
-      const response = await axiosInstance.delete(`purchases/id/${id}`);
-      purchases.value = purchases.value.filter(
-        (purchase) => purchase.id !== id
-      );
-      message.value = response.data.message;
-      toast.success(message.value || "Satın alma faturası başarıyla silindi");
-    } catch (err) {
-      error.value = err;
-      toast.error("Satın alma faturası silinirken bir hata oluştu");
-      console.error("Purchase delete error:", err);
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  // ✅ Get Purchase Lines by Purchase ID
-  const fetchPurchaseLines = async (purchaseId) => {
-    loading.value = true;
-    try {
-      const response = await axiosInstance.get(`purchases/${purchaseId}/lines`);
-      return response.data.data;
-    } catch (err) {
-      error.value = err;
-      toast.error("Satın alma fatura satırları yüklenirken bir hata oluştu");
-      console.error("Purchase lines fetch error:", err);
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  // ✅ Get Purchase Expenses by Purchase ID
-  const fetchPurchaseExpenses = async (purchaseId) => {
-    loading.value = true;
-    try {
-      const response = await axiosInstance.get(
-        `purchases/${purchaseId}/expenses`
-      );
-      return response.data.data;
-    } catch (err) {
-      error.value = err;
-      toast.error("Satın alma fatura giderleri yüklenirken bir hata oluştu");
-      console.error("Purchase expenses fetch error:", err);
-      throw err;
-    } finally {
-      loading.value = false;
-    }
-  };
-
   // ✅ Add Purchase Invoice with all related data
   const addPurchaseInvoice = async (data) => {
     loading.value = true;
@@ -165,7 +71,7 @@ export const usePurchaseStore = defineStore("purchase", () => {
       toast.success(
         message.value || "Satın alma faturası başarıyla kaydedildi"
       );
-      //  router.push({ name: "table-purchase" });
+      router.push({ name: "table-purchase" });
       return response.data;
     } catch (err) {
       error.value = err;
@@ -179,6 +85,63 @@ export const usePurchaseStore = defineStore("purchase", () => {
       }
 
       console.error("Purchase invoice add error:", err);
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+  // ✅ Update Purchase Invoice
+  const updatePurchase = async (id, data) => {
+    loading.value = true;
+    try {
+      const payload = {
+        ledger: data.ledger,
+        purchaseInvoices: data.purchaseInvoices,
+        purchaseInvoiceLines: data.purchaseInvoiceLines || [],
+        purchaseInvoiceExpenses: data.purchaseInvoiceExpenses || [],
+      };
+
+      const response = await axiosInstance.put(`purchases/${id}`, payload);
+      message.value = response.data.message;
+      toast.success(
+        message.value || "Satın alma faturası başarıyla güncellendi"
+      );
+
+      return response.data;
+    } catch (err) {
+      error.value = err;
+
+      // Validation hatalarını kontrol et
+      if (err.response?.data?.errors) {
+        const validationErrors = Object.values(err.response.data.errors).flat();
+        validationErrors.forEach((errorMsg) => toast.error(errorMsg));
+      } else {
+        toast.error("Satın alma faturası güncellenirken bir hata oluştu");
+      }
+
+      console.error("Purchase invoice update error:", err);
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  // ✅ Delete Purchase Invoice
+  const deletePurchase = async (id) => {
+    loading.value = true;
+    try {
+      const response = await axiosInstance.delete(`purchases/${id}`);
+      message.value = response.data.message;
+      toast.success(message.value || "Satın alma faturası başarıyla silindi");
+
+      // Remove from purchases array
+      purchases.value = purchases.value.filter((p) => p.id !== id);
+
+      return response.data;
+    } catch (err) {
+      error.value = err;
+      toast.error("Satın alma faturası silinirken bir hata oluştu");
+      console.error("Purchase invoice delete error:", err);
       throw err;
     } finally {
       loading.value = false;
@@ -223,7 +186,6 @@ export const usePurchaseStore = defineStore("purchase", () => {
       grandTotal: Number(grandTotal.toFixed(2)),
     };
   };
-
   return {
     // State
     purchases,
@@ -238,12 +200,9 @@ export const usePurchaseStore = defineStore("purchase", () => {
     // Actions
     fetchPurchases,
     fetchPurchase,
-    createPurchase,
+    addPurchaseInvoice,
     updatePurchase,
     deletePurchase,
-    fetchPurchaseLines,
-    fetchPurchaseExpenses,
-    addPurchaseInvoice,
     calculateTotals,
   };
 });

@@ -9,6 +9,7 @@ namespace Business.Abstract
     public interface ILedgerService
     {
         IDataResult<List<Ledger>> GetList();
+        IDataResult<List<Ledger>> GetListWithEntries();
         IDataResult<Ledger> GetById(int id);
         IDataResult<Ledger> GetByIdWithEntries(int id);
         IResult Add(Ledger ledger);

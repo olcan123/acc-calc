@@ -68,7 +68,7 @@ namespace Business.Concrate
 
         public IResult BulkUpdate(List<PurchaseInvoiceLine> purchaseInvoiceLines)
         {
-            _purchaseInvoiceLineDal.MergeLinq(purchaseInvoiceLines, (s, t) => s.Id == t.Id);
+            _purchaseInvoiceLineDal.MergeLinq(purchaseInvoiceLines, (s, t) => s.PurchaseInvoiceId == t.PurchaseInvoiceId);
             return new SuccessResult("Fatura satırları güncellendi");
         }
 

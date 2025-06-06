@@ -60,19 +60,18 @@ namespace Business.Concrate
             return new SuccessResult("Fatura masrafı silindi");
         }
 
-        //SECTION - Bulk
-
-        [ValidationAspect(typeof(PurchaseInvoiceExpenseValidator))]
+        //SECTION - Bulk        [ValidationAspect(typeof(PurchaseInvoiceExpenseValidator))]
         public IResult BulkAdd(List<PurchaseInvoiceExpense> purchaseInvoiceExpenses)
         {
-            _purchaseInvoiceExpenseDal.BulkAdd(purchaseInvoiceExpenses);
+            // Use AddRange instead of BulkAdd to avoid enum casting issues with EFCore.BulkExtensions
+            _purchaseInvoiceExpenseDal.AddRange(purchaseInvoiceExpenses);
             return new SuccessResult("Fatura masrafları eklendi");
         }
 
         [ValidationAspect(typeof(PurchaseInvoiceExpenseValidator))]
         public IResult BulkUpdate(List<PurchaseInvoiceExpense> purchaseInvoiceExpenses)
         {
-            _purchaseInvoiceExpenseDal.MergeLinq(purchaseInvoiceExpenses, (source, target) => source.Id == target.Id);
+            _purchaseInvoiceExpenseDal.MergeLinq(purchaseInvoiceExpenses, (source, target) => source.PurchaseInvoiceId == target.PurchaseInvoiceId);
             return new SuccessResult("Fatura masrafları güncellendi");
         }
 

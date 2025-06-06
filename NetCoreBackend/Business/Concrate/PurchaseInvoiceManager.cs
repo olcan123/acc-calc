@@ -36,6 +36,16 @@ namespace Business.Concrate
             var result = _purchaseInvoiceDal.GetAll();
             return new SuccessDataResult<List<PurchaseInvoice>>(result);
         }
+        public IDataResult<List<PurchaseInvoice>> GetListWithIncludes()
+        {
+            var result = _purchaseInvoiceDal.GetAllWithIncludeChain(
+                q => q.Include(p => p.PurchaseInvoiceLines)
+                    .Include(p => p.PurchaseInvoiceExpenses)
+                    .Include(p => p.Ledger)
+                      .ThenInclude(l => l.LedgerEntries)
+);
+            return new SuccessDataResult<List<PurchaseInvoice>>(result);
+        }
 
         public IDataResult<List<PurchaseInvoice>> GetListByPartnerId(int partnerId)
         {
@@ -48,14 +58,13 @@ namespace Business.Concrate
             var result = _purchaseInvoiceDal.Get(x => x.Id == id);
             return new SuccessDataResult<PurchaseInvoice>(result);
         }
-
         public IDataResult<PurchaseInvoice> GetByIdWithDetails(int id)
         {
             var result = _purchaseInvoiceDal.GetWithIncludeChain(
-                q => q.Include(p => p.Partner)
-                    .Include(p => p.Currency)
-                    .Include(p => p.PurchaseInvoiceLines)
-                    .Include(p => p.PurchaseInvoiceExpenses),
+                q => q.Include(p => p.PurchaseInvoiceLines)
+                    .Include(p => p.PurchaseInvoiceExpenses)
+                    .Include(p => p.Ledger)
+                      .ThenInclude(l => l.LedgerEntries),
                 x => x.Id == id);
             return new SuccessDataResult<PurchaseInvoice>(result);
         }
@@ -91,10 +100,10 @@ namespace Business.Concrate
             var ledgerEntries = new List<LedgerEntry>();
             _ledgerService.Add(ledger);
             purchaseInvoice.LedgerId = ledger.Id;
-            _purchaseInvoiceDal.Add(purchaseInvoice);
+            Add(purchaseInvoice);
 
             //SECTION - Purchase Expenses and Lines
-            if (purchaseInvoiceExpenses != null)
+            if (purchaseInvoiceExpenses != null && purchaseInvoiceExpenses.Count > 0)
             {
                 purchaseInvoiceExpenses.ForEach(x =>
                 {
@@ -118,6 +127,54 @@ namespace Business.Concrate
 
             //SECTION - Ledger Entries
             return new SuccessResult("Satınalma faturası oluşturuldu");
+        }
+
+        [TransactionScopeAspect]
+        public IResult DeleteInvoice(int purchaseId)
+        {
+            var purchaseInvoice = GetByIdWithDetails(purchaseId).Data;
+            if (purchaseInvoice == null)
+                return new ErrorResult("Satınalma faturası bulunamadı");
+
+            _purchaseInvoiceExpenseService.BulkDeleteByPurchaseInvoiceId(purchaseInvoice.Id);
+            _purchaseInvoiceLineService.BulkDeleteByPurchaseInvoiceId(purchaseInvoice.Id);
+
+            _ledgerService.Delete(new Ledger { Id = purchaseInvoice.LedgerId });
+            _ledgerEntryService.BulkDeleteByLedgerId(purchaseInvoice.LedgerId);
+            Delete(purchaseInvoice);
+            return new SuccessResult("Satınalma faturası silindi");
+        }
+
+        [TransactionScopeAspect]
+        public IResult UpdateInvoice(Ledger ledger, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses)
+        {
+            var ledgerEntries = new List<LedgerEntry>();
+            _ledgerService.Update(ledger);
+            Update(purchaseInvoice);
+
+            //SECTION - Purchase Expenses and Lines
+            if (purchaseInvoiceExpenses != null && purchaseInvoiceExpenses.Count > 0)
+            {
+                purchaseInvoiceExpenses.ForEach(x =>
+                {
+                    x.PurchaseInvoiceId = purchaseInvoice.Id;
+                });
+                _purchaseInvoiceExpenseService.BulkUpdate(purchaseInvoiceExpenses);
+            }
+
+            purchaseInvoiceLines.ForEach(x =>
+            {
+                x.PurchaseInvoiceId = purchaseInvoice.Id;
+            });
+            _purchaseInvoiceLineService.BulkUpdate(purchaseInvoiceLines);
+
+            //SECTION - Ledgerations
+            var ledgerizations = new LedgerizationPurchaseInvoice();
+
+            ledgerEntries = ledgerizations.CreateAllPurchaseInvoiceLedgerEntries(ledger.Id, purchaseInvoice, purchaseInvoiceLines, purchaseInvoiceExpenses);
+            _ledgerEntryService.BulkUpdate(ledgerEntries);
+
+            return new SuccessResult("Satınalma faturası güncellendi");
         }
     }
 }

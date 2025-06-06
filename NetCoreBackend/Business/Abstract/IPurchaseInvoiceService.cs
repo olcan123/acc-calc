@@ -9,6 +9,7 @@ namespace Business.Abstract
     public interface IPurchaseInvoiceService
     {
         IDataResult<List<PurchaseInvoice>> GetList();
+        IDataResult<List<PurchaseInvoice>> GetListWithIncludes();
         IDataResult<List<PurchaseInvoice>> GetListByPartnerId(int partnerId);
         IDataResult<PurchaseInvoice> GetById(int id);
         IDataResult<PurchaseInvoice> GetByIdWithDetails(int id);
@@ -18,6 +19,7 @@ namespace Business.Abstract
 
         //SECTION - Purchase Invoice
         IResult AddInvoice(Ledger ledger, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses);
-        //    IResult UpdateLocalInvoice(Ledger ledger, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses);
+        IResult DeleteInvoice(int purchaseInvoiceId);
+        IResult UpdateInvoice(Ledger ledger, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceLine> purchaseInvoiceLines, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses);
     }
 }

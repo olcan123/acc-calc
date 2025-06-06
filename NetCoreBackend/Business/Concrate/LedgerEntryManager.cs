@@ -66,7 +66,7 @@ namespace Business.Concrate
         public IResult BulkUpdate(List<LedgerEntry> ledgerEntries)
         {
             _ledgerEntryDal.MergeLinq(ledgerEntries, (source, target) =>
-                source.Id == target.Id);
+                source.LedgerId == target.LedgerId);
             return new SuccessResult("Muhasebe fişi satırları güncellendi");
         }
 

@@ -6,7 +6,8 @@ using Entities.Concrate; // Bu namespace projenizde doğru olmalı
 namespace Business.Ledgerization.Strategies
 {
     public class LedgerizationPurchaseInvoice
-    {        /// <summary>
+    {
+        /// <summary>
         /// Satın alma faturası için tüm defter kayıtlarını oluşturur.
         /// </summary>
         /// <param name="ledgerId">Defter ID'si.</param>
@@ -120,7 +121,7 @@ namespace Business.Ledgerization.Strategies
                     Credit = customsTaxAmount,
                 });
             }
-              // 6. ÖTV için Defterleştirme (Sadece ithalat faturası ve ilgili ürünlerde)
+            // 6. ÖTV için Defterleştirme (Sadece ithalat faturası ve ilgili ürünlerde)
             // ÖTV sadece ithalat faturalarında ve belirli ürün kategorilerinde uygulanır.
             if (purchaseInvoice.InvoiceType == InvoiceType.ImportInvoice && purchaseInvoiceLines.Any(x => x.ExciseTaxAmount > 0))
             {
@@ -143,13 +144,13 @@ namespace Business.Ledgerization.Strategies
             if (purchaseInvoiceExpenses != null && purchaseInvoiceExpenses.Any(x => x.Amount > 0))
             {
                 var otherVendorEntries = RegisterOtherVendorLedgerization(ledgerId, purchaseInvoice, purchaseInvoiceExpenses);
-                
+
                 // Satır numarasını devam ettir
                 foreach (var entry in otherVendorEntries)
                 {
                     entry.LineNo = lineNo++;
                 }
-                
+
                 ledgerEntries.AddRange(otherVendorEntries);
             }
 
@@ -187,12 +188,12 @@ namespace Business.Ledgerization.Strategies
                 _ => throw new ArgumentException($"Geçersiz KDV ID: {vatId} - İthalat alacak hesabı belirlenemedi."),
             };
         }        /// <summary>
-        /// Satın alma faturası masrafları için diğer satıcı hesaplarının defterleştirilmesi.
-        /// </summary>
-        /// <param name="ledgerId">Defter ID'si.</param>
-        /// <param name="purchaseInvoice">Satın alma faturası nesnesi.</param>
-        /// <param name="purchaseInvoiceExpenses">Satın alma faturası masrafları listesi.</param>
-        /// <returns>Oluşturulan defter kayıtlarının listesi.</returns>
+                 /// Satın alma faturası masrafları için diğer satıcı hesaplarının defterleştirilmesi.
+                 /// </summary>
+                 /// <param name="ledgerId">Defter ID'si.</param>
+                 /// <param name="purchaseInvoice">Satın alma faturası nesnesi.</param>
+                 /// <param name="purchaseInvoiceExpenses">Satın alma faturası masrafları listesi.</param>
+                 /// <returns>Oluşturulan defter kayıtlarının listesi.</returns>
         private List<LedgerEntry> RegisterOtherVendorLedgerization(int ledgerId, PurchaseInvoice purchaseInvoice, List<PurchaseInvoiceExpense> purchaseInvoiceExpenses)
         {
             List<LedgerEntry> ledgerEntries = new List<LedgerEntry>();

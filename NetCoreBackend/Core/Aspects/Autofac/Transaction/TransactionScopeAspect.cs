@@ -23,6 +23,8 @@ namespace Core.Aspects.Autofac.Transaction
                 catch (System.Exception e)
                 {
                     transactionScope.Dispose();
+                    // Log the exception veya başka bir işlem
+                    Console.WriteLine($"Transaction failed: {e.Message}");
                     throw;
                 }
             }

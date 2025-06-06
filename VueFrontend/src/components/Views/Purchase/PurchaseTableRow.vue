@@ -40,9 +40,7 @@
         placeholder="0"
         @input="handleQuantityChange(index, $event)"
       />
-    </td>
-
-    <!-- Unit of Measure -->
+    </td>    <!-- Unit of Measure -->
     <td class="px-3 py-3 min-w-[100px]">
       <TableFieldSelect
         :fieldName="`purchaseInvoiceLines[${index}].unitOfMeasureId`"
@@ -50,6 +48,30 @@
         placeholder="Birim"
       />
     </td>
+    
+    <!-- Import-only tax rate columns -->
+    <!-- Excise Tax Rate (ÖTV %) -->
+    <td v-if="isImportPurchase" class="px-3 py-3 min-w-[80px]">
+      <TableFieldNumberInput
+        :fieldName="`purchaseInvoiceLines[${index}].exciseTaxRate`"
+        placeholder="0"
+        step="0.01"
+        :max="100"
+        @input="handleExciseTaxRateChange(index, $event)"
+      />
+    </td>
+    
+    <!-- Customs Rate (Gümrük %) -->
+    <td v-if="isImportPurchase" class="px-3 py-3 min-w-[80px]">
+      <TableFieldNumberInput
+        :fieldName="`purchaseInvoiceLines[${index}].customsRate`"
+        placeholder="0"
+        step="0.01"
+        :max="100"
+        @input="handleCustomsRateChange(index, $event)"
+      />
+    </td>
+    
     <!-- VAT -->
     <td
       class="px-3 py-3 min-w-[80px] border-r-2 border-gray-300 dark:border-gray-600"
@@ -110,15 +132,41 @@
         step="0.000001"
         @input="handleAmountChange(index, $event)"
       />
-    </td>
-    <!-- Discount Amount -->
+    </td>    <!-- Discount Amount -->
     <td class="px-3 py-3 min-w-[100px]">
       <div
         class="p-2 bg-gray-50 dark:bg-gray-700 rounded text-center font-medium text-gray-800 dark:text-gray-200"
       >
         {{ field.value.discountAmount || "0.00" }}
       </div>
+    </td>    <!-- Expense Amount -->
+    <td class="px-3 py-3 min-w-[100px]">
+      <div
+        class="p-2 bg-blue-50 dark:bg-blue-900 rounded text-center font-medium text-blue-800 dark:text-blue-200"
+      >
+        {{ field.value.expenseAmount || "0.00" }}
+      </div>
     </td>
+    
+    <!-- Import-only tax amount columns -->
+    <!-- Excise Tax Amount (ÖTV Tutarı) -->
+    <td v-if="isImportPurchase" class="px-3 py-3 min-w-[100px]">
+      <div
+        class="p-2 bg-orange-50 dark:bg-orange-900 rounded text-center font-medium text-orange-800 dark:text-orange-200"
+      >
+        {{ field.value.exciseTaxAmount || "0.00" }}
+      </div>
+    </td>
+    
+    <!-- Customs Amount (Gümrük Tutarı) -->
+    <td v-if="isImportPurchase" class="px-3 py-3 min-w-[100px]">
+      <div
+        class="p-2 bg-purple-50 dark:bg-purple-900 rounded text-center font-medium text-purple-800 dark:text-purple-200"
+      >
+        {{ field.value.customsAmount || "0.00" }}
+      </div>
+    </td>
+    
     <!-- Cost Amount -->
     <td class="px-3 py-3 min-w-[100px]">
       <TableFieldNumberInput
@@ -163,6 +211,8 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useFormContext, useFieldArray } from "vee-validate";
 import TableFieldNumberInput from "@/components/TableForm/TableFieldNumberInput.vue";
@@ -173,6 +223,12 @@ import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";
 import { useAccountStore } from "@/stores/account.store";
 import { useVatStore } from "@/stores/vat.store";
 import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations.js";
+
+// Check if this is an import purchase using route
+const route = useRoute();
+const isImportPurchase = computed(() => {
+  return route.path.includes("/import");
+});
 
 // Stores
 const productStore = useProductStore();
@@ -280,6 +336,27 @@ const handleCostPriceChange = (index, event) => {
 const handleCostAmountChange = (index, event) => {
   const newCostAmount = Number(event.target.value) || 0;
   onCostAmountChange(setFieldValue, index, formValues, newCostAmount);
+};
+
+// Import-only tax handlers
+const handleExciseTaxRateChange = (index, event) => {
+  const newExciseTaxRate = Number(event.target.value) || 0;
+  setFieldValue(`purchaseInvoiceLines[${index}].exciseTaxRate`, newExciseTaxRate);
+  
+  // Trigger recalculation with the updated values
+  setTimeout(() => {
+    updateCalculations(setFieldValue, index, formValues, null);
+  }, 50);
+};
+
+const handleCustomsRateChange = (index, event) => {
+  const newCustomsRate = Number(event.target.value) || 0;
+  setFieldValue(`purchaseInvoiceLines[${index}].customsRate`, newCustomsRate);
+  
+  // Trigger recalculation with the updated values
+  setTimeout(() => {
+    updateCalculations(setFieldValue, index, formValues, null);
+  }, 50);
 };
 
 const removeLine = (index) => {

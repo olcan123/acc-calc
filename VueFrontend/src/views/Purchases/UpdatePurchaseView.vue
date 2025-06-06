@@ -6,26 +6,44 @@
     <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">
       {{
         isImportPurchase
-          ? "İthalat Satın Alma Faturası Oluştur"
-          : "Lokal Satın Alma Faturası Oluştur"
+          ? "İthalat Satın Alma Faturası Düzenle"
+          : "Lokal Satın Alma Faturası Düzenle"
       }}
     </h2>
 
-    <button
-      type="submit"
-      form="purchaseForm"
-      :disabled="loading || (submitCount > 0 && !meta.valid)"
-      class="flex items-center justify-center gap-2 text-white font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none transition w-full sm:w-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed"
-    >
-      <span v-if="loading">⏳</span>
-      <span v-else-if="submitCount > 0 && !meta.valid">🚫</span>
-      <span v-else>💾</span>
-      {{ loading ? "Kaydediliyor..." : "Kaydet" }}
-    </button>
+    <div class="flex gap-2 w-full sm:w-auto">
+      <button
+        type="button"
+        @click="goBack"
+        class="flex items-center justify-center gap-2 text-gray-700 bg-gray-200 hover:bg-gray-300 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none transition dark:bg-gray-600 dark:text-white dark:hover:bg-gray-700 dark:focus:ring-gray-800"
+      >
+        <span>←</span>
+        Geri
+      </button>
+      <button
+        type="submit"
+        form="purchaseForm"
+        :disabled="loading || (submitCount > 0 && !meta.valid)"
+        class="flex items-center justify-center gap-2 text-white font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none transition w-full sm:w-auto bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed"
+      >
+        <span v-if="loading">⏳</span>
+        <span v-else-if="submitCount > 0 && !meta.valid">🚫</span>
+        <span v-else>💾</span>
+        {{ loading ? "Güncelleniyor..." : "Güncelle" }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div v-if="initialLoading" class="flex justify-center items-center py-12">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+      <p class="text-gray-600 dark:text-gray-400">Fatura yükleniyor...</p>
+    </div>
   </div>
 
   <!-- Main Form -->
-  <form @submit="onSubmit" id="purchaseForm" class="space-y-6">
+  <form v-else @submit="onSubmit" id="purchaseForm" class="space-y-6">
     <!-- Purchase Invoice Info Button -->
     <PurchaseInvoiceInfoCard />
     <!-- Purchase Invoice Lines Section -->
@@ -75,8 +93,8 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
-import { useRoute } from "vue-router";
+import { computed, watch, ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useForm, useFieldArray } from "vee-validate";
 import { storeToRefs } from "pinia";
 import { usePurchaseStore } from "@/stores/purchase.store";
@@ -89,6 +107,7 @@ import { useAccountStore } from "@/stores/account.store";
 import { useModalStore } from "@/stores/modal.store";
 import { useCurrencyStore } from "@/stores/currency.store";
 import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations";
+import { useToast } from "vue-toastification";
 
 // Components
 import PurchaseInvoiceModal from "@/components/Views/Purchase/PurchaseInvoiceModal.vue";
@@ -108,8 +127,13 @@ const accountStore = useAccountStore();
 const modalStore = useModalStore();
 const currencyStore = useCurrencyStore();
 
-// Route to determine invoice type
+// Route and router
 const route = useRoute();
+const router = useRouter();
+const toast = useToast();
+
+// Purchase ID from route params
+const purchaseId = computed(() => parseInt(route.params.id));
 
 // Check if this is an import purchase
 const isImportPurchase = computed(() => {
@@ -119,79 +143,8 @@ const isImportPurchase = computed(() => {
 // Store reactive data
 const { loading } = storeToRefs(purchaseStore);
 
-// Auto-open modal on page load
-modalStore.openInvoiceModal();
-
-// Computed property for default warehouse ID
-const defaultWarehouseId = computed(() => {
-  return formValues.purchaseInvoices?.[0]?.warehouseId || null;
-});
-
-// Create initial values based on route type
-const createInitialValues = () => {
-  const baseValues = {
-    ledger: {
-      documentType: 1, // Purchase Invoice
-      documentDate: new Date().toISOString().split("T")[0],
-      referenceNo: "",
-      description: isImportPurchase.value
-        ? "İthalat Satın Alma Faturası"
-        : "Lokal Satın Alma Faturası",
-      status: 1,
-    },
-    purchaseInvoices: [
-      {
-        invoiceType: isImportPurchase.value ? 2 : 1, // ImportInvoice: 2, LocalInvoice: 1
-        partnerId: null,
-        vendorAccountId: null,
-        invoiceNo: "",
-        invoiceDate: new Date().toISOString().split("T")[0],
-        status: 1,
-        note: "",
-        isPaid: false,
-        cashPaymentAmount: 0,
-        currencyId: 1, // Default to first currency
-        exchangeRate: 1,
-      },
-    ],
-    purchaseInvoiceExpenses: [],
-    purchaseInvoiceLines: [
-      {
-        productId: null,
-        warehouseId: null,
-        unitOfMeasureId: null,
-        vatId: null,
-        purchaseAccountId: null,
-        quantity: 1,
-        unitPrice: 0,
-        amount: 0,
-        expenseAmount: 0,
-        discountRate: 0,
-        discountAmount: 0,
-        exciseTaxRate: 0,
-        exciseTaxAmount: 0,
-        customsRate: 0,
-        customsAmount: 0,
-        revaluationAmount: 0,
-        vatTaxAmount: 0,
-        costPrice: 0,
-        costAmount: 0,
-        totalPrice: 0,
-        totalAmount: 0,
-      },
-    ],
-  };
-
-  // Add currency fields for import purchases
-  if (isImportPurchase.value) {
-    baseValues.purchaseInvoices[0].importPartnerDocNo = "";
-    baseValues.purchaseInvoices[0].importPartnerDocDate = new Date()
-      .toISOString()
-      .split("T")[0];
-  }
-
-  return baseValues;
-};
+// Initial loading state
+const initialLoading = ref(true);
 
 // Form setup
 const {
@@ -202,23 +155,168 @@ const {
   setFieldValue,
   resetForm,
 } = useForm({
-  initialValues: createInitialValues(),
+  initialValues: createEmptyInitialValues(),
 });
 
 // Field array for invoice lines
-const { push } = useFieldArray("purchaseInvoiceLines");
+const { push, remove } = useFieldArray("purchaseInvoiceLines");
 
 // Initialize purchase calculations composable
 const { updateExpenseDistribution, calculateLineValues, updateCalculations } =
   usePurchaseCalculations(vatStore);
 
+// Create empty initial values
+function createEmptyInitialValues() {
+  return {
+    ledger: {
+      documentType: 1,
+      documentDate: new Date().toISOString().split("T")[0],
+      referenceNo: "",
+      description: "",
+      status: 1,
+    },
+    purchaseInvoices: [
+      {
+        invoiceType: isImportPurchase.value ? 2 : 1,
+        partnerId: null,
+        vendorAccountId: null,
+        invoiceNo: "",
+        invoiceDate: new Date().toISOString().split("T")[0],
+        status: 1,
+        note: "",
+        isPaid: false,
+        cashPaymentAmount: 0,
+        currencyId: 1,
+        exchangeRate: 1,
+        importPartnerDocNo: "",
+        importPartnerDocDate: new Date().toISOString().split("T")[0],
+      },
+    ],
+    purchaseInvoiceExpenses: [],
+    purchaseInvoiceLines: [],
+  };
+}
+
+// Format date for form
+const formatDateForForm = (date) => {
+  if (!date) return new Date().toISOString().split("T")[0];
+  return new Date(date).toISOString().split("T")[0];
+};
+
+// Load purchase data
+const loadPurchaseData = async () => {
+  try {
+    initialLoading.value = true;
+    
+    // Fetch the purchase with details
+    await purchaseStore.fetchPurchase(purchaseId.value);
+    const purchase = purchaseStore.purchase;
+
+    if (!purchase) {
+      toast.error("Fatura bulunamadı");
+      goBack();
+      return;
+    }
+
+    // Fetch lines and expenses
+    const [lines, expenses] = await Promise.all([
+      purchaseStore.fetchPurchaseLines(purchaseId.value),
+      purchaseStore.fetchPurchaseExpenses(purchaseId.value),
+    ]);
+
+    // Transform data for the form
+    const formData = {
+      ledger: purchase.ledger || {
+        documentType: 1,
+        documentDate: formatDateForForm(purchase.invoiceDate),
+        referenceNo: purchase.invoiceNo || "",
+        description: isImportPurchase.value
+          ? "İthalat Satın Alma Faturası"
+          : "Lokal Satın Alma Faturası",
+        status: purchase.status || 1,
+      },
+      purchaseInvoices: [
+        {
+          id: purchase.id,
+          invoiceType: purchase.invoiceType,
+          partnerId: purchase.partnerId,
+          vendorAccountId: purchase.vendorAccountId,
+          invoiceNo: purchase.invoiceNo || "",
+          invoiceDate: formatDateForForm(purchase.invoiceDate),
+          status: purchase.status || 1,
+          note: purchase.note || "",
+          isPaid: purchase.isPaid || false,
+          cashPaymentAmount: purchase.cashPaymentAmount || 0,
+          currencyId: purchase.currencyId || 1,
+          exchangeRate: purchase.exchangeRate || 1,
+          importPartnerDocNo: purchase.importPartnerDocNo || "",
+          importPartnerDocDate: formatDateForForm(purchase.importPartnerDocDate),
+        },
+      ],
+      purchaseInvoiceLines: lines?.map((line) => ({
+        id: line.id,
+        productId: line.productId,
+        warehouseId: line.warehouseId,
+        unitOfMeasureId: line.unitOfMeasureId,
+        vatId: line.vatId,
+        purchaseAccountId: line.purchaseAccountId,
+        quantity: line.quantity || 1,
+        unitPrice: line.unitPrice || 0,
+        amount: line.amount || 0,
+        expenseAmount: line.expenseAmount || 0,
+        discountRate: line.discountRate || 0,
+        discountAmount: line.discountAmount || 0,
+        exciseTaxRate: line.exciseTaxRate || 0,
+        exciseTaxAmount: line.exciseTaxAmount || 0,
+        customsRate: line.customsRate || 0,
+        customsAmount: line.customsAmount || 0,
+        revaluationAmount: line.revaluationAmount || 0,
+        vatTaxAmount: line.vatTaxAmount || 0,
+        costPrice: line.costPrice || 0,
+        costAmount: line.costAmount || 0,
+        totalPrice: line.totalPrice || 0,
+        totalAmount: line.totalAmount || 0,
+      })) || [],
+      purchaseInvoiceExpenses: expenses?.map((expense) => ({
+        id: expense.id,
+        partnerId: expense.partnerId,
+        vendorAccountId: expense.vendorAccountId,
+        partnerInvoiceNo: expense.partnerInvoiceNo || "",
+        partnerInvoiceDate: formatDateForForm(expense.partnerInvoiceDate),
+        expenseType: expense.expenseType || 1,
+        revaluationAmount: expense.revaluationAmount || 0,
+        amount: expense.amount || 0,
+        amountFc: expense.amountFc || 0,
+        isPaid: expense.isPaid || false,
+        cashPaymentAmount: expense.cashPaymentAmount || 0,
+      })) || [],
+    };
+
+    // Reset form with loaded data
+    resetForm({ values: formData });
+
+    // Trigger recalculations after data is loaded
+    setTimeout(() => {
+      recalculateAllLines();
+    }, 100);
+
+  } catch (error) {
+    console.error("Error loading purchase data:", error);
+    toast.error("Fatura verileri yüklenirken hata oluştu");
+    goBack();
+  } finally {
+    initialLoading.value = false;
+  }
+};
+
+// Computed property for default warehouse ID
+const defaultWarehouseId = computed(() => {
+  return formValues.purchaseInvoices?.[0]?.warehouseId || null;
+});
+
 // Fetch data on mount
 async function fetchData() {
   try {
-    // First fetch currencies to set default currency ID
-    await currencyStore.fetchCurrencies();
-
-    // Then fetch other data
     await Promise.all([
       partnerStore.fetchPartners(),
       productStore.fetchProducts(),
@@ -226,16 +324,18 @@ async function fetchData() {
       unitOfMeasureStore.fetchUnitOfMeasures(),
       vatStore.fetchVats(),
       accountStore.fetchAccounts(),
+      currencyStore.fetchCurrencies(),
     ]);
-    // Tüm veriler başarıyla çekildikten sonra yapılacak işlemler
   } catch (error) {
-    // Herhangi bir fetch işlemi başarısız olursa burası çalışır
     console.error("Veri çekme sırasında bir hata oluştu:", error);
+    toast.error("Veriler yüklenirken hata oluştu");
   }
 }
 
-// Fonksiyonu çağırmak için:
-fetchData();
+// Navigation
+const goBack = () => {
+  router.push({ name: "table-purchase" });
+};
 
 // Line operations
 const addNewLine = () => {
@@ -251,11 +351,11 @@ const addNewLine = () => {
     expenseAmount: 0,
     discountRate: 0,
     discountAmount: 0,
-    exciseTaxRate: 0, //isImport
-    exciseTaxAmount: 0, //isImport
-    customsRate: 0, //isImport
-    customsAmount: 0, //isImport
-    revaluationAmount: 0, //isImport
+    exciseTaxRate: 0,
+    exciseTaxAmount: 0,
+    customsRate: 0,
+    customsAmount: 0,
+    revaluationAmount: 0,
     vatTaxRate: 0,
     vatTaxAmount: 0,
     costPrice: 0,
@@ -268,9 +368,21 @@ const addNewLine = () => {
 // Form submission
 const onSubmit = handleSubmit(async (values) => {
   try {
-    await purchaseStore.addPurchaseInvoice(values);
+    // Add purchase ID to the data
+    const updateData = {
+      ...values,
+      purchaseInvoices: values.purchaseInvoices.map(invoice => ({
+        ...invoice,
+        id: purchaseId.value
+      }))
+    };
+    
+    await purchaseStore.updatePurchase(updateData);
+    toast.success("Fatura başarıyla güncellendi");
+    goBack();
   } catch (error) {
     console.error("Form submission error:", error);
+    toast.error("Fatura güncellenirken hata oluştu");
   }
 });
 
@@ -304,11 +416,12 @@ const recalculateAllLines = () => {
       setFieldValue(`purchaseInvoiceLines[${index}].${key}`, value);
     });
   });
+
   // Recalculate expense distribution
   if (formValues.purchaseInvoiceExpenses?.length > 0) {
     setTimeout(() => {
       updateExpenseDistribution(formValues, setFieldValue);
-    }, 100); // Small delay to ensure line calculations are applied first
+    }, 100);
   }
 
   console.log("✅ Tüm satırlar yeniden hesaplandı");
@@ -367,6 +480,18 @@ watch(
   },
   { deep: true }
 );
+
+// Initialize component
+onMounted(async () => {
+  // Auto-open modal on page load
+  modalStore.openInvoiceModal();
+  
+  // Fetch basic data first
+  await fetchData();
+  
+  // Then load purchase data
+  await loadPurchaseData();
+});
 </script>
 
 <style scoped>
