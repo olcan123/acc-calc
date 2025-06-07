@@ -94,13 +94,52 @@ namespace Core.DataAccess.EntityFramework
 
             using var context = new TContext();
             context.Set<TEntity>().ToLinqToDBTable()
-                .Merge()
+            .Merge()
                 .Using(entities)
                 .On(matchExpression)
+                .DeleteWhenMatchedAnd(deleteMatchExpression)
                 .InsertWhenNotMatched()
                 .UpdateWhenMatched()
-                .DeleteWhenMatchedAnd(deleteMatchExpression)
                 .Merge();
+
+        }
+
+        public void MergeSync(List<TEntity> entities, Expression<Func<TEntity, TEntity, bool>> match, Expression<Func<TEntity, bool>> deleteFilter = null)
+        {
+            using var context = new TContext();
+            var table = context.Set<TEntity>().ToLinqToDBTable();
+
+            var merge = table.Merge()
+                .Using(entities)
+                .On(match)
+                .UpdateWhenMatchedAnd(match)
+                .InsertWhenNotMatched();
+
+            if (deleteFilter != null)
+            {
+                merge = merge.DeleteWhenNotMatchedBySourceAnd(deleteFilter);
+            }
+
+            merge.Merge();
+        }
+
+        public void MergeSync(List<TEntity> entities, Expression<Func<TEntity, TEntity, bool>> match, Expression<Func<TEntity, TEntity, TEntity>> updateAction = null, Expression<Func<TEntity, TEntity>> insertAction = null, Expression<Func<TEntity, bool>> deleteFilter = null)
+        {
+            using var context = new TContext();
+            var table = context.Set<TEntity>().ToLinqToDBTable();
+
+            var merge = table.Merge()
+            .Using(entities)
+            .On(match)
+            .UpdateWhenMatched(updateAction)
+            .InsertWhenNotMatched(insertAction);
+
+            if (deleteFilter != null)
+            {
+                merge = merge.DeleteWhenNotMatchedBySourceAnd(deleteFilter);
+            }
+
+            merge.Merge();
         }
     }
 }

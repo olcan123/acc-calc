@@ -5,17 +5,16 @@
     >
       Satın Alma Faturaları
     </h2>
-
     <div class="flex gap-2">
       <button
-        @click="router.push({ name: 'CreateLocalPurchase' })"
+        @click="router.push({ name: 'create-local-purchase' })"
         type="button"
         class="flex items-center gap-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
       >
         Yeni Lokal Fatura
       </button>
       <button
-        @click="router.push({ name: 'CreateImportPurchase' })"
+        @click="router.push({ name: 'create-import-purchase' })"
         type="button"
         class="flex items-center gap-2 text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
       >
@@ -26,7 +25,12 @@
 
   <ConfirmDialog />
 
-  <DataTable :value="purchases" dataKey="id" responsiveLayout="scroll" :loading="loading">
+  <DataTable
+    :value="purchases"
+    dataKey="id"
+    responsiveLayout="scroll"
+    :loading="loading"
+  >
     <!-- Sıra Numarası -->
     <Column header="#" style="width: 60px">
       <template #body="{ index }">
@@ -54,7 +58,7 @@
     <!-- Fatura Tipi -->
     <Column field="invoiceType" header="Tip" style="min-width: 120px">
       <template #body="{ data }">
-        <span 
+        <span
           class="px-2 py-1 text-xs font-medium rounded-full"
           :class="getInvoiceTypeColor(data.invoiceType)"
         >
@@ -73,14 +77,14 @@
     <!-- Kur -->
     <Column field="exchangeRate" header="Kur" style="min-width: 80px">
       <template #body="{ data }">
-        {{ formatCurrency(data.exchangeRate, '', 4) }}
+        {{ formatCurrency(data.exchangeRate, "", 4) }}
       </template>
     </Column>
 
     <!-- Durum -->
     <Column field="status" header="Durum" style="min-width: 100px">
       <template #body="{ data }">
-        <span 
+        <span
           class="px-2 py-1 text-xs font-medium rounded-full"
           :class="getStatusColor(data.status)"
         >
@@ -92,9 +96,13 @@
     <!-- Ödeme Durumu -->
     <Column field="isPaid" header="Ödeme" style="min-width: 80px">
       <template #body="{ data }">
-        <span 
+        <span
           class="px-2 py-1 text-xs font-medium rounded-full"
-          :class="data.isPaid ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'"
+          :class="
+            data.isPaid
+              ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+              : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+          "
         >
           {{ data.isPaid ? "Ödendi" : "Ödenmedi" }}
         </span>
@@ -111,8 +119,17 @@
     <!-- Not -->
     <Column field="note" header="Not" style="min-width: 150px">
       <template #body="{ data }">
-        <span class="text-sm text-gray-600 dark:text-gray-400" :title="data.note">
-          {{ data.note ? (data.note.length > 30 ? data.note.substring(0, 30) + '...' : data.note) : '-' }}
+        <span
+          class="text-sm text-gray-600 dark:text-gray-400"
+          :title="data.note"
+        >
+          {{
+            data.note
+              ? data.note.length > 30
+                ? data.note.substring(0, 30) + "..."
+                : data.note
+              : "-"
+          }}
         </span>
       </template>
     </Column>
@@ -123,9 +140,12 @@
         <div class="flex gap-2">
           <!-- Düzenle Butonu -->
           <router-link
-            :to="{ 
-              name: data.invoiceType === 2 ? 'UpdateImportPurchase' : 'UpdateLocalPurchase', 
-              params: { id: data.id } 
+            :to="{
+              name:
+                data.invoiceType === 2
+                  ? 'update-import-purchase'
+                  : 'update-local-purchase',
+              params: { id: data.id },
             }"
             type="button"
             class="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-3 py-1.5 focus:outline-none dark:focus:ring-yellow-900"
@@ -152,11 +172,7 @@
               Detayları Görüntüle
             </a>
 
-            <a
-              href="#"
-              @click.prevent="viewLines(data)"
-              class="dropdown-item"
-            >
+            <a href="#" @click.prevent="viewLines(data)" class="dropdown-item">
               Fatura Satırları
             </a>
 
@@ -191,6 +207,7 @@ import ConfirmDialog from "primevue/confirmdialog";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { usePurchaseStore } from "@/stores/purchase.store";
+import { useAccountStore } from "@/stores/account.store";
 import { storeToRefs } from "pinia";
 import TableDropdownButton from "@/components/UI/Buttons/TableDropdownButton.vue";
 
@@ -206,8 +223,11 @@ const router = useRouter();
 const confirm = useConfirm();
 
 const purchaseStore = usePurchaseStore();
+const accountStore = useAccountStore();
 await purchaseStore.fetchPurchases();
+await accountStore.fetchAccounts();
 const { purchases, loading } = storeToRefs(purchaseStore);
+const { accountTypeOptions } = storeToRefs(accountStore);
 
 // Purchase invoice deletion
 const confirmDelete = (purchase) => {
@@ -230,21 +250,26 @@ const formatDate = (date) => {
 
 const formatCurrency = (amount, currency = "₺", decimals = 2) => {
   if (amount === null || amount === undefined) return "-";
-  return new Intl.NumberFormat("tr-TR", {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals,
-  }).format(amount) + (currency ? ` ${currency}` : "");
+  return (
+    new Intl.NumberFormat("tr-TR", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(amount) + (currency ? ` ${currency}` : "")
+  );
 };
 
 const calculateInvoiceTotal = (invoice) => {
-  if (!invoice.purchaseInvoiceLines || invoice.purchaseInvoiceLines.length === 0) {
+  if (
+    !invoice.purchaseInvoiceLines ||
+    invoice.purchaseInvoiceLines.length === 0
+  ) {
     return formatCurrency(0);
   }
-  
+
   const total = invoice.purchaseInvoiceLines.reduce((sum, line) => {
     return sum + (line.totalAmount || 0);
   }, 0);
-  
+
   return formatCurrency(total);
 };
 
@@ -302,7 +327,7 @@ const duplicateInvoice = (invoice) => {
   .dropdown-item {
     color: #d1d5db;
   }
-  
+
   .dropdown-item:hover {
     background-color: #374151;
   }

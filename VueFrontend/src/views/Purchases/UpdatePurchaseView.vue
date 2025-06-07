@@ -37,7 +37,9 @@
   <!-- Loading State -->
   <div v-if="initialLoading" class="flex justify-center items-center py-12">
     <div class="text-center">
-      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+      <div
+        class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"
+      ></div>
       <p class="text-gray-600 dark:text-gray-400">Fatura yükleniyor...</p>
     </div>
   </div>
@@ -93,7 +95,7 @@
 </template>
 
 <script setup>
-import { computed, watch, ref, onMounted } from "vue";
+import { computed, watch, ref, onMounted, provide } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useForm, useFieldArray } from "vee-validate";
 import { storeToRefs } from "pinia";
@@ -162,8 +164,12 @@ const {
 const { push, remove } = useFieldArray("purchaseInvoiceLines");
 
 // Initialize purchase calculations composable
-const { updateExpenseDistribution, calculateLineValues, updateCalculations } =
-  usePurchaseCalculations(vatStore);
+const {
+  updateExpenseDistribution,
+  calculateLineValues,
+  updateCalculations,
+  onExchangeRateChange,
+} = usePurchaseCalculations(vatStore);
 
 // Create empty initial values
 function createEmptyInitialValues() {
@@ -172,7 +178,9 @@ function createEmptyInitialValues() {
       documentType: 1,
       documentDate: new Date().toISOString().split("T")[0],
       referenceNo: "",
-      description: "",
+      description: isImportPurchase.value
+        ? "İthalat Satın Alma Faturası"
+        : "Lokal Satın Alma Faturası",
       status: 1,
     },
     purchaseInvoices: [
@@ -180,6 +188,7 @@ function createEmptyInitialValues() {
         invoiceType: isImportPurchase.value ? 2 : 1,
         partnerId: null,
         vendorAccountId: null,
+        warehouseId: null,
         invoiceNo: "",
         invoiceDate: new Date().toISOString().split("T")[0],
         status: 1,
@@ -193,7 +202,32 @@ function createEmptyInitialValues() {
       },
     ],
     purchaseInvoiceExpenses: [],
-    purchaseInvoiceLines: [],
+    purchaseInvoiceLines: [
+      {
+        productId: null,
+        warehouseId: null,
+        unitOfMeasureId: null,
+        vatId: null,
+        purchaseAccountId: null,
+        quantity: 1,
+        unitPrice: 0,
+        amount: 0,
+        expenseAmount: 0,
+        discountRate: 0,
+        discountAmount: 0,
+        exciseTaxRate: 0,
+        exciseTaxAmount: 0,
+        customsRate: 0,
+        customsAmount: 0,
+        revaluationAmount: 0,
+        vatTaxRate: 0,
+        vatTaxAmount: 0,
+        costPrice: 0,
+        costAmount: 0,
+        totalPrice: 0,
+        totalAmount: 0,
+      },
+    ],
   };
 }
 
@@ -203,11 +237,16 @@ const formatDateForForm = (date) => {
   return new Date(date).toISOString().split("T")[0];
 };
 
+// Provide exchange rate change handler for child components
+provide("onExchangeRateChange", (newExchangeRate) => {
+  onExchangeRateChange(setFieldValue, () => formValues, newExchangeRate);
+});
+
 // Load purchase data
 const loadPurchaseData = async () => {
   try {
     initialLoading.value = true;
-    
+
     // Fetch the purchase with details
     await purchaseStore.fetchPurchase(purchaseId.value);
     const purchase = purchaseStore.purchase;
@@ -216,15 +255,7 @@ const loadPurchaseData = async () => {
       toast.error("Fatura bulunamadı");
       goBack();
       return;
-    }
-
-    // Fetch lines and expenses
-    const [lines, expenses] = await Promise.all([
-      purchaseStore.fetchPurchaseLines(purchaseId.value),
-      purchaseStore.fetchPurchaseExpenses(purchaseId.value),
-    ]);
-
-    // Transform data for the form
+    } // Transform data for the form
     const formData = {
       ledger: purchase.ledger || {
         documentType: 1,
@@ -238,6 +269,8 @@ const loadPurchaseData = async () => {
       purchaseInvoices: [
         {
           id: purchase.id,
+          ledgerId: purchase.ledgerId,
+          warehouseId: purchase.warehouseId || null,
           invoiceType: purchase.invoiceType,
           partnerId: purchase.partnerId,
           vendorAccountId: purchase.vendorAccountId,
@@ -250,46 +283,53 @@ const loadPurchaseData = async () => {
           currencyId: purchase.currencyId || 1,
           exchangeRate: purchase.exchangeRate || 1,
           importPartnerDocNo: purchase.importPartnerDocNo || "",
-          importPartnerDocDate: formatDateForForm(purchase.importPartnerDocDate),
+          importPartnerDocDate: formatDateForForm(
+            purchase.importPartnerDocDate
+          ),
         },
       ],
-      purchaseInvoiceLines: lines?.map((line) => ({
-        id: line.id,
-        productId: line.productId,
-        warehouseId: line.warehouseId,
-        unitOfMeasureId: line.unitOfMeasureId,
-        vatId: line.vatId,
-        purchaseAccountId: line.purchaseAccountId,
-        quantity: line.quantity || 1,
-        unitPrice: line.unitPrice || 0,
-        amount: line.amount || 0,
-        expenseAmount: line.expenseAmount || 0,
-        discountRate: line.discountRate || 0,
-        discountAmount: line.discountAmount || 0,
-        exciseTaxRate: line.exciseTaxRate || 0,
-        exciseTaxAmount: line.exciseTaxAmount || 0,
-        customsRate: line.customsRate || 0,
-        customsAmount: line.customsAmount || 0,
-        revaluationAmount: line.revaluationAmount || 0,
-        vatTaxAmount: line.vatTaxAmount || 0,
-        costPrice: line.costPrice || 0,
-        costAmount: line.costAmount || 0,
-        totalPrice: line.totalPrice || 0,
-        totalAmount: line.totalAmount || 0,
-      })) || [],
-      purchaseInvoiceExpenses: expenses?.map((expense) => ({
-        id: expense.id,
-        partnerId: expense.partnerId,
-        vendorAccountId: expense.vendorAccountId,
-        partnerInvoiceNo: expense.partnerInvoiceNo || "",
-        partnerInvoiceDate: formatDateForForm(expense.partnerInvoiceDate),
-        expenseType: expense.expenseType || 1,
-        revaluationAmount: expense.revaluationAmount || 0,
-        amount: expense.amount || 0,
-        amountFc: expense.amountFc || 0,
-        isPaid: expense.isPaid || false,
-        cashPaymentAmount: expense.cashPaymentAmount || 0,
-      })) || [],
+      purchaseInvoiceLines:
+        purchase.purchaseInvoiceLines?.map((line) => ({
+          id: line.id,
+          productId: line.productId,
+          warehouseId: line.warehouseId || null,
+          unitOfMeasureId: line.unitOfMeasureId || null,
+          vatId: line.vatId || null,
+          purchaseAccountId: line.purchaseAccountId || null,
+          quantity: line.quantity || 1,
+          unitPrice: line.unitPrice || 0,
+          amount: line.amount || 0,
+          expenseAmount: line.expenseAmount || 0,
+          discountRate: line.discountRate || 0,
+          discountAmount: line.discountAmount || 0,
+          exciseTaxRate: line.exciseTaxRate || 0,
+          exciseTaxAmount: line.exciseTaxAmount || 0,
+          customsRate: line.customsRate || 0,
+          customsAmount: line.customsAmount || 0,
+          revaluationAmount: line.revaluationAmount || 0,
+          vatTaxRate: line.vatTaxRate || 0,
+          vatTaxAmount: line.vatTaxAmount || 0,
+          costPrice: line.costPrice || 0,
+          costAmount: line.costAmount || 0,
+          totalPrice: line.totalPrice || 0,
+          totalAmount: line.totalAmount || 0,
+        })) || [],
+      purchaseInvoiceExpenses:
+        purchase.purchaseInvoiceExpenses?.map((expense) => ({
+          id: expense.id,
+          purchaseInvoiceId: expense.purchaseInvoiceId || purchase.id,
+          partnerId: expense.partnerId || null,
+          expenseType: expense.expenseType || 1, // Default to 1 if not set
+          partnerInvoiceDate: formatDateForForm(
+            expense.partnerInvoiceDate || new Date()
+          ),
+          partnerInvoiceNo: expense.partnerInvoiceNo || "",
+          vendorAccountId: expense.vendorAccountId || null,
+          amount: expense.amount || 0,
+          isPaid: expense.isPaid || false,
+          cashPaymentAmount: expense.cashPaymentAmount || 0,
+          revaluationAmount: expense.revaluationAmount || 0,
+        })) || [],
     };
 
     // Reset form with loaded data
@@ -299,7 +339,6 @@ const loadPurchaseData = async () => {
     setTimeout(() => {
       recalculateAllLines();
     }, 100);
-
   } catch (error) {
     console.error("Error loading purchase data:", error);
     toast.error("Fatura verileri yüklenirken hata oluştu");
@@ -368,18 +407,13 @@ const addNewLine = () => {
 // Form submission
 const onSubmit = handleSubmit(async (values) => {
   try {
-    // Add purchase ID to the data
-    const updateData = {
-      ...values,
-      purchaseInvoices: values.purchaseInvoices.map(invoice => ({
-        ...invoice,
-        id: purchaseId.value
-      }))
-    };
-    
-    await purchaseStore.updatePurchase(updateData);
-    toast.success("Fatura başarıyla güncellendi");
-    goBack();
+    values.ledger.documentDate = new Date(
+      values.purchaseInvoices[0].invoiceDate
+    )
+      .toISOString()
+      .split("T")[0];
+    await purchaseStore.updatePurchase(values);
+    // console.log("Güncelleme verisi:", values);
   } catch (error) {
     console.error("Form submission error:", error);
     toast.error("Fatura güncellenirken hata oluştu");
@@ -485,10 +519,10 @@ watch(
 onMounted(async () => {
   // Auto-open modal on page load
   modalStore.openInvoiceModal();
-  
+
   // Fetch basic data first
   await fetchData();
-  
+
   // Then load purchase data
   await loadPurchaseData();
 });

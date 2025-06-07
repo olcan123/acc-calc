@@ -51,24 +51,12 @@ namespace WebAPI.Controllers
         {
             var result = _purchaseInvoiceService.DeleteInvoice(id);
             return result.Success ? Ok(result) : BadRequest(result);
-        }        [HttpPut]
+        }
+
+        [HttpPut]
         public IActionResult Update([FromBody] PurchaseModel model)
         {
             var result = _purchaseInvoiceService.UpdateInvoice(model.Ledger, model.PurchaseInvoices[0], model.PurchaseInvoiceLines, model.PurchaseInvoiceExpenses);
-            return result.Success ? Ok(result) : BadRequest(result);
-        }
-
-        [HttpGet("{id}/lines")]
-        public IActionResult GetPurchaseLines(int id)
-        {
-            var result = _purchaseInvoiceLineService.GetListByInvoiceId(id);
-            return result.Success ? Ok(result) : BadRequest(result);
-        }
-
-        [HttpGet("{id}/expenses")]
-        public IActionResult GetPurchaseExpenses(int id)
-        {
-            var result = _purchaseInvoiceExpenseService.GetListByInvoiceId(id);
             return result.Success ? Ok(result) : BadRequest(result);
         }
     }

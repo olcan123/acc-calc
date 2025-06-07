@@ -19,5 +19,7 @@ namespace Core.DataAccess
         void BulkAddOrUpdate(List<T> entityList, BulkConfig bulkConfig = null);
         void MergeLinq(List<T> entities, Expression<Func<T, T, bool>> matchExpression);
         void MergeLinqWithDelete(List<T> entities, Expression<Func<T, T, bool>> matchExpression, Expression<Func<T, T, bool>> deleteMatchExpression = null);
+        void MergeSync(List<T> entities, Expression<Func<T, T, bool>> match, Expression<Func<T, bool>> deleteFilter = null);
+        void MergeSync(List<T> entities, Expression<Func<T, T, bool>> match, Expression<Func<T, T, T>> updateAction = null, Expression<Func<T, T>> insertAction = null, Expression<Func<T, bool>> deleteFilter = null);
     }
 }

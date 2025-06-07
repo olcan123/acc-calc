@@ -71,7 +71,12 @@ namespace Business.Concrate
         [ValidationAspect(typeof(PurchaseInvoiceExpenseValidator))]
         public IResult BulkUpdate(List<PurchaseInvoiceExpense> purchaseInvoiceExpenses)
         {
-            _purchaseInvoiceExpenseDal.MergeLinq(purchaseInvoiceExpenses, (source, target) => source.PurchaseInvoiceId == target.PurchaseInvoiceId);
+            var purchaseInvoiceId = purchaseInvoiceExpenses.FirstOrDefault()?.PurchaseInvoiceId;
+            if (purchaseInvoiceId == null)
+                return new ErrorResult("Fatura ID'si bulunamadı");
+            
+            _purchaseInvoiceExpenseDal.MergeLinqWithDelete(purchaseInvoiceExpenses, (source, target) => source.Id == target.Id,
+               (source, target) => target.PurchaseInvoiceId == purchaseInvoiceId.Value);
             return new SuccessResult("Fatura masrafları güncellendi");
         }
 

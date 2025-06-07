@@ -92,6 +92,7 @@
 
         <!-- Masraf/Gider Yönetimi - Collapsible Section -->
         <div
+          v-if="isImportPurchase"
           class="md:col-span-2 border border-gray-200 dark:border-gray-600 rounded-lg"
         >
           <button
@@ -237,7 +238,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watchEffect } from "vue";
+import { computed, ref, watchEffect, inject, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import { useFormContext, useFieldArray } from "vee-validate";
@@ -291,6 +292,9 @@ const { optionCurrencies } = storeToRefs(currencyStore);
 // Form context to get current values
 const { values, setFieldValue } = useFormContext();
 
+// Inject exchange rate change handler from parent
+const onExchangeRateChange = inject('onExchangeRateChange', null);
+
 // Initialize purchase calculations for expense redistribution
 const vatStore = useVatStore();
 const { updateExpenseDistribution } = usePurchaseCalculations(vatStore);
@@ -334,4 +338,14 @@ watchEffect(() => {
     getDefaultVendorAccountId()
   );
 });
+
+// Watch for exchange rate changes and trigger recalculation
+watch(
+  () => values.purchaseInvoices?.[0]?.exchangeRate,
+  (newExchangeRate, oldExchangeRate) => {
+    if (newExchangeRate !== oldExchangeRate && onExchangeRateChange) {
+      onExchangeRateChange(newExchangeRate);
+    }
+  }
+);
 </script>

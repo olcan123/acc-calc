@@ -91,7 +91,7 @@ export const usePurchaseStore = defineStore("purchase", () => {
     }
   };
   // ✅ Update Purchase Invoice
-  const updatePurchase = async (id, data) => {
+  const updatePurchase = async (data) => {
     loading.value = true;
     try {
       const payload = {
@@ -101,7 +101,7 @@ export const usePurchaseStore = defineStore("purchase", () => {
         purchaseInvoiceExpenses: data.purchaseInvoiceExpenses || [],
       };
 
-      const response = await axiosInstance.put(`purchases/${id}`, payload);
+      const response = await axiosInstance.put(`purchases`, payload);
       message.value = response.data.message;
       toast.success(
         message.value || "Satın alma faturası başarıyla güncellendi"

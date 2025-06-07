@@ -89,9 +89,7 @@
                 }}
               </p>
             </div>
-          </div>
-
-          <!-- Hesap Label -->
+          </div>          <!-- Hesap Label -->
           <div
             class="flex items-center gap-2 bg-emerald-50 dark:bg-emerald-900 px-3 py-2 rounded-lg"
           >
@@ -110,6 +108,49 @@
                     formValues.purchaseInvoices?.[0]?.vendorAccountId
                   ) || "Seçilmedi"
                 }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Currency Label (only for import purchases) -->
+          <div
+            v-if="isImportPurchase"
+            class="flex items-center gap-2 bg-indigo-50 dark:bg-indigo-900 px-3 py-2 rounded-lg"
+          >
+            <span class="text-indigo-600 dark:text-indigo-400">💱</span>
+            <div class="flex-1 min-w-0">
+              <p
+                class="text-xs text-indigo-600 dark:text-indigo-400 font-medium"
+              >
+                Para Birimi
+              </p>
+              <p
+                class="text-sm text-indigo-800 dark:text-indigo-200 font-medium truncate"
+              >
+                {{
+                  getCurrencyName(formValues.purchaseInvoices?.[0]?.currencyId) ||
+                  "Seçilmedi"
+                }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Exchange Rate Label (only for import purchases) -->
+          <div
+            v-if="isImportPurchase"
+            class="flex items-center gap-2 bg-orange-50 dark:bg-orange-900 px-3 py-2 rounded-lg"
+          >
+            <span class="text-orange-600 dark:text-orange-400">📊</span>
+            <div class="flex-1 min-w-0">
+              <p
+                class="text-xs text-orange-600 dark:text-orange-400 font-medium"
+              >
+                Döviz Kuru
+              </p>
+              <p
+                class="text-sm text-orange-800 dark:text-orange-200 font-medium"
+              >
+                {{ formatExchangeRate(formValues.purchaseInvoices?.[0]?.exchangeRate) }}
               </p>
             </div>
           </div>
@@ -135,19 +176,32 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
 import { useFormContext } from "vee-validate";
 import { usePartnerStore } from "@/stores/partner.store";
 import { useAccountStore } from "@/stores/account.store";
+import { useCurrencyStore } from "@/stores/currency.store";
 import { useModalStore } from "@/stores/modal.store";
+
+// Route for import purchase detection
+const route = useRoute();
+
+// Check if this is an import purchase
+const isImportPurchase = computed(() => {
+  return route.path.includes("/import");
+});
 
 // Stores
 const partnerStore = usePartnerStore();
 const accountStore = useAccountStore();
+const currencyStore = useCurrencyStore();
 const modalStore = useModalStore();
 
 const { optionPartners } = storeToRefs(partnerStore);
 const { optionAccounts } = storeToRefs(accountStore);
+const { optionCurrencies } = storeToRefs(currencyStore);
 
 const { values: formValues } = useFormContext();
 
@@ -155,6 +209,14 @@ const { values: formValues } = useFormContext();
 const formatDate = (date) => {
   if (!date) return "";
   return new Date(date).toLocaleDateString("tr-TR");
+};
+
+const formatExchangeRate = (rate) => {
+  if (!rate || rate === 0) return "1,0000";
+  return new Intl.NumberFormat("tr-TR", {
+    minimumFractionDigits: 4,
+    maximumFractionDigits: 10,
+  }).format(rate);
 };
 
 const getPartnerName = (partnerId) => {
@@ -167,5 +229,11 @@ const getAccountName = (accountId) => {
   if (!accountId || !optionAccounts.value) return "";
   const account = optionAccounts.value.find((a) => a.value === accountId);
   return account?.label || "";
+};
+
+const getCurrencyName = (currencyId) => {
+  if (!currencyId || !optionCurrencies.value) return "";
+  const currency = optionCurrencies.value.find((c) => c.value === currencyId);
+  return currency?.label || "";
 };
 </script>

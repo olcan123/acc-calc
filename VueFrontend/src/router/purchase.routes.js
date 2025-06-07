@@ -10,7 +10,7 @@ export default [
     children: [
       {
         path: "",
-        name: "TablePurchases",
+        name: "table-purchase",
         component: TablePurchaseView,
         meta: {
           title: "Satın Alma Faturaları"
@@ -18,7 +18,7 @@ export default [
       },
       {
         path: "local/create",
-        name: "CreateLocalPurchase",
+        name: "create-local-purchase",
         component: CreatePurchaseView,
         meta: {
           title: "Lokal Satın Alma Faturası Oluştur"
@@ -26,7 +26,7 @@ export default [
       },
       {
         path: 'import/create',
-        name: 'CreateImportPurchase',
+        name: 'create-import-purchase',
         component: CreatePurchaseView,
         meta: {
           title: "İthalat Satın Alma Faturası Oluştur"
@@ -34,7 +34,7 @@ export default [
       },
       {
         path: "local/edit/:id",
-        name: "UpdateLocalPurchase",
+        name: "update-local-purchase",
         component: UpdatePurchaseView,
         meta: {
           title: "Lokal Satın Alma Faturası Düzenle"
@@ -42,7 +42,7 @@ export default [
       },
       {
         path: 'import/edit/:id',
-        name: 'UpdateImportPurchase',
+        name: 'update-import-purchase',
         component: UpdatePurchaseView,
         meta: {
           title: "İthalat Satın Alma Faturası Düzenle"

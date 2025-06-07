@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { computed, watch } from "vue";
+import { computed, watch, provide } from "vue";
 import { useRoute } from "vue-router";
 import { useForm, useFieldArray } from "vee-validate";
 import { storeToRefs } from "pinia";
@@ -209,8 +209,17 @@ const {
 const { push } = useFieldArray("purchaseInvoiceLines");
 
 // Initialize purchase calculations composable
-const { updateExpenseDistribution, calculateLineValues, updateCalculations } =
-  usePurchaseCalculations(vatStore);
+const { 
+  updateExpenseDistribution, 
+  calculateLineValues, 
+  updateCalculations,
+  onExchangeRateChange
+} = usePurchaseCalculations(vatStore);
+
+// Provide exchange rate change handler for child components
+provide('onExchangeRateChange', (newExchangeRate) => {
+  onExchangeRateChange(setFieldValue, () => formValues, newExchangeRate);
+});
 
 // Fetch data on mount
 async function fetchData() {
