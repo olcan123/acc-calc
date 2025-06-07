@@ -69,9 +69,9 @@ namespace Business.Concrate
             if (ledgerId == null)
                 return new ErrorResult("Muhasebe fişi satırları güncellenirken LedgerId bulunamadı");
 
-            _ledgerEntryDal.MergeLinqWithDelete(ledgerEntries, (source, target) =>
+            _ledgerEntryDal.MergeSync(ledgerEntries, (source, target) =>
                 source.Id == target.Id,
-                (source, target) => target.LedgerId == ledgerId.Value);
+                target => target.LedgerId == ledgerId.Value);
             return new SuccessResult("Muhasebe fişi satırları güncellendi");
         }
 

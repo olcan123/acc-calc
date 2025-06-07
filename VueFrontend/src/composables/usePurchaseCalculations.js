@@ -6,7 +6,7 @@ import { computed } from "vue";
  * @returns {Object} Hesaplama metodları ve utility fonksiyonları
  */
 export function usePurchaseCalculations(vatStore) {
-    /**
+  /**
    * Sayısal değerleri belirli hassasiyetle formatlar (floating point precision sorunlarını önler)
    * @param {number} value - Formatlanacak değer
    * @param {number} precision - Ondalık basamak sayısı (varsayılan: 4)
@@ -14,14 +14,15 @@ export function usePurchaseCalculations(vatStore) {
    */
   const formatPrecision = (value, precision = 4) => {
     // Null, undefined, empty string kontrolü
-    if (value === null || value === undefined || value === '' || value === 0) return 0;
-    
+    if (value === null || value === undefined || value === "" || value === 0)
+      return 0;
+
     // Number'a dönüştür
     const numValue = Number(value);
-    
+
     // NaN kontrolü
     if (isNaN(numValue)) return 0;
-    
+
     return parseFloat(numValue.toFixed(precision));
   };
 
@@ -66,7 +67,11 @@ export function usePurchaseCalculations(vatStore) {
    * @param {string} skipField - Bu alanı yeniden hesaplama (manuel değiştirildiği için)
    * @param {number} exchangeRate - Döviz kuru (opsiyonel, varsayılan: 1)
    * @returns {Object} Hesaplanmış değerler
-   */  const calculateLineValues = (lineData, skipField = null, exchangeRate = 1) => {
+   */ const calculateLineValues = (
+    lineData,
+    skipField = null,
+    exchangeRate = 1
+  ) => {
     const {
       quantity = 0,
       unitPrice = 0,
@@ -84,7 +89,7 @@ export function usePurchaseCalculations(vatStore) {
 
     // Basic amount calculation
     const convertedUnitPrice = convertCurrency(unitPrice, exchangeRate);
-    
+
     let amount;
     if (skipField === "amount" && manualAmount !== null) {
       amount = convertCurrency(manualAmount, exchangeRate);
@@ -102,14 +107,14 @@ export function usePurchaseCalculations(vatStore) {
     } else {
       // STEP 1: UnitPrice × ExchangeRate
       costPrice = convertedUnitPrice;
-      
+
       // Apply discount
-      costPrice = costPrice - (costPrice * (discountRate / 100));
-      
+      costPrice = costPrice - costPrice * (discountRate / 100);
+
       // STEP 2: Add expense per unit
       const expensePerUnit = quantity > 0 ? expenseAmount / quantity : 0;
       costPrice = costPrice + expensePerUnit;
-      
+
       // STEP 3: Add customs and excise taxes
       const customsTaxOnCostPrice = costPrice * (customsRate / 100);
       const exciseTaxOnCostPrice = costPrice * (exciseTaxRate / 100);
@@ -126,8 +131,12 @@ export function usePurchaseCalculations(vatStore) {
     }
 
     // Tax amounts for display
-    const baseCostPriceForTax = convertedUnitPrice - (convertedUnitPrice * (discountRate / 100)) + (quantity > 0 ? expenseAmount / quantity : 0);
-    const exciseTaxAmount = baseCostPriceForTax * (exciseTaxRate / 100) * quantity;
+    const baseCostPriceForTax =
+      convertedUnitPrice -
+      convertedUnitPrice * (discountRate / 100) +
+      (quantity > 0 ? expenseAmount / quantity : 0);
+    const exciseTaxAmount =
+      baseCostPriceForTax * (exciseTaxRate / 100) * quantity;
     const customsAmount = baseCostPriceForTax * (customsRate / 100) * quantity;
 
     // VAT calculations
@@ -143,9 +152,10 @@ export function usePurchaseCalculations(vatStore) {
       totalAmount = manualTotalAmount;
       totalPrice = quantity > 0 ? totalAmount / quantity : 0;
     } else {
-      totalPrice = costPrice + (costPrice * vatRate);
+      totalPrice = costPrice + costPrice * vatRate;
       totalAmount = costAmount + vatTaxAmount;
-    }    return {
+    }
+    return {
       amount: formatPrecision(amount, 4),
       discountAmount: formatPrecision(discountAmount, 4),
       exciseTaxAmount: formatPrecision(exciseTaxAmount, 4),
@@ -153,16 +163,17 @@ export function usePurchaseCalculations(vatStore) {
       costPrice: formatPrecision(costPrice, 4),
       costAmount: formatPrecision(costAmount, 4),
       vatTaxAmount: formatPrecision(vatTaxAmount, 4),
-      totalPrice: formatPrecision(totalPrice, 4),
-      totalAmount: formatPrecision(totalAmount, 4)
+      totalPrice: formatPrecision(totalPrice, 2),
+      totalAmount: formatPrecision(totalAmount, 2),
     };
-  };/**
+  };
+  /**
    * Tek bir değer değiştiğinde tüm hesaplamaları güncelle
    * @param {Function} setFieldValue - VeeValidate setFieldValue fonksiyonu
    * @param {number} index - Satır indeksi
    * @param {Object} currentValues - Mevcut form değerleri
    * @param {string} changedField - Değişen alan adı
-   */  const updateCalculations = (
+   */ const updateCalculations = (
     setFieldValue,
     index,
     currentValues,
@@ -173,8 +184,12 @@ export function usePurchaseCalculations(vatStore) {
 
     // Exchange rate'i al
     const exchangeRate = currentValues.purchaseInvoices?.[0]?.exchangeRate || 1;
-    
-    const calculated = calculateLineValues(lineData, changedField, exchangeRate);
+
+    const calculated = calculateLineValues(
+      lineData,
+      changedField,
+      exchangeRate
+    );
 
     // Sadece değişmeyen alanları güncelle (kullanıcı input'u korunur)
     const fieldsToUpdate = {
@@ -192,8 +207,8 @@ export function usePurchaseCalculations(vatStore) {
     // Eğer kullanıcı bu alanı manuel değiştiriyorsa, o alanı güncelleme
     if (changedField && fieldsToUpdate[changedField] !== undefined) {
       delete fieldsToUpdate[changedField];
-    } 
-    
+    }
+
     // Tüm hesaplanmış değerleri güncelle
     Object.entries(fieldsToUpdate).forEach(([field, value]) => {
       setFieldValue(`purchaseInvoiceLines[${index}].${field}`, value);
@@ -240,7 +255,8 @@ export function usePurchaseCalculations(vatStore) {
       newDiscountRate
     );
     updateCalculations(setFieldValue, index, currentValues, "discountRate");
-  };  /**
+  };
+  /**
    * VAT değiştiğinde hesaplamalar
    */
   const onVatChange = (setFieldValue, index, currentValues, newVatId) => {
@@ -248,20 +264,25 @@ export function usePurchaseCalculations(vatStore) {
     setTimeout(() => {
       updateCalculations(setFieldValue, index, currentValues, "vatId");
     }, 50); // VAT değişikliğinden sonra hesaplamaları güncelle
-  };  /**
+  };
+  /**
    * Exchange Rate değiştiğinde tüm satırları yeniden hesapla
    * @param {Function} setFieldValue - VeeValidate setFieldValue fonksiyonu
    * @param {Function} getFormValues - Form values getter fonksiyonu
    * @param {number} newExchangeRate - Yeni döviz kuru
-   */  const onExchangeRateChange = (setFieldValue, getFormValues, newExchangeRate) => {
+   */ const onExchangeRateChange = (
+    setFieldValue,
+    getFormValues,
+    newExchangeRate
+  ) => {
     // Exchange rate'i güncelle
-    setFieldValue('purchaseInvoices[0].exchangeRate', newExchangeRate);
-    
+    setFieldValue("purchaseInvoices[0].exchangeRate", newExchangeRate);
+
     // Tüm satırları yeniden hesapla
     setTimeout(() => {
       // Fresh form values al (getFormValues() her zaman güncel değerleri döner)
       const freshValues = getFormValues();
-      
+
       if (freshValues.purchaseInvoiceLines?.length > 0) {
         freshValues.purchaseInvoiceLines.forEach((line, index) => {
           updateCalculations(setFieldValue, index, freshValues, null);
@@ -282,7 +303,7 @@ export function usePurchaseCalculations(vatStore) {
     const quantity = lineData?.quantity || 1; // 0'a bölme hatasını önlemek için minimum 1
 
     // Unit Price'ı yeniden hesapla: unitPrice = amount / quantity
-    const newUnitPrice = quantity > 0 ? newAmount / quantity : 0;    // Unit Price'ı güncelle
+    const newUnitPrice = quantity > 0 ? newAmount / quantity : 0; // Unit Price'ı güncelle
     setFieldValue(
       `purchaseInvoiceLines[${index}].unitPrice`,
       formatPrecision(newUnitPrice, 4)
@@ -314,7 +335,7 @@ export function usePurchaseCalculations(vatStore) {
 
     // Total Price'dan Cost Price'ı hesapla: costPrice = totalPrice / (1 + vatRate)
     const newCostPrice =
-      vatRate > 0 ? newTotalPrice / (1 + vatRate) : newTotalPrice;    // Cost Price'ı güncelle (bu Unit Price olacak çünkü discount rate = 0)
+      vatRate > 0 ? newTotalPrice / (1 + vatRate) : newTotalPrice; // Cost Price'ı güncelle (bu Unit Price olacak çünkü discount rate = 0)
     setFieldValue(
       `purchaseInvoiceLines[${index}].unitPrice`,
       formatPrecision(newCostPrice, 4)
@@ -347,8 +368,8 @@ export function usePurchaseCalculations(vatStore) {
 
     // Total Amount'tan Cost Amount'ı hesapla: costAmount = totalAmount / (1 + vatRate)
     const newCostAmount =
-      vatRate > 0 ? newTotalAmount / (1 + vatRate) : newTotalAmount;    // Cost Amount'tan Amount'ı hesapla (discount = 0 olduğu için costAmount = amount)
-    const newAmount = newCostAmount;    // Amount'tan Unit Price'ı hesapla: unitPrice = amount / quantity
+      vatRate > 0 ? newTotalAmount / (1 + vatRate) : newTotalAmount; // Cost Amount'tan Amount'ı hesapla (discount = 0 olduğu için costAmount = amount)
+    const newAmount = newCostAmount; // Amount'tan Unit Price'ı hesapla: unitPrice = amount / quantity
     const newUnitPrice = quantity > 0 ? newAmount / quantity : 0;
     // Değerleri güncelle
     setFieldValue(
@@ -379,7 +400,7 @@ export function usePurchaseCalculations(vatStore) {
     setFieldValue(`purchaseInvoiceLines[${index}].costPrice`, newCostPrice);
 
     // Discount rate'i sıfırla (cost price manuel değiştirildiğinde)
-    setFieldValue(`purchaseInvoiceLines[${index}].discountRate`, 0);    // Cost Price = Unit Price - Discount olduğu için ve discount = 0 olduğunda
+    setFieldValue(`purchaseInvoiceLines[${index}].discountRate`, 0); // Cost Price = Unit Price - Discount olduğu için ve discount = 0 olduğunda
     // Cost Price = Unit Price olur
     setFieldValue(
       `purchaseInvoiceLines[${index}].unitPrice`,
@@ -408,11 +429,11 @@ export function usePurchaseCalculations(vatStore) {
     setFieldValue(`purchaseInvoiceLines[${index}].discountRate`, 0);
 
     const lineData = currentValues.purchaseInvoiceLines?.[index];
-    const quantity = lineData?.quantity || 1;    // Cost Amount = Amount - Discount Amount olduğu için ve discount = 0 olduğunda
+    const quantity = lineData?.quantity || 1; // Cost Amount = Amount - Discount Amount olduğu için ve discount = 0 olduğunda
     // Cost Amount = Amount olur
     const newAmount = newCostAmount;
     // Amount'tan Unit Price'ı hesapla: unitPrice = amount / quantity
-    const newUnitPrice = quantity > 0 ? newAmount / quantity : 0;    // Değerleri güncelle
+    const newUnitPrice = quantity > 0 ? newAmount / quantity : 0; // Değerleri güncelle
     setFieldValue(
       `purchaseInvoiceLines[${index}].amount`,
       formatPrecision(newAmount, 4)
@@ -447,7 +468,8 @@ export function usePurchaseCalculations(vatStore) {
         totalCostAmount: 0,
         totalVatAmount: 0,
         grandTotal: 0,
-      }    ); // Decimal precision
+      }
+    ); // Decimal precision
     Object.keys(totals).forEach((key) => {
       totals[key] = formatPrecision(totals[key], 4);
     });
@@ -497,10 +519,14 @@ export function usePurchaseCalculations(vatStore) {
     // Eğer toplam fatura tutarı 0 ise, masrafları eşit dağıt
     if (totalInvoiceAmount <= 0) {
       const equalExpensePerLine =
-        totalExpenseAmount / purchaseInvoiceLines.length;      return purchaseInvoiceLines.map((line) => ({
+        totalExpenseAmount / purchaseInvoiceLines.length;
+      return purchaseInvoiceLines.map((line) => ({
         ...line,
         expenseAmount: formatPrecision(equalExpensePerLine, 4),
-        costAmount: formatPrecision((line.amount || 0) + equalExpensePerLine, 4),
+        costAmount: formatPrecision(
+          (line.amount || 0) + equalExpensePerLine,
+          4
+        ),
       }));
     }
 
@@ -517,7 +543,7 @@ export function usePurchaseCalculations(vatStore) {
         const lineRatio = (line.amount || 0) / totalInvoiceAmount;
         expenseAmount = totalExpenseAmount * lineRatio;
         distributedExpenseTotal += expenseAmount;
-      }      // Precision kontrolü
+      } // Precision kontrolü
       expenseAmount = formatPrecision(expenseAmount, 4);
       const costAmount = formatPrecision((line.amount || 0) + expenseAmount, 4);
 
@@ -534,7 +560,7 @@ export function usePurchaseCalculations(vatStore) {
    * Form values'ı güncelle - expense dağılımı sonrası
    * @param {Object} formValues - Form values objesi
    * @param {Function} setFieldValue - VeeValidate setFieldValue fonksiyonu
-   */  const updateExpenseDistribution = (formValues, setFieldValue) => {
+   */ const updateExpenseDistribution = (formValues, setFieldValue) => {
     const { purchaseInvoiceLines = [], purchaseInvoiceExpenses = [] } =
       formValues;
 
@@ -572,7 +598,7 @@ export function usePurchaseCalculations(vatStore) {
 
     // Expense dağılım fonksiyonları
     distributeExpenseAmounts,
-    updateExpenseDistribution,    // Olay işleyicileri
+    updateExpenseDistribution, // Olay işleyicileri
     onQuantityChange,
     onUnitPriceChange,
     onDiscountRateChange,

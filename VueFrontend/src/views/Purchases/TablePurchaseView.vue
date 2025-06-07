@@ -51,7 +51,7 @@
     <!-- Partner -->
     <Column field="partner.name" header="Tedarikçi" style="min-width: 150px">
       <template #body="{ data }">
-        {{ data.partner?.name || data.partner?.tradeName || "-" }}
+        {{ partnerNames[data.partnerId] || "-" }}
       </template>
     </Column>
 
@@ -70,7 +70,10 @@
     <!-- Para Birimi -->
     <Column field="currency.code" header="Para Birimi" style="min-width: 80px">
       <template #body="{ data }">
-        {{ data.currency?.code || "-" }}
+        {{
+          currenciesWithComputed.find((c) => c.id === data.currencyId)
+            ?.formattedCode || "-"
+        }}
       </template>
     </Column>
 
@@ -201,6 +204,7 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useConfirm } from "primevue/useconfirm";
 import ConfirmDialog from "primevue/confirmdialog";
@@ -208,6 +212,8 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { usePurchaseStore } from "@/stores/purchase.store";
 import { useAccountStore } from "@/stores/account.store";
+import { useCurrencyStore } from "@/stores/currency.store";
+import { usePartnerStore } from "@/stores/partner.store";
 import { storeToRefs } from "pinia";
 import TableDropdownButton from "@/components/UI/Buttons/TableDropdownButton.vue";
 
@@ -223,11 +229,20 @@ const router = useRouter();
 const confirm = useConfirm();
 
 const purchaseStore = usePurchaseStore();
+const currencyStore = useCurrencyStore();
+const partnerStore = usePartnerStore();
 const accountStore = useAccountStore();
+
+// Fetch initial data
 await purchaseStore.fetchPurchases();
 await accountStore.fetchAccounts();
+await currencyStore.fetchCurrencies();
+await partnerStore.fetchPartners();
+// Reactive references
 const { purchases, loading } = storeToRefs(purchaseStore);
 const { accountTypeOptions } = storeToRefs(accountStore);
+const { currencies } = storeToRefs(currencyStore);
+const { partners } = storeToRefs(partnerStore);
 
 // Purchase invoice deletion
 const confirmDelete = (purchase) => {
@@ -303,6 +318,22 @@ const viewExpenses = async (invoice) => {
     console.error("Error fetching invoice expenses:", error);
   }
 };
+
+// Currencies with computed properties
+const currenciesWithComputed = computed(() => {
+  return currencies.value.map((currency) => ({
+    ...currency,
+    formattedCode: currency.code.toUpperCase(),
+  }));
+});
+
+// Partner names with computed properties
+const partnerNames = computed(() => {
+  return partners.value.reduce((acc, partner) => {
+    acc[partner.id] = partner.name;
+    return acc;
+  }, {});
+});
 
 const duplicateInvoice = (invoice) => {
   // TODO: Implement invoice duplication

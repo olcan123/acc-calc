@@ -107,7 +107,8 @@ export const usePurchaseStore = defineStore("purchase", () => {
         message.value || "Satın alma faturası başarıyla güncellendi"
       );
 
-      return response.data;
+      // Redirect to purchase table
+      router.push({ name: "table-purchase" });
     } catch (err) {
       error.value = err;
 
@@ -130,7 +131,7 @@ export const usePurchaseStore = defineStore("purchase", () => {
   const deletePurchase = async (id) => {
     loading.value = true;
     try {
-      const response = await axiosInstance.delete(`purchases/${id}`);
+      const response = await axiosInstance.delete(`purchases/id/${id}`);
       message.value = response.data.message;
       toast.success(message.value || "Satın alma faturası başarıyla silindi");
 

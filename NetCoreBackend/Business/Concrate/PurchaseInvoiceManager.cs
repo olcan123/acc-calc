@@ -138,10 +138,10 @@ namespace Business.Concrate
 
             _purchaseInvoiceExpenseService.BulkDeleteByPurchaseInvoiceId(purchaseInvoice.Id);
             _purchaseInvoiceLineService.BulkDeleteByPurchaseInvoiceId(purchaseInvoice.Id);
-
-            _ledgerService.Delete(new Ledger { Id = purchaseInvoice.LedgerId });
-            _ledgerEntryService.BulkDeleteByLedgerId(purchaseInvoice.LedgerId);
             Delete(purchaseInvoice);
+
+            _ledgerEntryService.BulkDeleteByLedgerId(purchaseInvoice.LedgerId);
+            _ledgerService.Delete(new Ledger { Id = purchaseInvoice.LedgerId });
             return new SuccessResult("Satınalma faturası silindi");
         }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,18 +17,18 @@ namespace DataAccess.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Code = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    ParentAccountId = table.Column<int>(type: "integer", nullable: true),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    IsPostable = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    NormalBalance = table.Column<int>(type: "integer", nullable: true),
-                    AccountType = table.Column<int>(type: "integer", nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    ParentAccountId = table.Column<int>(type: "int", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    IsPostable = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    NormalBalance = table.Column<int>(type: "int", nullable: true),
+                    AccountType = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -46,17 +45,17 @@ namespace DataAccess.Migrations
                 name: "Addresses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Location = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    Street = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    City = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    State = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    Country = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    ZipCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Location = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Street = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    State = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Country = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ZipCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -67,11 +66,11 @@ namespace DataAccess.Migrations
                 name: "Banks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -82,11 +81,11 @@ namespace DataAccess.Migrations
                 name: "Categories",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -97,15 +96,15 @@ namespace DataAccess.Migrations
                 name: "Companies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    TradeName = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    UidNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    VatNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    Period = table.Column<string>(type: "character varying(5)", maxLength: 5, nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    TradeName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    UidNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    VatNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Period = table.Column<string>(type: "nvarchar(5)", maxLength: 5, nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -116,11 +115,11 @@ namespace DataAccess.Migrations
                 name: "Contacts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -131,12 +130,12 @@ namespace DataAccess.Migrations
                 name: "Currencies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Code = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -147,15 +146,15 @@ namespace DataAccess.Migrations
                 name: "Ledgers",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     DocumentType = table.Column<short>(type: "smallint", nullable: false, comment: "1=PurchaseInvoice, 2=SalesInvoice, 3=Payment, 4=Receipt, 5=Journal"),
-                    DocumentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ReferenceNo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    DocumentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReferenceNo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Status = table.Column<short>(type: "smallint", nullable: false, defaultValue: (short)0),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -166,9 +165,9 @@ namespace DataAccess.Migrations
                 name: "OperationClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -179,16 +178,16 @@ namespace DataAccess.Migrations
                 name: "Partners",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    TradeName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    PartnerType = table.Column<int>(type: "integer", nullable: false),
-                    BusinessPartnerType = table.Column<int>(type: "integer", nullable: true),
-                    IdentityNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    VatNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    TradeName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    PartnerType = table.Column<int>(type: "int", nullable: false),
+                    BusinessPartnerType = table.Column<int>(type: "int", nullable: true),
+                    IdentityNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    VatNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -199,12 +198,12 @@ namespace DataAccess.Migrations
                 name: "UnitOfMeasures",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Abbreviation = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Abbreviation = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -215,10 +214,10 @@ namespace DataAccess.Migrations
                 name: "UserOperationClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    OperationClaimId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    OperationClaimId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -229,14 +228,14 @@ namespace DataAccess.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    FirstName = table.Column<string>(type: "text", nullable: true),
-                    LastName = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    PasswordHash = table.Column<byte[]>(type: "bytea", nullable: true),
-                    PasswordSalt = table.Column<byte[]>(type: "bytea", nullable: true),
-                    Status = table.Column<bool>(type: "boolean", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -247,14 +246,14 @@ namespace DataAccess.Migrations
                 name: "Vats",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Rate = table.Column<float>(type: "real", nullable: false),
-                    IsDefault = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    IsDefault = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -265,13 +264,13 @@ namespace DataAccess.Migrations
                 name: "Warehouses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CompanyId = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    CompanyId1 = table.Column<int>(type: "integer", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    CompanyId1 = table.Column<int>(type: "int", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -293,16 +292,16 @@ namespace DataAccess.Migrations
                 name: "ContactDetails",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ContactId = table.Column<int>(type: "integer", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Value = table.Column<string>(type: "text", nullable: true),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    IsPrimary = table.Column<bool>(type: "boolean", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ContactId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsPrimary = table.Column<bool>(type: "bit", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -319,17 +318,17 @@ namespace DataAccess.Migrations
                 name: "BankAccounts",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    BankId = table.Column<int>(type: "integer", nullable: false),
-                    BranchName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    AccountNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    IBAN = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    SwiftCode = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    CurrencyId = table.Column<int>(type: "integer", nullable: false),
-                    BankId1 = table.Column<int>(type: "integer", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BankId = table.Column<int>(type: "int", nullable: false),
+                    BranchName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    AccountNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    IBAN = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    SwiftCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    CurrencyId = table.Column<int>(type: "int", nullable: false),
+                    BankId1 = table.Column<int>(type: "int", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -357,10 +356,10 @@ namespace DataAccess.Migrations
                 name: "AddressPartners",
                 columns: table => new
                 {
-                    AddressId = table.Column<int>(type: "integer", nullable: false),
-                    PartnerId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    PartnerId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -383,10 +382,10 @@ namespace DataAccess.Migrations
                 name: "ContactPartners",
                 columns: table => new
                 {
-                    ContactId = table.Column<int>(type: "integer", nullable: false),
-                    PartnerId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ContactId = table.Column<int>(type: "int", nullable: false),
+                    PartnerId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -409,19 +408,19 @@ namespace DataAccess.Migrations
                 name: "LedgerEntries",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    LedgerId = table.Column<int>(type: "integer", nullable: false),
-                    PartnerId = table.Column<int>(type: "integer", nullable: true),
-                    LineNo = table.Column<int>(type: "integer", nullable: false),
-                    AccountId = table.Column<int>(type: "integer", nullable: false),
-                    Description = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    Debit = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
-                    Credit = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
-                    AccountId1 = table.Column<int>(type: "integer", nullable: true),
-                    CurrencyId = table.Column<int>(type: "integer", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LedgerId = table.Column<int>(type: "int", nullable: false),
+                    PartnerId = table.Column<int>(type: "int", nullable: true),
+                    LineNo = table.Column<int>(type: "int", nullable: false),
+                    AccountId = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
+                    Debit = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
+                    Credit = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
+                    AccountId1 = table.Column<int>(type: "int", nullable: true),
+                    CurrencyId = table.Column<int>(type: "int", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -460,24 +459,24 @@ namespace DataAccess.Migrations
                 name: "PurchaseInvoices",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    LedgerId = table.Column<int>(type: "integer", nullable: false),
-                    InvoiceType = table.Column<int>(type: "integer", nullable: false),
-                    PartnerId = table.Column<int>(type: "integer", nullable: false),
-                    VendorAccountId = table.Column<int>(type: "integer", nullable: false),
-                    InvoiceNo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    InvoiceDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ImportPartnerDocNo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    ImportPartnerDocDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    CurrencyId = table.Column<int>(type: "integer", nullable: false),
-                    ExchangeRate = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LedgerId = table.Column<int>(type: "int", nullable: false),
+                    InvoiceType = table.Column<int>(type: "int", nullable: false),
+                    PartnerId = table.Column<int>(type: "int", nullable: false),
+                    VendorAccountId = table.Column<int>(type: "int", nullable: false),
+                    InvoiceNo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    InvoiceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ImportPartnerDocNo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ImportPartnerDocDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CurrencyId = table.Column<int>(type: "int", nullable: false),
+                    ExchangeRate = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
                     Status = table.Column<short>(type: "smallint", nullable: false, defaultValue: (short)0),
-                    Note = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    IsPaid = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    CashPaymentAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Note = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CashPaymentAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -499,7 +498,7 @@ namespace DataAccess.Migrations
                         column: x => x.LedgerId,
                         principalTable: "Ledgers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_PurchaseInvoices_Partners_PartnerId",
                         column: x => x.PartnerId,
@@ -512,19 +511,19 @@ namespace DataAccess.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    PurchaseAccountId = table.Column<int>(type: "integer", nullable: false),
-                    SaleAccountId = table.Column<int>(type: "integer", nullable: false),
-                    CustomsTaxRate = table.Column<float>(type: "numeric(5,2)", nullable: false),
-                    ExciseTaxRate = table.Column<float>(type: "numeric(5,2)", nullable: false),
-                    VatId = table.Column<int>(type: "integer", nullable: false),
-                    ProductType = table.Column<int>(type: "integer", nullable: false),
-                    UnitOfMeasureId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    PurchaseAccountId = table.Column<int>(type: "int", nullable: false),
+                    SaleAccountId = table.Column<int>(type: "int", nullable: false),
+                    CustomsTaxRate = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    ExciseTaxRate = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    VatId = table.Column<int>(type: "int", nullable: false),
+                    ProductType = table.Column<int>(type: "int", nullable: false),
+                    UnitOfMeasureId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -559,10 +558,10 @@ namespace DataAccess.Migrations
                 name: "AddressWarehouses",
                 columns: table => new
                 {
-                    AddressId = table.Column<int>(type: "integer", nullable: false),
-                    WarehouseId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    AddressId = table.Column<int>(type: "int", nullable: false),
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -585,10 +584,10 @@ namespace DataAccess.Migrations
                 name: "ContactWarehouses",
                 columns: table => new
                 {
-                    ContactId = table.Column<int>(type: "integer", nullable: false),
-                    WarehouseId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ContactId = table.Column<int>(type: "int", nullable: false),
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -611,10 +610,10 @@ namespace DataAccess.Migrations
                 name: "BankAccountCompanies",
                 columns: table => new
                 {
-                    BankAccountId = table.Column<int>(type: "integer", nullable: false),
-                    CompanyId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    BankAccountId = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -637,10 +636,10 @@ namespace DataAccess.Migrations
                 name: "BankAccountPartners",
                 columns: table => new
                 {
-                    BankAccountId = table.Column<int>(type: "integer", nullable: false),
-                    PartnerId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    BankAccountId = table.Column<int>(type: "int", nullable: false),
+                    PartnerId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -663,21 +662,21 @@ namespace DataAccess.Migrations
                 name: "PurchaseInvoiceExpenses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PurchaseInvoiceId = table.Column<int>(type: "integer", nullable: false),
-                    PartnerId = table.Column<int>(type: "integer", nullable: false),
-                    VendorAccountId = table.Column<int>(type: "integer", nullable: false),
-                    PartnerInvoiceNo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    PartnerInvoiceDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ExpenseType = table.Column<int>(type: "integer", nullable: false),
-                    RevaluationAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
-                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    AmountFc = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
-                    IsPaid = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    CashPaymentAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false, defaultValue: 0m),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PurchaseInvoiceId = table.Column<int>(type: "int", nullable: false),
+                    PartnerId = table.Column<int>(type: "int", nullable: false),
+                    VendorAccountId = table.Column<int>(type: "int", nullable: false),
+                    PartnerInvoiceNo = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    PartnerInvoiceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExpenseType = table.Column<int>(type: "int", nullable: false),
+                    RevaluationAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    AmountFc = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
+                    IsPaid = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    CashPaymentAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: false, defaultValue: 0m),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -699,20 +698,20 @@ namespace DataAccess.Migrations
                         column: x => x.PurchaseInvoiceId,
                         principalTable: "PurchaseInvoices",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Barcodes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Code = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Type = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -730,10 +729,10 @@ namespace DataAccess.Migrations
                 name: "ProductCategories",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
-                    CategoryId = table.Column<int>(type: "integer", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -756,15 +755,15 @@ namespace DataAccess.Migrations
                 name: "ProductDocuments",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
-                    FileName = table.Column<string>(type: "text", nullable: true),
-                    FileUrl = table.Column<string>(type: "text", nullable: true),
-                    DocumentType = table.Column<string>(type: "text", nullable: true),
-                    UploadedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DocumentType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -781,16 +780,16 @@ namespace DataAccess.Migrations
                 name: "ProductImages",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
-                    Url = table.Column<string>(type: "text", nullable: true),
-                    Label = table.Column<string>(type: "text", nullable: true),
-                    IsMain = table.Column<bool>(type: "boolean", nullable: false),
-                    DisplayOrder = table.Column<int>(type: "integer", nullable: false),
-                    UploadedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Label = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsMain = table.Column<bool>(type: "bit", nullable: false),
+                    DisplayOrder = table.Column<int>(type: "int", nullable: false),
+                    UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -807,16 +806,16 @@ namespace DataAccess.Migrations
                 name: "ProductPrices",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
-                    UnitPrice = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    Category = table.Column<byte>(type: "smallint", nullable: false),
-                    Side = table.Column<byte>(type: "smallint", nullable: false),
-                    ValidFrom = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ValidTo = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    Category = table.Column<byte>(type: "tinyint", nullable: false),
+                    Side = table.Column<byte>(type: "tinyint", nullable: false),
+                    ValidFrom = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ValidTo = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -833,33 +832,32 @@ namespace DataAccess.Migrations
                 name: "PurchaseInvoiceLines",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    PurchaseInvoiceId = table.Column<int>(type: "integer", nullable: false),
-                    ProductId = table.Column<int>(type: "integer", nullable: false),
-                    WarehouseId = table.Column<int>(type: "integer", nullable: false),
-                    UnitOfMeasureId = table.Column<int>(type: "integer", nullable: false),
-                    VatId = table.Column<int>(type: "integer", nullable: false),
-                    PurchaseAccountId = table.Column<int>(type: "integer", nullable: false),
-                    Quantity = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    UnitPrice = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    ExpenseAmount = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    DiscountRate = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    DiscountAmount = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    ExciseTaxRate = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    ExciseTaxAmount = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    CustomsRate = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    CustomsAmount = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    RevaluationAmount = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    VatTaxRate = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    VatTaxAmount = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    CostPrice = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    CostAmount = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    TotalAmount = table.Column<decimal>(type: "numeric(18,6)", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    Modified = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PurchaseInvoiceId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    WarehouseId = table.Column<int>(type: "int", nullable: false),
+                    UnitOfMeasureId = table.Column<int>(type: "int", nullable: false),
+                    VatId = table.Column<int>(type: "int", nullable: false),
+                    PurchaseAccountId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    UnitPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    ExpenseAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    DiscountRate = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    DiscountAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    ExciseTaxRate = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    ExciseTaxAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    CustomsRate = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    CustomsAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    RevaluationAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    VatTaxAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    CostPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    CostAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    TotalPrice = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,6)", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Modified = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -959,11 +957,6 @@ namespace DataAccess.Migrations
                     { 4, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Raifaisen Bank" },
                     { 5, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Procredit Bank" }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Companies",
-                columns: new[] { "Id", "Modified", "Name", "Period", "TradeName", "UidNumber", "VatNumber" },
-                values: new object[] { 1, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Pintech d.o.o.", "2024", "Pintech Solutions", "123456789", "AL123456789" });
 
             migrationBuilder.InsertData(
                 table: "Currencies",

@@ -74,9 +74,10 @@ namespace Business.Concrate
             var purchaseInvoiceId = purchaseInvoiceExpenses.FirstOrDefault()?.PurchaseInvoiceId;
             if (purchaseInvoiceId == null)
                 return new ErrorResult("Fatura ID'si bulunamadı");
-            
-            _purchaseInvoiceExpenseDal.MergeLinqWithDelete(purchaseInvoiceExpenses, (source, target) => source.Id == target.Id,
-               (source, target) => target.PurchaseInvoiceId == purchaseInvoiceId.Value);
+
+            _purchaseInvoiceExpenseDal.MergeSync(purchaseInvoiceExpenses, (source, target) =>
+                source.Id == target.Id,
+                target => target.PurchaseInvoiceId == purchaseInvoiceId.Value);
             return new SuccessResult("Fatura masrafları güncellendi");
         }
 

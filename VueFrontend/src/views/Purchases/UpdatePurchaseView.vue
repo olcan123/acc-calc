@@ -112,11 +112,13 @@ import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations";
 import { useToast } from "vue-toastification";
 
 // Components
-import PurchaseInvoiceModal from "@/components/Views/Purchase/PurchaseInvoiceModal.vue";
-import PurchaseInvoiceInfoCard from "@/components/Views/Purchase/PurchaseInvoiceInfoCard.vue";
-import PurchaseTableHeader from "@/components/Views/Purchase/PurchaseTableHeader.vue";
-import PurchaseTableRow from "@/components/Views/Purchase/PurchaseTableRow.vue";
-import PurchaseTotalSummary from "@/components/Views/Purchase/PurchaseTotalSummary.vue";
+import {
+  PurchaseInvoiceModal,
+  PurchaseInvoiceInfoCard,
+  PurchaseTableHeader,
+  PurchaseTableRow,
+  PurchaseTotalSummary,
+} from "@/components/Views/Purchase";
 
 // Stores
 const purchaseStore = usePurchaseStore();
@@ -161,7 +163,7 @@ const {
 });
 
 // Field array for invoice lines
-const { push, remove } = useFieldArray("purchaseInvoiceLines");
+const { push } = useFieldArray("purchaseInvoiceLines");
 
 // Initialize purchase calculations composable
 const {

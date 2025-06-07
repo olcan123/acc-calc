@@ -35,21 +35,21 @@ namespace DataAccess.Concrate.EfMapping
             builder.HasOne(p => p.Currency)
                   .WithMany(p => p.PurchaseInvoices)
                   .HasForeignKey(p => p.CurrencyId)
-                  .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(p => p.Ledger)
+                  .OnDelete(DeleteBehavior.Restrict);            builder.HasOne(p => p.Ledger)
                   .WithMany(p => p.PurchaseInvoices)
-                    .HasForeignKey(p => p.LedgerId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .HasForeignKey(p => p.LedgerId)
+                  .OnDelete(DeleteBehavior.Restrict);
 
             // Collections
             builder.HasMany(p => p.PurchaseInvoiceLines)
                   .WithOne(l => l.PurchaseInvoice)
-                  .HasForeignKey(l => l.PurchaseInvoiceId);
+                  .HasForeignKey(l => l.PurchaseInvoiceId)
+                  .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(p => p.PurchaseInvoiceExpenses)
                   .WithOne(e => e.PurchaseInvoice)
-                  .HasForeignKey(e => e.PurchaseInvoiceId);
+                  .HasForeignKey(e => e.PurchaseInvoiceId)
+                  .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

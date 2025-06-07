@@ -28,7 +28,7 @@ namespace DataAccess.Concrate.EntityFramework.Context
                     throw new InvalidOperationException($"Connection string 'DefaultConnection' missing for {environment}!");
                 }
 
-                optionsBuilder.UseNpgsql(connectionString);
+                optionsBuilder.UseSqlServer(connectionString);
                 optionsBuilder.UseLinqToDB();
             }
 

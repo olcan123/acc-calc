@@ -41,10 +41,11 @@ namespace Business.Ledgerization.Strategies
                     Debit = item.SumCostAmount,
                     Credit = 0,
                 });
-            }
+            }            // 2. Satıcı Hesabı için Defterleştirme
+            decimal totalInvoiceAmount = purchaseInvoice.InvoiceType == InvoiceType.ImportInvoice 
+                ? purchaseInvoiceLines.Sum(x => x.Amount)
+                : purchaseInvoiceLines.Sum(x => x.TotalAmount);
 
-            // 2. Satıcı Hesabı için Defterleştirme
-            decimal totalInvoiceAmount = purchaseInvoiceLines.Sum(x => x.TotalAmount);
             ledgerEntries.Add(new LedgerEntry
             {
                 LedgerId = ledgerId,
@@ -208,8 +209,8 @@ namespace Business.Ledgerization.Strategies
                     LineNo = lineNo++,
                     AccountId = item.PartnerId, // Partner hesabı kullanılmalı
                     Description = $"{purchaseInvoice.InvoiceNo} - Diğer Satıcı Masrafı",
-                    Debit = item.Amount,
-                    Credit = 0,
+                    Debit = 0,
+                    Credit =item.Amount,
                 });
             }
             return ledgerEntries;

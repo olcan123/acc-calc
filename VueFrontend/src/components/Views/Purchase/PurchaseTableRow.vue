@@ -2,7 +2,7 @@
   <tr
     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
     v-for="(field, index) in fields"
-    :key="field.key"
+    :key="`purchase-line-${field.key}-${index}`"
   >
     <!-- Unit Info Section -->
 
@@ -40,7 +40,8 @@
         placeholder="0"
         @input="handleQuantityChange(index, $event)"
       />
-    </td>    <!-- Unit of Measure -->
+    </td>
+    <!-- Unit of Measure -->
     <td class="px-3 py-3 min-w-[100px]">
       <TableFieldSelect
         :fieldName="`purchaseInvoiceLines[${index}].unitOfMeasureId`"
@@ -48,7 +49,7 @@
         placeholder="Birim"
       />
     </td>
-    
+
     <!-- Import-only tax rate columns -->
     <!-- Excise Tax Rate (ÖTV %) -->
     <td v-if="isImportPurchase" class="px-3 py-3 min-w-[80px]">
@@ -60,7 +61,7 @@
         @input="handleExciseTaxRateChange(index, $event)"
       />
     </td>
-    
+
     <!-- Customs Rate (Gümrük %) -->
     <td v-if="isImportPurchase" class="px-3 py-3 min-w-[80px]">
       <TableFieldNumberInput
@@ -71,7 +72,7 @@
         @input="handleCustomsRateChange(index, $event)"
       />
     </td>
-    
+
     <!-- VAT -->
     <td
       class="px-3 py-3 min-w-[80px] border-r-2 border-gray-300 dark:border-gray-600"
@@ -132,14 +133,16 @@
         step="0.000001"
         @input="handleAmountChange(index, $event)"
       />
-    </td>    <!-- Discount Amount -->
+    </td>
+    <!-- Discount Amount -->
     <td class="px-3 py-3 min-w-[100px]">
       <div
         class="p-2 bg-gray-50 dark:bg-gray-700 rounded text-center font-medium text-gray-800 dark:text-gray-200"
       >
         {{ field.value.discountAmount || "0.00" }}
       </div>
-    </td>    <!-- Expense Amount -->
+    </td>
+    <!-- Expense Amount -->
     <td class="px-3 py-3 min-w-[100px]">
       <div
         class="p-2 bg-blue-50 dark:bg-blue-900 rounded text-center font-medium text-blue-800 dark:text-blue-200"
@@ -147,7 +150,7 @@
         {{ field.value.expenseAmount || "0.00" }}
       </div>
     </td>
-    
+
     <!-- Import-only tax amount columns -->
     <!-- Excise Tax Amount (ÖTV Tutarı) -->
     <td v-if="isImportPurchase" class="px-3 py-3 min-w-[100px]">
@@ -157,7 +160,7 @@
         {{ field.value.exciseTaxAmount || "0.00" }}
       </div>
     </td>
-    
+
     <!-- Customs Amount (Gümrük Tutarı) -->
     <td v-if="isImportPurchase" class="px-3 py-3 min-w-[100px]">
       <div
@@ -166,7 +169,7 @@
         {{ field.value.customsAmount || "0.00" }}
       </div>
     </td>
-    
+
     <!-- Cost Amount -->
     <td class="px-3 py-3 min-w-[100px]">
       <TableFieldNumberInput
@@ -211,7 +214,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, nextTick } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useFormContext, useFieldArray } from "vee-validate";
@@ -223,6 +226,9 @@ import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";
 import { useAccountStore } from "@/stores/account.store";
 import { useVatStore } from "@/stores/vat.store";
 import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations.js";
+
+// Define emits for parent communication
+const emit = defineEmits(["remove-line"]);
 
 // Check if this is an import purchase using route
 const route = useRoute();
@@ -341,8 +347,11 @@ const handleCostAmountChange = (index, event) => {
 // Import-only tax handlers
 const handleExciseTaxRateChange = (index, event) => {
   const newExciseTaxRate = Number(event.target.value) || 0;
-  setFieldValue(`purchaseInvoiceLines[${index}].exciseTaxRate`, newExciseTaxRate);
-  
+  setFieldValue(
+    `purchaseInvoiceLines[${index}].exciseTaxRate`,
+    newExciseTaxRate
+  );
+
   // Trigger recalculation with the updated values
   setTimeout(() => {
     updateCalculations(setFieldValue, index, formValues, null);
@@ -352,17 +361,22 @@ const handleExciseTaxRateChange = (index, event) => {
 const handleCustomsRateChange = (index, event) => {
   const newCustomsRate = Number(event.target.value) || 0;
   setFieldValue(`purchaseInvoiceLines[${index}].customsRate`, newCustomsRate);
-  
+
   // Trigger recalculation with the updated values
   setTimeout(() => {
     updateCalculations(setFieldValue, index, formValues, null);
   }, 50);
 };
 
-const removeLine = (index) => {
+const removeLine = async (index) => {
   // Handle removal internally using useFieldArray
   if (fields.value.length > 1) {
-    remove(index);
+    try {
+      remove(index);
+      await nextTick();
+    } catch (error) {
+      emit("remove-line", index);
+    }
   }
 };
 </script>

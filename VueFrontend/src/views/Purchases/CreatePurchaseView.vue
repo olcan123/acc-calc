@@ -91,11 +91,13 @@ import { useCurrencyStore } from "@/stores/currency.store";
 import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations";
 
 // Components
-import PurchaseInvoiceModal from "@/components/Views/Purchase/PurchaseInvoiceModal.vue";
-import PurchaseInvoiceInfoCard from "@/components/Views/Purchase/PurchaseInvoiceInfoCard.vue";
-import PurchaseTableHeader from "@/components/Views/Purchase/PurchaseTableHeader.vue";
-import PurchaseTableRow from "@/components/Views/Purchase/PurchaseTableRow.vue";
-import PurchaseTotalSummary from "@/components/Views/Purchase/PurchaseTotalSummary.vue";
+import {
+  PurchaseInvoiceModal,
+  PurchaseInvoiceInfoCard,
+  PurchaseTableHeader,
+  PurchaseTableRow,
+  PurchaseTotalSummary,
+} from "@/components/Views/Purchase";
 
 // Stores
 const purchaseStore = usePurchaseStore();
