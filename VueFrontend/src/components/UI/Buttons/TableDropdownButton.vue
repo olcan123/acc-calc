@@ -20,15 +20,14 @@
           clip-rule="evenodd"
         />
       </svg>
-    </button>
-
-    <!-- Dropdown Menu -->
+    </button>    <!-- Dropdown Menu -->
     <Teleport to="body">
       <div
         v-if="open"
         ref="dropdownMenuRef"
         class="z-[9999] fixed w-48 rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 overflow-y-auto max-h-[300px]"
         :style="dropdownStyles"
+        @click="close"
       >
         <div class="py-1 divide-y divide-gray-100 dark:divide-gray-700">
           <slot />

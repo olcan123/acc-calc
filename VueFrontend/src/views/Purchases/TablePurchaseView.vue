@@ -187,8 +187,15 @@
               Masraflar
             </a>
 
-            <hr class="my-2 border-gray-200 dark:border-gray-600" />
+            <a
+              href="#"
+              @click.prevent="viewLedgerDetails(data)"
+              class="dropdown-item"
+            >
+              Defter Kayıtları
+            </a>
 
+            <hr class="my-2 border-gray-200 dark:border-gray-600" />
             <a
               href="#"
               @click.prevent="duplicateInvoice(data)"
@@ -201,10 +208,15 @@
       </template>
     </Column>
   </DataTable>
+
+  <!-- Ledger Modal -->
+  <LedgerModal v-model="showLedgerModal">
+    <LedgerDetailsModal v-if="selectedLedgerId" :ledger-id="selectedLedgerId" />
+  </LedgerModal>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useConfirm } from "primevue/useconfirm";
 import ConfirmDialog from "primevue/confirmdialog";
@@ -216,6 +228,8 @@ import { useCurrencyStore } from "@/stores/currency.store";
 import { usePartnerStore } from "@/stores/partner.store";
 import { storeToRefs } from "pinia";
 import TableDropdownButton from "@/components/UI/Buttons/TableDropdownButton.vue";
+import LedgerModal from "@/components/UI/Modal/LedgerModal.vue";
+import LedgerDetailsModal from "@/components/Views/Purchase/LedgerDetailsModal.vue";
 
 // Import enum helpers
 import {
@@ -227,6 +241,10 @@ import {
 
 const router = useRouter();
 const confirm = useConfirm();
+
+// Modal states
+const showLedgerModal = ref(false);
+const selectedLedgerId = ref(null);
 
 const purchaseStore = usePurchaseStore();
 const currencyStore = useCurrencyStore();
@@ -316,6 +334,16 @@ const viewExpenses = async (invoice) => {
     // TODO: Show expenses in a modal
   } catch (error) {
     console.error("Error fetching invoice expenses:", error);
+  }
+};
+
+// Show ledger details modal
+const viewLedgerDetails = (invoice) => {
+  if (invoice.ledger?.id) {
+    selectedLedgerId.value = invoice.ledger.id;
+    showLedgerModal.value = true;
+  } else {
+    console.warn("Ledger information not found for invoice:", invoice.id);
   }
 };
 
