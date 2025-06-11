@@ -14,10 +14,12 @@ namespace Business.Concrate
     public class LedgerManager : ILedgerService
     {
         private readonly ILedgerDal _ledgerDal;
+        private readonly ILedgerEntryService _ledgerEntryService;
 
-        public LedgerManager(ILedgerDal ledgerDal)
+        public LedgerManager(ILedgerDal ledgerDal, ILedgerEntryService ledgerEntryService)
         {
             _ledgerDal = ledgerDal;
+            _ledgerEntryService = ledgerEntryService;
         }
 
         public IDataResult<List<Ledger>> GetList()
@@ -67,6 +69,47 @@ namespace Business.Concrate
 
             _ledgerDal.Delete(ledger);
             return new SuccessResult("Muhasebe fişi silindi");
+        }
+
+
+        //SECTION - Ledgerization
+
+        [TransactionScopeAspect]
+        public IResult AddLedgerization(Ledger ledger, List<LedgerEntry> ledgerEntries)
+        {
+            Add(ledger);
+            if (ledgerEntries != null && ledgerEntries.Count > 0)
+            {
+                foreach (var entry in ledgerEntries)
+                {
+                    entry.LedgerId = ledger.Id; // Set the LedgerId for each entry
+                }
+                _ledgerEntryService.BulkAdd(ledgerEntries);
+            }
+
+            return new SuccessResult("Muhasebe fişi ve girişleri eklendi");
+        }
+
+        public IResult UpdateLedgerization(Ledger ledger, List<LedgerEntry> ledgerEntries)
+        {
+            Update(ledger);
+            if (ledgerEntries != null && ledgerEntries.Count > 0)
+            {
+                foreach (var entry in ledgerEntries)
+                {
+                    entry.LedgerId = ledger.Id; // Set the LedgerId for each entry
+                }
+                _ledgerEntryService.BulkUpdate(ledgerEntries);
+            }
+
+            return new SuccessResult("Muhasebe fişi ve girişleri güncellendi");
+        }
+
+        public IResult DeleteLedgerization(int ledgerId)
+        {
+            _ledgerEntryService.BulkDeleteByLedgerId(ledgerId);
+            _ledgerDal.Delete(new Ledger { Id = ledgerId });
+            return new SuccessResult("Muhasebe fişi ve girişleri silindi");
         }
     }
 }
