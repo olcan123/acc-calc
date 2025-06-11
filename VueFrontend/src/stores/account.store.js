@@ -97,6 +97,38 @@ export const useAccountStore = defineStore("account", () => {
     };
   });
 
+// Filter accounts by code prefixes and return as options (value/label format)
+const optionAccountsSartsWithCode = computed(() => {
+  return (startsWithCodes = []) => {
+    // Ensure startsWithCodes is always an array
+    const codesArray = Array.isArray(startsWithCodes) ? startsWithCodes : [startsWithCodes];
+    
+    // Filter accounts by postable status and code prefixes
+    const filteredAccounts = accounts.value.filter((account) => {
+      // Check if account is postable
+      if (account.isPostable !== true) {
+        return false;
+      }
+      
+      // Check if account has code
+      if (!account.code) {
+        return false;
+      }
+      
+      // Check if account code starts with any of the specified codes
+      const accountCode = account.code.toString();
+      return codesArray.some(code => accountCode.startsWith(code));
+    });
+    
+    // Map to option format with value and label
+    return filteredAccounts.map((account) => ({
+      value: account.id,
+      label: `${account.code} - ${account.name}`,
+    }));
+  };
+});
+
+
   const fetchAccounts = async () => {
     loading.value = true;
     try {
@@ -180,7 +212,6 @@ export const useAccountStore = defineStore("account", () => {
       loading.value = false;
     }
   };
-
   return {
     accounts,
     account,
@@ -192,6 +223,7 @@ export const useAccountStore = defineStore("account", () => {
     normalBalanceOptions,
     optionAccounts,
     parentAccountFilterOptions,
+    optionAccountsSartsWithCode,
     fetchAccounts,
     fetchAccount,
     fetchAccountsByParentId,

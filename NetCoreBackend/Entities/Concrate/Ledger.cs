@@ -10,6 +10,7 @@ namespace Entities.Concrate
         {
             LedgerEntries = new HashSet<LedgerEntry>();
             PurchaseInvoices = new HashSet<PurchaseInvoice>();
+            SaleInvoices = new HashSet<SaleInvoice>();
         }
         public int Id { get; set; }
         public short DocumentType { get; set; }
@@ -19,6 +20,7 @@ namespace Entities.Concrate
         public short Status { get; set; }
         public ICollection<LedgerEntry> LedgerEntries { get; set; }
         public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; }
+        public ICollection<SaleInvoice> SaleInvoices { get; set; }
     }
 
     public enum LedgerDocumentType

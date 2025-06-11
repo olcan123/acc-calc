@@ -14,7 +14,8 @@ namespace Entities.Concrate
             ProductImages = new HashSet<ProductImage>();
             ProductDocuments = new HashSet<ProductDocument>();
             PurchaseInvoiceLines = new HashSet<PurchaseInvoiceLine>();
-            
+            SaleInvoiceLines = new HashSet<SaleInvoiceLine>();
+
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -42,7 +43,8 @@ namespace Entities.Concrate
         public ICollection<ProductPrice> ProductPrices { get; set; }          // 1 → N
         public ICollection<ProductImage> ProductImages { get; set; }   // 1 → N
         public ICollection<ProductDocument> ProductDocuments { get; set; } // 1 → N
-        public ICollection<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; } = new HashSet<PurchaseInvoiceLine>();
+        public ICollection<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; } 
+        public ICollection<SaleInvoiceLine> SaleInvoiceLines { get; set; } = new HashSet<SaleInvoiceLine>(); // 1 → N
 
     }
 

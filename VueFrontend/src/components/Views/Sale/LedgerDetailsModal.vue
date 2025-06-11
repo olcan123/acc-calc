@@ -6,9 +6,6 @@
   <div v-else-if="ledgerData" class="space-y-6">
     <!-- Defter Bilgileri -->
     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-      <h4 class="text-md font-semibold text-gray-900 dark:text-white mb-3">
-        Defter Bilgileri
-      </h4>
       <div class="grid grid-cols-2 gap-4 text-sm">
         <div>
           <span class="font-medium text-gray-600 dark:text-gray-300">Belge Türü:</span>
@@ -20,17 +17,15 @@
         </div>
         <div>
           <span class="font-medium text-gray-600 dark:text-gray-300">Referans No:</span>
-          <span class="ml-2 text-gray-900 dark:text-white">{{ ledgerData.referenceNo || '-' }}</span>
+          <span class="ml-2 text-gray-900 dark:text-white">{{ ledgerData.referenceNo || "-" }}</span>
         </div>
         <div>
           <span class="font-medium text-gray-600 dark:text-gray-300">Durum:</span>
-          <span class="ml-2" :class="getStatusClass(ledgerData.status)">
-            {{ getStatusLabel(ledgerData.status) }}
-          </span>
+          <span class="ml-2" :class="getStatusClass(ledgerData.status)">{{ getStatusLabel(ledgerData.status) }}</span>
         </div>
         <div class="col-span-2">
           <span class="font-medium text-gray-600 dark:text-gray-300">Açıklama:</span>
-          <span class="ml-2 text-gray-900 dark:text-white">{{ ledgerData.description || '-' }}</span>
+          <span class="ml-2 text-gray-900 dark:text-white">{{ ledgerData.description || "-" }}</span>
         </div>
       </div>
     </div>
@@ -54,13 +49,9 @@
           <!-- Hesap -->
         <Column header="Hesap" style="min-width: 150px">
           <template #body="{ data }">
-            <div>
-              <div class="font-medium text-gray-900 dark:text-white">
-                {{ getAccountNameWithStore(data.accountId) }}
-              </div>
-              <div class="text-xs text-gray-500 dark:text-gray-400">
-                ID: {{ data.accountId }}
-              </div>
+            <div class="text-sm">
+              <div class="font-mono text-gray-900 dark:text-white">{{ data.accountCode }}</div>
+              <div class="text-gray-600 dark:text-gray-300">{{ getAccountNameWithStore(data.accountId) }}</div>
             </div>
           </template>
         </Column>
@@ -68,33 +59,36 @@
         <!-- Partner -->
         <Column header="Partner" style="min-width: 120px">
           <template #body="{ data }">
-            <span v-if="data.partnerId" class="text-gray-900 dark:text-white">
-              {{ getPartnerNameWithStore(data.partnerId) }}
+            <span class="text-sm text-gray-900 dark:text-white">
+              {{ data.partnerId ? getPartnerNameWithStore(data.partnerId) : '-' }}
             </span>
-            <span v-else class="text-gray-500 dark:text-gray-400">-</span>
           </template>
         </Column>
 
         <!-- Açıklama -->
         <Column field="description" header="Açıklama" style="min-width: 200px">
           <template #body="{ data }">
-            <span class="text-sm text-gray-900 dark:text-white">{{ data.description }}</span>
+            <span class="text-sm text-gray-900 dark:text-white">{{ data.description || '-' }}</span>
           </template>
-        </Column>        <!-- Borç -->
+        </Column>
+
+        <!-- Borç -->
         <Column header="Borç" style="min-width: 120px" class="text-right">
           <template #body="{ data }">
-            <span class="font-medium" :class="data.debit > 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-400'">
+            <span v-if="data.debit && data.debit > 0" class="text-green-600 dark:text-green-400 font-medium">
               {{ formatCurrency(data.debit) }}
             </span>
+            <span v-else class="text-gray-400">-</span>
           </template>
         </Column>
 
         <!-- Alacak -->
         <Column header="Alacak" style="min-width: 120px" class="text-right">
           <template #body="{ data }">
-            <span class="font-medium" :class="data.credit > 0 ? 'text-red-600 dark:text-red-400' : 'text-gray-400'">
+            <span v-if="data.credit && data.credit > 0" class="text-red-600 dark:text-red-400 font-medium">
               {{ formatCurrency(data.credit) }}
             </span>
+            <span v-else class="text-gray-400">-</span>
           </template>
         </Column>
 
@@ -102,14 +96,17 @@
         <Column header="Bakiye" style="min-width: 140px" class="text-right">
           <template #body="{ data }">
             <span class="font-semibold" :class="getRunningBalance(data.lineNo) >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
-              {{ formatCurrency(getRunningBalance(data.lineNo)) }}
+              {{ formatCurrency(Math.abs(getRunningBalance(data.lineNo))) }}
             </span>
           </template>
         </Column>
-      </DataTable>      <!-- Toplam Satırı -->
+      </DataTable>
+
+      <!-- Toplam Satırı -->
       <div class="mt-4 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
         <div class="flex justify-between items-center text-sm font-medium">
-          <span class="text-gray-900 dark:text-white">Toplam:</span>          <div class="flex gap-8">
+          <span class="text-gray-900 dark:text-white">Toplam:</span>
+          <div class="flex gap-8">
             <div>
               <span class="text-gray-600 dark:text-gray-300 mr-2">Borç:</span>
               <span class="text-green-600 dark:text-green-400 font-semibold">
@@ -125,7 +122,7 @@
             <div>
               <span class="text-gray-600 dark:text-gray-300 mr-2">Net Bakiye:</span>
               <span :class="finalBalance >= 0 ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'" class="font-semibold">
-                {{ formatCurrency(finalBalance) }}
+                {{ formatCurrency(Math.abs(finalBalance)) }}
               </span>
             </div>
           </div>
@@ -144,7 +141,7 @@ import { ref, computed, watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
-import { usePurchaseStore } from '@/stores/purchase.store';
+import { useSaleStore } from '@/stores/sale.store';
 import { useAccountStore } from '@/stores/account.store';
 import { usePartnerStore } from '@/stores/partner.store';
 import { useLedgerHelpers } from '@/composables/useLedgerHelpers';
@@ -156,11 +153,11 @@ const props = defineProps({
   }
 });
 
-const purchaseStore = usePurchaseStore();
+const saleStore = useSaleStore();
 const accountStore = useAccountStore();
 const partnerStore = usePartnerStore();
 
-const { purchases } = storeToRefs(purchaseStore);
+const { sales } = storeToRefs(saleStore);
 const { accounts } = storeToRefs(accountStore);
 const { partners } = storeToRefs(partnerStore);
 
@@ -170,6 +167,7 @@ const ledgerData = ref(null);
 // Composable'dan helper fonksiyonları
 const {
   formatDate,
+  formatDateTime,
   formatCurrency,
   getDocumentTypeLabel,
   getStatusLabel,
@@ -179,7 +177,7 @@ const {
   calculateRunningBalance,
   calculateTotalDebit,
   calculateTotalCredit,
-  calculateFinalBalance
+  calculateFinalBalance,
 } = useLedgerHelpers();
 
 // Computed properties for totals
@@ -212,19 +210,19 @@ const getRunningBalance = (lineNo) => {
 const fetchLedgerData = async () => {
   loading.value = true;
   try {
-    // Fetch the purchases if not already loaded
-    if (!purchases.value || purchases.value.length === 0) {
-      await purchaseStore.fetchPurchases();
+    // Fetch the sales if not already loaded
+    if (!sales.value || sales.value.length === 0) {
+      await saleStore.fetchSales();
     }
     
-    // Find the purchase that contains this ledger
-    const purchase = purchases.value.find(p => p.ledger?.id === props.ledgerId);
+    // Find the sale that contains this ledger
+    const sale = sales.value.find(s => s.ledger?.id === props.ledgerId);
     
-    if (purchase?.ledger) {
-      ledgerData.value = purchase.ledger;
+    if (sale?.ledger) {
+      ledgerData.value = sale.ledger;
     } else {
-      // If not found, the ledger data might not be loaded with the purchase list
-      // Try to fetch the specific purchase details
+      // If not found, the ledger data might not be loaded with the sale list
+      // Try to fetch the specific sale details
       ledgerData.value = null;
     }
   } catch (error) {
@@ -250,6 +248,7 @@ onMounted(async () => {
     await fetchLedgerData();
   }
 });
+
 </script>
 
 <style scoped>

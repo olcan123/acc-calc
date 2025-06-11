@@ -94,5 +94,7 @@ namespace DataAccess.Concrate.EntityFramework.Context
         public DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
         public DbSet<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; }
         public DbSet<PurchaseInvoiceExpense> PurchaseInvoiceExpenses { get; set; }
+        public DbSet<SaleInvoice> SaleInvoices { get; set; }
+        public DbSet<SaleInvoiceLine> SaleInvoiceLines { get; set; }
     }
 }

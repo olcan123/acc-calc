@@ -11,6 +11,7 @@ public class Partner : BaseEntity
         PurchaseInvoices = new HashSet<PurchaseInvoice>();
         LedgerEntries = new HashSet<LedgerEntry>();
         PurchaseInvoiceExpenses = new HashSet<PurchaseInvoiceExpense>();
+        SaleInvoices = new HashSet<SaleInvoice>(); // Assuming SaleInvoice is defined elsewhere
     }
 
     public int Id { get; set; }
@@ -23,11 +24,12 @@ public class Partner : BaseEntity
 
     // Navigation Properties
     public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; }
-    public ICollection<PurchaseInvoiceExpense> PurchaseInvoiceExpenses { get;}
+    public ICollection<PurchaseInvoiceExpense> PurchaseInvoiceExpenses { get; }
     public ICollection<BankAccountPartner> BankAccountPartners { get; set; }
     public ICollection<ContactPartner> ContactPartners { get; set; }
     public ICollection<AddressPartner> AddressPartners { get; set; }
     public ICollection<LedgerEntry> LedgerEntries { get; set; }
+    public ICollection<SaleInvoice> SaleInvoices { get; set; } // Assuming SaleInvoice is defined elsewhere
 }
 
 

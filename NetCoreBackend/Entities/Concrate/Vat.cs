@@ -13,6 +13,7 @@ namespace Entities.Concrate
         {
             Products = new HashSet<Product>();
             PurchaseInvoiceLines = new HashSet<PurchaseInvoiceLine>();
+            SaleInvoiceLines = new HashSet<SaleInvoiceLine>();
         }
 
         public int Id { get; set; }
@@ -24,5 +25,6 @@ namespace Entities.Concrate
         // 1 → N
         public ICollection<Product> Products { get; set; }
         public ICollection<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; } 
+        public ICollection<SaleInvoiceLine> SaleInvoiceLines { get; set; }  // İlişkili Satış Fatura Satırları
     }
 }

@@ -12,6 +12,7 @@ import productRoutes from "./product.routes";
 import currencyRoutes from "./currency.routes";
 import accountRoutes from "./account.routes";
 import purchaseRoutes from "./purchase.routes";
+import saleRoutes from "./sale.routes";
 
 const routes = [  {
     path: "/",
@@ -24,10 +25,10 @@ const routes = [  {
       ...vatRoutes,
       ...unitOfMeasureRoutes,
       ...categoryRoutes,
-      ...productRoutes,
-      ...currencyRoutes,
+      ...productRoutes,      ...currencyRoutes,
       ...accountRoutes,
-      ...purchaseRoutes
+      ...purchaseRoutes,
+      ...saleRoutes
     ],
   },
 ];

@@ -5,13 +5,12 @@ import { computed } from "vue";
  * @param {Object} vatStore - VAT store referansı
  * @returns {Object} Hesaplama metodları ve utility fonksiyonları
  */
-export function usePurchaseCalculations(vatStore) {
-  /**
+export function usePurchaseCalculations(vatStore) {  /**
    * Sayısal değerleri belirli hassasiyetle formatlar (floating point precision sorunlarını önler)
    * @param {number} value - Formatlanacak değer
    * @param {number} precision - Ondalık basamak sayısı (varsayılan: 4)
    * @returns {number} Formatlanmış değer
-   */
+   */  
   const formatPrecision = (value, precision = 4) => {
     // Null, undefined, empty string kontrolü
     if (value === null || value === undefined || value === "" || value === 0)
@@ -23,7 +22,20 @@ export function usePurchaseCalculations(vatStore) {
     // NaN kontrolü
     if (isNaN(numValue)) return 0;
 
-    return parseFloat(numValue.toFixed(precision));
+    // ULTRA PRECISION FIX: Çok hassas rounding için multiple approach
+    // Approach 1: Number.EPSILON ile düzeltme
+    const epsilon = Number.EPSILON;
+    const multiplier = Math.pow(10, precision);
+    
+    // Approach 2: String-based rounding (en hassas)
+    const stringRounded = numValue.toFixed(precision + 2);
+    const preRounded = parseFloat(stringRounded);
+    
+    // Approach 3: Mathematical rounding with epsilon
+    const rounded = Math.round((preRounded + epsilon) * multiplier) / multiplier;
+    
+    // Final result: parseFloat ile clean number döndür
+    return parseFloat(rounded.toFixed(precision));
   };
 
   /**
@@ -60,14 +72,14 @@ export function usePurchaseCalculations(vatStore) {
     };
 
     return vatRates[vatId] || 0;
-  };
-  /**
+  };  /**
    * Temel hesaplamaları yapan ana fonksiyon
    * @param {Object} lineData - Fatura satırı verisi
    * @param {string} skipField - Bu alanı yeniden hesaplama (manuel değiştirildiği için)
    * @param {number} exchangeRate - Döviz kuru (opsiyonel, varsayılan: 1)
    * @returns {Object} Hesaplanmış değerler
-   */ const calculateLineValues = (
+   */ 
+  const calculateLineValues = (
     lineData,
     skipField = null,
     exchangeRate = 1
@@ -86,6 +98,19 @@ export function usePurchaseCalculations(vatStore) {
       costPrice: manualCostPrice = null,
       costAmount: manualCostAmount = null,
     } = lineData;
+
+    // DATABASE PRECISION PROTECTION: Eğer skipField yoksa ve totalAmount var ise (database'den gelmiş)
+    // o değeri exact olarak koru ve diğer değerleri ona göre hesapla
+    const isDatabaseLoad = !skipField && manualTotalAmount !== null && manualTotalAmount !== undefined;
+    
+    // DEBUG: Database load kontrolü
+    if (isDatabaseLoad) {
+      console.log('💾 Database precision protection active:', {
+        manualTotalAmount: manualTotalAmount,
+        skipField: skipField,
+        mode: 'DATABASE_LOAD'
+      });
+    }
 
     // Basic amount calculation
     const convertedUnitPrice = convertCurrency(unitPrice, exchangeRate);
@@ -137,25 +162,48 @@ export function usePurchaseCalculations(vatStore) {
       (quantity > 0 ? expenseAmount / quantity : 0);
     const exciseTaxAmount =
       baseCostPriceForTax * (exciseTaxRate / 100) * quantity;
-    const customsAmount = baseCostPriceForTax * (customsRate / 100) * quantity;
-
-    // VAT calculations
+    const customsAmount = baseCostPriceForTax * (customsRate / 100) * quantity;    // VAT calculations
     const vatRate = getVatRate(vatId);
-    const vatTaxAmount = costAmount * vatRate;
-
-    // Total calculations
-    let totalPrice, totalAmount;
+      // Total calculations - precision-safe hesaplama
+    let totalPrice, totalAmount, vatTaxAmount;
     if (skipField === "totalPrice" && manualTotalPrice !== null) {
       totalPrice = manualTotalPrice;
-      totalAmount = costAmount + vatTaxAmount;
+      totalAmount = costAmount + (costAmount * vatRate);
+      vatTaxAmount = costAmount * vatRate;
     } else if (skipField === "totalAmount" && manualTotalAmount !== null) {
-      totalAmount = manualTotalAmount;
+      // Kullanıcının manuel girdiği totalAmount değerini hiç formatlamadan koru
+      totalAmount = parseFloat(manualTotalAmount);
       totalPrice = quantity > 0 ? totalAmount / quantity : 0;
+      // VAT amount'u consistent şekilde hesapla
+      vatTaxAmount = totalAmount - costAmount;    
+    } else if (isDatabaseLoad) {
+      // DATABASE PROTECTION: Database'den gelen değerleri exact koru
+      totalAmount = parseFloat(manualTotalAmount);
+      totalPrice = quantity > 0 ? totalAmount / quantity : 0;
+      vatTaxAmount = totalAmount - costAmount;
+      
+      console.log('💾 Database values preserved:', {
+        originalTotalAmount: manualTotalAmount,
+        preservedTotalAmount: totalAmount,
+        calculatedVatTaxAmount: vatTaxAmount
+      });
     } else {
-      totalPrice = costPrice + costPrice * vatRate;
-      totalAmount = costAmount + vatTaxAmount;
-    }
-    return {
+      // PRECISION FIX: Consistent hesaplama yöntemi kullan
+      // Her ikisini de aynı mantıkla hesapla: costAmount * (1 + vatRate)
+      totalAmount = costAmount * (1 + vatRate);
+      totalPrice = quantity > 0 ? totalAmount / quantity : 0;
+      // VAT amount'u tutarlı şekilde hesapla
+      vatTaxAmount = totalAmount - costAmount;
+      
+      // DEBUG: Precision kontrolü
+      console.log('🔢 Forward calculation:', {
+        costAmount: costAmount,
+        vatRate: vatRate,
+        calculation: `${costAmount} * (1 + ${vatRate}) = ${totalAmount}`,
+        vatTaxAmount: vatTaxAmount
+      });
+    }    return {
+      // PRECISION FIX: Sadece display için formatla, internal calculations raw tutulsun
       amount: formatPrecision(amount, 4),
       discountAmount: formatPrecision(discountAmount, 4),
       exciseTaxAmount: formatPrecision(exciseTaxAmount, 4),
@@ -164,16 +212,27 @@ export function usePurchaseCalculations(vatStore) {
       costAmount: formatPrecision(costAmount, 4),
       vatTaxAmount: formatPrecision(vatTaxAmount, 4),
       totalPrice: formatPrecision(totalPrice, 2),
-      totalAmount: formatPrecision(totalAmount, 2),
+      // ULTIMATE PROTECTION: Manuel input ve database değerleri ASLA formatlanmaz
+      totalAmount: (skipField === "totalAmount" && manualTotalAmount !== null) || isDatabaseLoad
+        ? parseFloat(manualTotalAmount)  // User input ve database değerlerini exact koru
+        : formatPrecision(totalAmount, 2),
+      
+      // DEBUG: Raw değerleri de döndür (debugging için)
+      _raw: {
+        amount: amount,
+        costAmount: costAmount,
+        vatTaxAmount: vatTaxAmount,
+        totalAmount: totalAmount
+      }
     };
-  };
-  /**
+  };  /**
    * Tek bir değer değiştiğinde tüm hesaplamaları güncelle
    * @param {Function} setFieldValue - VeeValidate setFieldValue fonksiyonu
    * @param {number} index - Satır indeksi
    * @param {Object} currentValues - Mevcut form değerleri
    * @param {string} changedField - Değişen alan adı
-   */ const updateCalculations = (
+   */ 
+  const updateCalculations = (
     setFieldValue,
     index,
     currentValues,
@@ -189,7 +248,18 @@ export function usePurchaseCalculations(vatStore) {
       lineData,
       changedField,
       exchangeRate
-    );
+    );    
+
+    // PRECISION FIX: totalAmount koruması sadece manuel değişiklikler için
+    const shouldPreserveTotalAmount = changedField === "totalAmount";
+      // DEBUG: updateCalculations kontrolü
+    console.log('🔄 updateCalculations called:', {
+      changedField: changedField,
+      preserveTotalAmount: shouldPreserveTotalAmount,
+      currentTotalAmount: lineData.totalAmount,
+      calculatedTotalAmount: calculated.totalAmount,
+      rawCalculated: calculated._raw
+    });
 
     // Sadece değişmeyen alanları güncelle (kullanıcı input'u korunur)
     const fieldsToUpdate = {
@@ -207,6 +277,12 @@ export function usePurchaseCalculations(vatStore) {
     // Eğer kullanıcı bu alanı manuel değiştiriyorsa, o alanı güncelleme
     if (changedField && fieldsToUpdate[changedField] !== undefined) {
       delete fieldsToUpdate[changedField];
+    }
+
+    // CRITICAL FIX: totalAmount koruması sadece user input durumunda
+    if (shouldPreserveTotalAmount) {
+      delete fieldsToUpdate.totalAmount;
+      console.log('🛡️ totalAmount protected from update');
     }
 
     // Tüm hesaplanmış değerleri güncelle
@@ -345,19 +421,25 @@ export function usePurchaseCalculations(vatStore) {
     setTimeout(() => {
       updateCalculations(setFieldValue, index, currentValues, "totalPrice");
     }, 50);
-  };
-  /**
-   * Total Amount değiştiğinde hesaplama (discount rate sıfırlanır)
-   * Total Amount = Cost Amount + VAT Amount olduğu için ters hesaplama yapar
-   */
-  const onTotalAmountChange = (
+  };  /**
+   * Total Amount değiştiğinde kapsamlı tersine hesaplama 
+   * calculateLineValues'ın tam tersi mantığını uygular
+   * PRECISION FIX: Forward calculation ile tutarlı formül kullanır
+   */  const onTotalAmountChange = (
     setFieldValue,
     index,
     currentValues,
     newTotalAmount
   ) => {
-    // Total Amount değerini ayarla
-    setFieldValue(`purchaseInvoiceLines[${index}].totalAmount`, newTotalAmount);
+    // ÖNCE: Kullanıcının exact değerini kaydet (hiç formatlamadan)
+    const exactUserValue = parseFloat(newTotalAmount);
+    
+    // DEBUG: User input kontrolü
+    console.log('🎯 User totalAmount input:', {
+      input: newTotalAmount,
+      parsed: exactUserValue,
+      type: typeof newTotalAmount
+    });
 
     // Discount rate'i sıfırla (total amount manuel değiştirildiğinde)
     setFieldValue(`purchaseInvoiceLines[${index}].discountRate`, 0);
@@ -365,21 +447,68 @@ export function usePurchaseCalculations(vatStore) {
     const lineData = currentValues.purchaseInvoiceLines?.[index];
     const vatRate = getVatRate(lineData?.vatId);
     const quantity = lineData?.quantity || 1;
+    const exchangeRate = currentValues.purchaseInvoices?.[0]?.exchangeRate || 1;
+    const expenseAmount = lineData?.expenseAmount || 0;
+    const exciseTaxRate = lineData?.exciseTaxRate || 0;
+    const customsRate = lineData?.customsRate || 0;
 
-    // Total Amount'tan Cost Amount'ı hesapla: costAmount = totalAmount / (1 + vatRate)
-    const newCostAmount =
-      vatRate > 0 ? newTotalAmount / (1 + vatRate) : newTotalAmount; // Cost Amount'tan Amount'ı hesapla (discount = 0 olduğu için costAmount = amount)
-    const newAmount = newCostAmount; // Amount'tan Unit Price'ı hesapla: unitPrice = amount / quantity
-    const newUnitPrice = quantity > 0 ? newAmount / quantity : 0;
-    // Değerleri güncelle
-    setFieldValue(
-      `purchaseInvoiceLines[${index}].amount`,
-      formatPrecision(newAmount, 4)
-    );
-    setFieldValue(
-      `purchaseInvoiceLines[${index}].unitPrice`,
-      formatPrecision(newUnitPrice, 4)
-    );
+    // PRECISION FIX: Forward calculation ile aynı formülü kullan
+    // Forward: totalAmount = costAmount * (1 + vatRate)
+    // Reverse: costAmount = totalAmount / (1 + vatRate)
+    const newCostAmount = vatRate > 0 ? exactUserValue / (1 + vatRate) : exactUserValue;
+
+    // STEP 2: Cost Amount'tan Cost Price'ı hesapla
+    // costAmount = costPrice × quantity
+    const newCostPrice = quantity > 0 ? newCostAmount / quantity : 0;
+
+    // STEP 3: Cost Price'tan base unit price'ı tersine hesapla
+    // Forward hesaplama: costPrice = baseUnitPrice × (1 - discountRate/100) + expensePerUnit + taxes
+    // Tersine hesaplama: baseUnitPrice = (costPrice - expensePerUnit - taxes) / (1 - discountRate/100)
+    
+    const expensePerUnit = quantity > 0 ? expenseAmount / quantity : 0;
+    
+    // Vergilerin ve masrafların olmadığı temiz cost price'ı bul
+    // Bu iteratif bir süreç çünkü vergiler cost price üzerinden hesaplanıyor
+    let baseCostPriceForTax = newCostPrice - expensePerUnit;
+    
+    // Vergi oranlarını tersine hesapla (yaklaşık iterasyon)
+    for (let i = 0; i < 3; i++) {
+      const exciseTaxAmount = baseCostPriceForTax * (exciseTaxRate / 100);
+      const customsAmount = baseCostPriceForTax * (customsRate / 100);
+      const totalTaxes = exciseTaxAmount + customsAmount;
+      baseCostPriceForTax = newCostPrice - expensePerUnit - totalTaxes;
+    }
+
+    // Discount olmadığı için (sıfırlandığı için) baseCostPrice = unitPrice × exchangeRate
+    const newUnitPrice = baseCostPriceForTax / exchangeRate;
+    
+    // STEP 4: Unit Price'tan Amount'ı hesapla (discount = 0 olduğu için)
+    const newAmount = newUnitPrice * quantity;    // SMART FIX: UI validation için minimal formatting, calculation precision için maksimum hassasiyet
+    // Amount: Raw precision (calculation için)
+    // UnitPrice: Light formatting (UI validation için)  
+    // CostPrice: Light formatting
+    // CostAmount: Raw precision (calculation için)
+    setFieldValue(`purchaseInvoiceLines[${index}].amount`, newAmount);
+    setFieldValue(`purchaseInvoiceLines[${index}].unitPrice`, formatPrecision(newUnitPrice, 6));
+    setFieldValue(`purchaseInvoiceLines[${index}].costPrice`, formatPrecision(newCostPrice, 6));
+    setFieldValue(`purchaseInvoiceLines[${index}].costAmount`, newCostAmount);
+
+    // SON: Total Amount'ı kullanıcının exact değeriyle set et
+    setFieldValue(`purchaseInvoiceLines[${index}].totalAmount`, exactUserValue);    // DEBUG: Final değerleri kontrol et - RAW VALUES
+    console.log('🏁 Final reverse calculation result (RAW):', {
+      userInput: exactUserValue,
+      newAmount: newAmount,
+      newCostAmount: newCostAmount,
+      newUnitPrice: newUnitPrice,
+      formattedUnitPrice: formatPrecision(newUnitPrice, 6),
+      calculatedVAT: exactUserValue - newCostAmount,
+      verification: `${newCostAmount} * (1 + ${vatRate}) = ${newCostAmount * (1 + vatRate)}`,
+      expectedFromCalculator: {
+        amount: 423.728813559322,
+        vatAmount: 76.27118644067797,
+        total: 500.00
+      }
+    });
 
     // Diğer hesaplamaları güncelle (totalAmount değişikliğini hariç tut)
     setTimeout(() => {

@@ -9,13 +9,15 @@ namespace Entities.Concrate
         {
             Products = new HashSet<Product>();
             PurchaseInvoiceLines = new HashSet<PurchaseInvoiceLine>();
+            SaleInvoiceLines = new HashSet<SaleInvoiceLine>();
         }
-        
+
         public int Id { get; set; }
         public string Name { get; set; }
         public string Abbreviation { get; set; } // Kısa Adı
 
         public ICollection<Product> Products { get; set; } // 1 → N
         public ICollection<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; } // 1 → N
+        public ICollection<SaleInvoiceLine> SaleInvoiceLines { get; set; } // 1 → N
     }
 }

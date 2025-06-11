@@ -4,6 +4,7 @@ using DataAccess.Concrate.EntityFramework.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(FcdAccContext))]
-    partial class FcdAccContextModelSnapshot : ModelSnapshot
+    [Migration("20250608104101_SaleAdd")]
+    partial class SaleAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2178,9 +2181,6 @@ namespace DataAccess.Migrations
 
                     b.Property<int>("SaleInvoiceId")
                         .HasColumnType("int");
-
-                    b.Property<decimal>("TotalAmount")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,4)");

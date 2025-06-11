@@ -242,7 +242,6 @@ import { computed, ref, watchEffect, inject, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
 import { useFormContext, useFieldArray } from "vee-validate";
-import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations";
 import BaseModalPersistent from "@/components/UI/Modal/BaseModalPersistent.vue";
 import FieldTextInput from "@/components/Form/FieldTextInput.vue";
 import FieldTextArea from "@/components/Form/FieldTextArea.vue";
@@ -297,7 +296,6 @@ const onExchangeRateChange = inject('onExchangeRateChange', null);
 
 // Initialize purchase calculations for expense redistribution
 const vatStore = useVatStore();
-const { updateExpenseDistribution } = usePurchaseCalculations(vatStore);
 
 // Field array for managing expenses
 const { push: pushExpense, remove: removeExpense } = useFieldArray(

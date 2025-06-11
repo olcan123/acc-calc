@@ -2,14 +2,14 @@
   <tr
     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
     v-for="(field, index) in fields"
-    :key="`purchase-line-${field.key}-${index}`"
+    :key="`sale-line-${field.key}-${index}`"
   >
     <!-- Unit Info Section -->
 
     <!-- Product Selection -->
     <td class="px-3 py-3 min-w-[200px]">
       <TableFieldSelect
-        :fieldName="`purchaseInvoiceLines[${index}].productId`"
+        :fieldName="`saleInvoiceLines[${index}].productId`"
         :options="optionProducts"
         placeholder="Ürün seçin"
         @change="onProductChange(index, $event)"
@@ -19,8 +19,8 @@
     <!-- Account Selection -->
     <td class="px-3 py-3 min-w-[200px]">
       <TableFieldSelect
-        :fieldName="`purchaseInvoiceLines[${index}].purchaseAccountId`"
-        :options="parentAccountFilterOptions()"
+        :fieldName="`saleInvoiceLines[${index}].saleAccountId`"
+        :options="saleAccountFilterOptions()"
         placeholder="Hesap No"
       />
     </td>
@@ -28,48 +28,35 @@
     <!-- Warehouse Selection -->
     <td class="px-3 py-3 min-w-[120px]">
       <TableFieldSelect
-        :fieldName="`purchaseInvoiceLines[${index}].warehouseId`"
+        :fieldName="`saleInvoiceLines[${index}].warehouseId`"
         :options="optionWarehouses"
         placeholder="Depo seçin"
       />
     </td>
+
     <!-- Quantity -->
     <td class="px-3 py-3 min-w-[80px]">
       <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].quantity`"
+        :fieldName="`saleInvoiceLines[${index}].quantity`"
         placeholder="0"
         @input="handleQuantityChange(index, $event)"
       />
     </td>
+
     <!-- Unit of Measure -->
     <td class="px-3 py-3 min-w-[100px]">
       <TableFieldSelect
-        :fieldName="`purchaseInvoiceLines[${index}].unitOfMeasureId`"
+        :fieldName="`saleInvoiceLines[${index}].unitOfMeasureId`"
         :options="optionUnitOfMeasures"
         placeholder="Birim"
       />
     </td>
 
-    <!-- Import-only tax rate columns -->
-    <!-- Excise Tax Rate (ÖTV %) -->
-    <td v-if="isImportPurchase" class="px-3 py-3 min-w-[80px]">
-      <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].exciseTaxRate`"
-        placeholder="0"
-        step="0.01"
-        :max="100"
-        @input="handleExciseTaxRateChange(index, $event)"
-      />
-    </td>
-
-    <!-- Customs Rate (Gümrük %) -->
-    <td v-if="isImportPurchase" class="px-3 py-3 min-w-[80px]">
-      <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].customsRate`"
-        placeholder="0"
-        step="0.01"
-        :max="100"
-        @input="handleCustomsRateChange(index, $event)"
+    <!-- Description -->
+    <td class="px-3 py-3 min-w-[150px]">
+      <TableFieldTextInput
+        :fieldName="`saleInvoiceLines[${index}].description`"
+        placeholder="Açıklama girin"
       />
     </td>
 
@@ -78,7 +65,7 @@
       class="px-3 py-3 min-w-[80px] border-r-2 border-gray-300 dark:border-gray-600"
     >
       <TableFieldSelect
-        :fieldName="`purchaseInvoiceLines[${index}].vatId`"
+        :fieldName="`saleInvoiceLines[${index}].vatId`"
         :options="optionVats"
         placeholder="KDV"
         @change="handleVatChange(index, $event)"
@@ -90,16 +77,17 @@
     <!-- Unit Price -->
     <td class="px-3 py-3 min-w-[100px]">
       <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].unitPrice`"
+        :fieldName="`saleInvoiceLines[${index}].unitPrice`"
         placeholder="0.00"
         step="0.000001"
         @input="handleUnitPriceChange(index, $event)"
       />
     </td>
+
     <!-- Discount Rate -->
     <td class="px-3 py-3 min-w-[80px]">
       <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].discountRate`"
+        :fieldName="`saleInvoiceLines[${index}].discountRate`"
         placeholder="0"
         step="0.000001"
         :max="100"
@@ -107,33 +95,26 @@
       />
     </td>
 
-    <!-- Cost Price -->
-    <td class="px-3 py-3 min-w-[100px]">
-      <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].costPrice`"
-        placeholder="0.00"
-        step="0.000001"
-        @input="handleCostPriceChange(index, $event)"
-      />
-    </td>
     <!-- Total Price -->
     <td class="px-3 py-3 min-w-[100px]">
       <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].totalPrice`"
+        :fieldName="`saleInvoiceLines[${index}].totalPrice`"
         placeholder="0.00"
         step="0.000001"
         @input="handleTotalPriceChange(index, $event)"
       />
     </td>
+
     <!-- Amount (Tutar) -->
     <td class="px-3 py-3 min-w-[100px]">
       <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].amount`"
+        :fieldName="`saleInvoiceLines[${index}].amount`"
         placeholder="0.00"
         step="0.000001"
         @input="handleAmountChange(index, $event)"
       />
     </td>
+
     <!-- Discount Amount -->
     <td class="px-3 py-3 min-w-[100px]">
       <div
@@ -141,43 +122,6 @@
       >
         {{ field.value.discountAmount || "0.00" }}
       </div>
-    </td>
-    <!-- Expense Amount -->
-    <td class="px-3 py-3 min-w-[100px]">
-      <div
-        class="p-2 bg-blue-50 dark:bg-blue-900 rounded text-center font-medium text-blue-800 dark:text-blue-200"
-      >
-        {{ field.value.expenseAmount || "0.00" }}
-      </div>
-    </td>
-
-    <!-- Import-only tax amount columns -->
-    <!-- Excise Tax Amount (ÖTV Tutarı) -->
-    <td v-if="isImportPurchase" class="px-3 py-3 min-w-[100px]">
-      <div
-        class="p-2 bg-orange-50 dark:bg-orange-900 rounded text-center font-medium text-orange-800 dark:text-orange-200"
-      >
-        {{ field.value.exciseTaxAmount || "0.00" }}
-      </div>
-    </td>
-
-    <!-- Customs Amount (Gümrük Tutarı) -->
-    <td v-if="isImportPurchase" class="px-3 py-3 min-w-[100px]">
-      <div
-        class="p-2 bg-purple-50 dark:bg-purple-900 rounded text-center font-medium text-purple-800 dark:text-purple-200"
-      >
-        {{ field.value.customsAmount || "0.00" }}
-      </div>
-    </td>
-
-    <!-- Cost Amount -->
-    <td class="px-3 py-3 min-w-[100px]">
-      <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].costAmount`"
-        placeholder="0.00"
-        step="0.000001"
-        @input="handleCostAmountChange(index, $event)"
-      />
     </td>
 
     <!-- VAT Amount -->
@@ -188,17 +132,19 @@
         {{ field.value.vatTaxAmount || "0.00" }}
       </div>
     </td>
+
     <!-- Total Amount (Final) -->
     <td
       class="px-3 py-3 min-w-[120px] border-r-2 border-gray-300 dark:border-gray-600"
     >
       <TableFieldNumberInput
-        :fieldName="`purchaseInvoiceLines[${index}].totalAmount`"
+        :fieldName="`saleInvoiceLines[${index}].totalAmount`"
         placeholder="0.00"
         step="0.000001"
         @input="handleTotalAmountChange(index, $event)"
       />
     </td>
+
     <!-- Actions -->
     <td class="px-3 py-3 min-w-[80px]">
       <button
@@ -206,6 +152,7 @@
         @click="removeLine(index)"
         :disabled="fields.length <= 1"
         class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 disabled:opacity-50 disabled:cursor-not-allowed p-2 rounded hover:bg-red-50 dark:hover:bg-red-900"
+        title="Satırı Sil"
       >
         🗑️
       </button>
@@ -214,31 +161,29 @@
 </template>
 
 <script setup>
-import { computed, nextTick } from "vue";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useFormContext, useFieldArray } from "vee-validate";
 import TableFieldNumberInput from "@/components/TableForm/TableFieldNumberInput.vue";
 import TableFieldSelect from "@/components/TableForm/TableFieldSelect.vue";
+import TableFieldTextInput from "@/components/TableForm/TableFieldTextInput.vue";
 import { useProductStore } from "@/stores/product.store";
 import { useWarehouseStore } from "@/stores/warehouse.store";
 import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";
 import { useAccountStore } from "@/stores/account.store";
 import { useVatStore } from "@/stores/vat.store";
-import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations.js";
+import { useSaleCalculations } from "@/composables/useSaleCalculations.js";
 
 // Define component options
 defineOptions({
   inheritAttrs: false
 });
 
-// Define emits for parent communication
-const emit = defineEmits(["remove-line"]);
-
-// Check if this is an import purchase using route
+// Check if this is an export sale using route
 const route = useRoute();
-const isImportPurchase = computed(() => {
-  return route.path.includes("/import");
+const isExportSale = computed(() => {
+  return route.name === 'create-export-sale';
 });
 
 // Stores
@@ -249,17 +194,54 @@ const accountStore = useAccountStore();
 const vatStore = useVatStore();
 
 // Store data with reactive refs
-const { optionProducts, products } = storeToRefs(productStore);
-const { optionWarehouses } = storeToRefs(warehouseStore);
-const { optionUnitOfMeasures } = storeToRefs(unitOfMeasureStore);
-const { optionVats } = storeToRefs(vatStore);
-const { parentAccountFilterOptions } = storeToRefs(accountStore);
+const { products } = storeToRefs(productStore);
+const { warehouses } = storeToRefs(warehouseStore);
+const { unitOfMeasures } = storeToRefs(unitOfMeasureStore);
+const { accounts } = storeToRefs(accountStore);
+const { vats } = storeToRefs(vatStore);
+
+// Computed options for selects
+const optionProducts = computed(() => {
+  return products.value.map(product => ({
+    value: product.id,
+    label: product.name,
+  }));
+});
+
+const optionWarehouses = computed(() => {
+  return warehouses.value.map(warehouse => ({
+    value: warehouse.id,
+    label: warehouse.name,
+  }));
+});
+
+const optionUnitOfMeasures = computed(() => {
+  return unitOfMeasures.value.map(unit => ({
+    value: unit.id,
+    label: unit.name,
+  }));
+});
+
+const optionVats = computed(() => {
+  return vats.value.map(vat => ({
+    value: vat.id,
+    label: `%${vat.rate} - ${vat.name}`,
+  }));
+});
+
+const saleAccountFilterOptions = () => {
+  return accounts.value
+    .map(account => ({
+      value: account.id,
+      label: `${account.code} - ${account.name}`,
+    }));
+};
 
 // Access parent form context
 const { setFieldValue, values: formValues } = useFormContext();
-const { remove, fields } = useFieldArray("purchaseInvoiceLines");
+const { remove, fields } = useFieldArray("saleInvoiceLines");
 
-// Purchase calculations composable
+// Sale calculations composable
 const {
   onQuantityChange,
   onUnitPriceChange,
@@ -268,10 +250,8 @@ const {
   onAmountChange,
   onTotalPriceChange,
   onTotalAmountChange,
-  onCostPriceChange,
-  onCostAmountChange,
   updateCalculations,
-} = usePurchaseCalculations(vatStore);
+} = useSaleCalculations(vats);
 
 // Event handlers
 const onProductChange = (index, $event) => {
@@ -279,24 +259,18 @@ const onProductChange = (index, $event) => {
   const product = products.value.find((p) => p.id === productId);
   if (product) {
     // Auto-fill product-related fields when product is selected
-    setFieldValue(
-      `purchaseInvoiceLines[${index}].purchaseAccountId`,
-      product.purchaseAccountId || null
-    );
-    setFieldValue(
-      `purchaseInvoiceLines[${index}].unitOfMeasureId`,
-      product.unitOfMeasureId || null
-    );
-    setFieldValue(
-      `purchaseInvoiceLines[${index}].unitPrice`,
-      product.purchasePrice || 0
-    );
-    setFieldValue(
-      `purchaseInvoiceLines[${index}].vatId`,
-      product.vatId || null
-    );
+    setFieldValue(`saleInvoiceLines[${index}].saleAccountId`, product.saleAccountId);
+    setFieldValue(`saleInvoiceLines[${index}].unitOfMeasureId`, product.unitOfMeasureId);
+    setFieldValue(`saleInvoiceLines[${index}].vatId`, product.vatId);
+    setFieldValue(`saleInvoiceLines[${index}].unitPrice`, product.salePrice || 0);
+    
+    // Set warehouse from invoice data if available
+    const warehouseId = formValues.saleInvoices?.[0]?.warehouseId;
+    if (warehouseId && !formValues.saleInvoiceLines[index]?.warehouseId) {
+      setFieldValue(`saleInvoiceLines[${index}].warehouseId`, warehouseId);
+    }
 
-    // Ürün seçildikten sonra hesaplamaları güncelle
+    // Trigger recalculation with the updated values
     setTimeout(() => {
       updateCalculations(setFieldValue, index, formValues);
     }, 50);
@@ -339,49 +313,7 @@ const handleTotalAmountChange = (index, event) => {
   onTotalAmountChange(setFieldValue, index, formValues, newTotalAmount);
 };
 
-const handleCostPriceChange = (index, event) => {
-  const newCostPrice = Number(event.target.value) || 0;
-  onCostPriceChange(setFieldValue, index, formValues, newCostPrice);
-};
-
-const handleCostAmountChange = (index, event) => {
-  const newCostAmount = Number(event.target.value) || 0;
-  onCostAmountChange(setFieldValue, index, formValues, newCostAmount);
-};
-
-// Import-only tax handlers
-const handleExciseTaxRateChange = (index, event) => {
-  const newExciseTaxRate = Number(event.target.value) || 0;
-  setFieldValue(
-    `purchaseInvoiceLines[${index}].exciseTaxRate`,
-    newExciseTaxRate
-  );
-
-  // Trigger recalculation with the updated values
-  setTimeout(() => {
-    updateCalculations(setFieldValue, index, formValues, null);
-  }, 50);
-};
-
-const handleCustomsRateChange = (index, event) => {
-  const newCustomsRate = Number(event.target.value) || 0;
-  setFieldValue(`purchaseInvoiceLines[${index}].customsRate`, newCustomsRate);
-
-  // Trigger recalculation with the updated values
-  setTimeout(() => {
-    updateCalculations(setFieldValue, index, formValues, null);
-  }, 50);
-};
-
-const removeLine = async (index) => {
-  // Handle removal internally using useFieldArray
-  if (fields.value.length > 1) {
-    try {
-      remove(index);
-      await nextTick();
-    } catch (error) {
-      emit("remove-line", index);
-    }
-  }
+const removeLine = (index) => {
+  remove(index);
 };
 </script>

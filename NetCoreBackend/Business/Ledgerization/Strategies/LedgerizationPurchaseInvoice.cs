@@ -41,7 +41,8 @@ namespace Business.Ledgerization.Strategies
                     Debit = item.SumCostAmount,
                     Credit = 0,
                 });
-            }            // 2. Satıcı Hesabı için Defterleştirme
+            }       
+                 // 2. Satıcı Hesabı için Defterleştirme
             decimal totalInvoiceAmount = purchaseInvoice.InvoiceType == InvoiceType.ImportInvoice 
                 ? purchaseInvoiceLines.Sum(x => x.Amount)
                 : purchaseInvoiceLines.Sum(x => x.TotalAmount);

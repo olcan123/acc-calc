@@ -114,10 +114,15 @@ namespace Business.DependencyResolvers.Autofac
             builder.RegisterType<PurchaseInvoiceManager>().As<IPurchaseInvoiceService>();
 
             builder.RegisterType<EfPurchaseInvoiceLineDal>().As<IPurchaseInvoiceLineDal>();
-            builder.RegisterType<PurchaseInvoiceLineManager>().As<IPurchaseInvoiceLineService>();
-
-            builder.RegisterType<EfPurchaseInvoiceExpenseDal>().As<IPurchaseInvoiceExpenseDal>();
+            builder.RegisterType<PurchaseInvoiceLineManager>().As<IPurchaseInvoiceLineService>();            builder.RegisterType<EfPurchaseInvoiceExpenseDal>().As<IPurchaseInvoiceExpenseDal>();
             builder.RegisterType<PurchaseInvoiceExpenseManager>().As<IPurchaseInvoiceExpenseService>();
+
+            // SECTION: Satış Faturaları
+            builder.RegisterType<EfSaleInvoiceDal>().As<ISaleInvoiceDal>();
+            builder.RegisterType<SaleInvoiceManager>().As<ISaleInvoiceService>();
+
+            builder.RegisterType<EfSaleInvoiceLineDal>().As<ISaleInvoiceLineDal>();
+            builder.RegisterType<SaleInvoiceLineManager>().As<ISaleInvoiceLineService>();
 
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 

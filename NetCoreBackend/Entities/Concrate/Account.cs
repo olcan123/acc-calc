@@ -20,6 +20,8 @@ namespace Entities.Concrate
             PurchaseInvoiceLines = new HashSet<PurchaseInvoiceLine>();
             PurchaseProducts = new HashSet<Product>();
             SaleProducts = new HashSet<Product>();
+            SaleInvoiceLines = new HashSet<SaleInvoiceLine>();
+            SaleInvoices = new HashSet<SaleInvoice>();
             // Koleksiyonlar burada başlatılır eğer varsa
         }
 
@@ -41,6 +43,8 @@ namespace Entities.Concrate
         public ICollection<PurchaseInvoice> PurchaseInvoices { get; set; } = null!; // Alım faturaları
         public ICollection<PurchaseInvoiceExpense> PurchaseInvoiceExpenses { get; set; } = null!; // Alım faturası giderleri
         public ICollection<PurchaseInvoiceLine> PurchaseInvoiceLines { get; set; } = null!;
+        public ICollection<SaleInvoiceLine> SaleInvoiceLines { get; set; }  // Satış fatura satırları
+        public ICollection<SaleInvoice> SaleInvoices { get; set; } = null!; // Satış faturaları
 
         public ICollection<Product> PurchaseProducts { get; set; } = null!; // Alım hesapları için ürünler
         public ICollection<Product> SaleProducts { get; set; } = null!; // Satış hesapları için ürünler

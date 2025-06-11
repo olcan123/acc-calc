@@ -281,10 +281,10 @@ const formatDate = (date) => {
   return new Date(date).toLocaleDateString("tr-TR");
 };
 
-const formatCurrency = (amount, currency = "₺", decimals = 2) => {
+const formatCurrency = (amount, currency = "€", decimals = 2) => {
   if (amount === null || amount === undefined) return "-";
   return (
-    new Intl.NumberFormat("tr-TR", {
+    new Intl.NumberFormat("de-DE", {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
     }).format(amount) + (currency ? ` ${currency}` : "")
