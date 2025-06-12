@@ -100,33 +100,14 @@
     <Column header="İşlemler" style="min-width: 150px">
       <template #body="{ data }">
         <div class="flex gap-2">
-          <!-- Edit Button -->
-          <button
-            @click="updateBank(data.id)"
-            class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-lg transition-colors"
-            title="Düzenle"
-          >
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-              />
-            </svg>
-          </button>
-
-          <!-- Delete Button -->
-          <button
-            @click="confirmDeleteBank(data.id)"
-            class="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 dark:hover:bg-red-900 rounded-lg transition-colors"
-            title="Sil"
-          >
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fill-rule="evenodd"
-                d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9zM4 5a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 102 0v-1a1 1 0 10-2 0v1zm4 0a1 1 0 102 0v-1a1 1 0 10-2 0v1z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
+          <EditButton 
+            @click="updateBank(data.id)" 
+            title="Düzenle" 
+          />
+          <DeleteButton 
+            @click="confirmDeleteBank(data.id)" 
+            title="Sil" 
+          />
         </div>
       </template>
     </Column>
@@ -139,6 +120,8 @@
 <script setup>
 import { DataTable, Column } from "primevue";
 import ConfirmDialog from "primevue/confirmdialog";
+import EditButton from "@/components/UI/Buttons/EditButton.vue";
+import DeleteButton from "@/components/UI/Buttons/DeleteButton.vue";
 import { useConfirm } from "primevue/useconfirm";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
@@ -150,7 +133,7 @@ import { FilterMatchMode, FilterOperator } from "@primevue/core";
 const router = useRouter();
 const confirm = useConfirm();
 const bankStore = useBankStore();
-const { banks } = storeToRefs(bankStore);
+const { banks, loading } = storeToRefs(bankStore);
 
 // Filter state initialization
 const initFilters = () => {

@@ -29,18 +29,15 @@
               >Flowbite</span
             >
           </a>
-        </div>        <!-- Orta Menü -->
+        </div>
+        <!-- Orta Menü -->
         <div
           class="hidden md:flex gap-6 text-sm font-medium text-gray-700 dark:text-white"
         >
-          <nav-link to="table-company"> Sirketler </nav-link>
           <nav-link to="table-partner"> Partnerler </nav-link>
           <nav-link to="table-product"> Urunler </nav-link>
           <nav-link to="table-purchase"> Satın Alma </nav-link>
           <nav-link to="table-sale"> Satış </nav-link>
-          <a href="#" class="hover:text-blue-600 dark:hover:text-blue-400"
-            >Contact</a
-          >
         </div>
 
         <!-- Sağ taraf: Menü -->
@@ -138,21 +135,14 @@
       </div>
 
       <!-- Mobil Menü -->
-      <div v-if="mobileMenuOpen" class="mt-4 md:hidden">        <ul
+      <div v-if="mobileMenuOpen" class="mt-4 md:hidden">
+        <ul
           class="flex flex-col gap-2 text-sm font-medium border-t pt-4 border-gray-200 dark:border-gray-700"
         >
-          <mobil-navlink to="table-company"> Sirketler </mobil-navlink>
           <mobil-navlink to="table-partner"> Partnerler </mobil-navlink>
           <mobil-navlink to="table-product"> Urunler </mobil-navlink>
           <mobil-navlink to="table-purchase"> Satın Alma </mobil-navlink>
           <mobil-navlink to="table-sale"> Satış </mobil-navlink>
-          <li>
-            <a
-              href="#"
-              class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
-              >Contact</a
-            >
-          </li>
         </ul>
       </div>
     </div>
