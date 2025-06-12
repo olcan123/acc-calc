@@ -1,35 +1,33 @@
 <template>
-  <div class="dropdown-container" ref="dropdownRef">
-    <!-- Trigger Button -->
+  <div class="dropdown-container" ref="dropdownRef">    <!-- Modern Icon-based Trigger Button with Enhanced Styling -->
     <button
       @click="toggle"
       type="button"
-      class="inline-flex justify-center w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900"
+      class="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-900 rounded-lg transition-colors"
+      :title="buttonText"
     >
-      {{ buttonText }}
-      <svg
-        class="-mr-1 ml-2 h-5 w-5"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 20 20"
-        fill="currentColor"
-        aria-hidden="true"
-      >
-        <path
-          fill-rule="evenodd"
-          d="M5.23 7.21a.75.75 0 011.06.02L10 11.293l3.71-4.06a.75.75 0 111.08 1.04l-4.25 4.65a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
-          clip-rule="evenodd"
-        />
+      <!-- Three dots (menu) icon -->
+      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M10 12a2 2 0 100-4 2 2 0 000 4zM10 4a2 2 0 100-4 2 2 0 000 4zM10 20a2 2 0 100-4 2 2 0 000 4z"/>
       </svg>
-    </button>    <!-- Dropdown Menu -->
+    </button>
+
+    <!-- Enhanced Dropdown Menu -->
     <Teleport to="body">
       <div
         v-if="open"
         ref="dropdownMenuRef"
-        class="z-[9999] fixed w-48 rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 overflow-y-auto max-h-[300px]"
+        class="z-[9999] fixed w-56 rounded-2xl bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl shadow-2xl ring-1 ring-slate-900/5 dark:ring-white/10 overflow-hidden border border-slate-200/50 dark:border-slate-700/50"
         :style="dropdownStyles"
         @click="close"
       >
-        <div class="py-1 divide-y divide-gray-100 dark:divide-gray-700">
+        <!-- Elegant header with gradient -->
+        <div class="px-4 py-3 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 border-b border-slate-200/50 dark:border-slate-600/50">
+          <p class="text-xs font-medium text-slate-600 dark:text-slate-300 uppercase tracking-wider">{{ buttonText }}</p>
+        </div>
+        
+        <!-- Menu items container -->
+        <div class="py-2">
           <slot />
         </div>
       </div>
@@ -101,24 +99,87 @@ onBeforeUnmount(() => {
   position: relative;
 }
 
-/* Optional: slot içerisine eklenen öğeler için default stil */
+/* Enhanced dropdown item styles */
 ::v-deep(.dropdown-item) {
-  display: block;
-  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  margin: 0.125rem 0.5rem;
   font-size: 0.875rem;
-  color: #374151; /* gray-700 */
+  font-weight: 500;
+  color: #475569; /* slate-600 */
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s ease-out;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
 
   &:hover {
-    background-color: #e0f2fe; /* tailwind blue-100 */
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #334155; /* slate-700 */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  /* Add subtle shine effect on hover */
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease-out;
+  }
+
+  &:hover::before {
+    left: 100%;
   }
 
   @media (prefers-color-scheme: dark) {
-    color: #d1d5db; /* gray-300 */
+    color: #cbd5e1; /* slate-300 */
+    
     &:hover {
-      background-color: #1f2937; /* gray-800 */
+      background: linear-gradient(135deg, #334155 0%, #475569 100%);
+      color: #f1f5f9; /* slate-100 */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
+
+    &::before {
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    }
+  }
+}
+
+/* Add icon support for dropdown items */
+::v-deep(.dropdown-item-icon) {
+  width: 1rem;
+  height: 1rem;
+  margin-right: 0.75rem;
+  opacity: 0.7;
+  transition: opacity 0.2s ease-out;
+}
+
+::v-deep(.dropdown-item:hover .dropdown-item-icon) {
+  opacity: 1;
+}
+
+/* Separator styling */
+::v-deep(.dropdown-separator) {
+  height: 1px;
+  margin: 0.5rem 1rem;
+  background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  ::v-deep(.dropdown-separator) {
+    background: linear-gradient(90deg, transparent, #475569, transparent);
   }
 }
 </style>

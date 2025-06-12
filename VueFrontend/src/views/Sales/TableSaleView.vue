@@ -24,14 +24,71 @@
   </div>
 
   <ConfirmDialog />
-
   <DataTable
     :value="sales"
+    v-model:filters="filters"
     dataKey="id"
     responsiveLayout="scroll"
     :loading="loading"
+    paginator
+    :rows="10"
+    filterDisplay="menu"
+    sortMode="multiple"
+    :globalFilterFields="['invoiceNo', 'partner.name', 'partner.tradeName']"
   >
-    <!-- Sıra Numarası -->
+    <template #header>
+      <div class="flex flex-wrap justify-between items-center gap-4">
+        <!-- Clear Filter Button -->
+        <button
+          @click="clearFilter"
+          type="button"
+          class="flex items-center gap-2 text-gray-700 bg-gray-100 hover:bg-gray-200 focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-4 py-2 focus:outline-none dark:bg-gray-600 dark:hover:bg-gray-700 dark:text-white dark:focus:ring-gray-800"
+        >
+          <span>🗑️</span>
+          Filtreleri Temizle
+        </button>
+
+        <!-- Global Search -->
+        <div class="flex items-center gap-2">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+              </svg>
+            </div>
+            <input
+              v-model="filters['global'].value"
+              type="text"
+              placeholder="Anahtar kelime ile ara..."
+              class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <template #empty>
+      <div class="text-center py-8">
+        <div class="text-gray-500 dark:text-gray-400">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">Satış faturası bulunamadı</h3>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Arama kriterlerinizi değiştirerek tekrar deneyin.</p>
+        </div>
+      </div>
+    </template>
+
+    <template #loading>
+      <div class="text-center py-8">
+        <div class="text-gray-500 dark:text-gray-400">
+          <div class="animate-spin inline-block w-6 h-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full" role="status" aria-label="loading">
+            <span class="sr-only">Yükleniyor...</span>
+          </div>
+          <p class="mt-2 text-sm">Satış faturaları yükleniyor. Lütfen bekleyin...</p>
+        </div>
+      </div>
+    </template>    <!-- Sıra Numarası -->
     <Column header="#" style="width: 60px">
       <template #body="{ index }">
         {{ index + 1 }}
@@ -39,24 +96,46 @@
     </Column>
 
     <!-- Fatura No -->
-    <Column field="invoiceNo" header="Fatura No" style="min-width: 120px" />
-
-    <!-- Fatura Tarihi -->
-    <Column field="invoiceDate" header="Fatura Tarihi" style="min-width: 120px">
+    <Column field="invoiceNo" header="Fatura No" sortable style="min-width: 120px">
+      <template #filter="{ filterModel }">
+        <input
+          v-model="filterModel.value"
+          type="text"
+          placeholder="Fatura no ara..."
+          class="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        />
+      </template>
+    </Column>    <!-- Fatura Tarihi -->
+    <Column field="invoiceDate" header="Fatura Tarihi" sortable style="min-width: 120px" dataType="date">
       <template #body="{ data }">
         {{ formatDate(data.invoiceDate) }}
+      </template>
+      <template #filter="{ filterModel }">
+        <input
+          v-model="filterModel.value"
+          type="date"
+          class="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        />
       </template>
     </Column>
 
     <!-- Partner (Müşteri) -->
-    <Column field="partner.name" header="Müşteri" style="min-width: 150px">
+    <Column field="partner.name" header="Müşteri" sortable style="min-width: 150px">
       <template #body="{ data }">
         {{ partnerNames[data.partnerId] || "-" }}
+      </template>
+      <template #filter="{ filterModel }">
+        <input
+          v-model="filterModel.value"
+          type="text"
+          placeholder="Müşteri ara..."
+          class="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        />
       </template>
     </Column>
 
     <!-- Fatura Tipi -->
-    <Column field="saleInvoiceType" header="Tip" style="min-width: 120px">
+    <Column field="saleInvoiceType" header="Tip" sortable style="min-width: 120px">
       <template #body="{ data }">
         <span
           class="px-2 py-1 text-xs font-medium rounded-full"
@@ -65,10 +144,20 @@
           {{ getInvoiceTypeLabel(data.saleInvoiceType) }}
         </span>
       </template>
+      <template #filter="{ filterModel }">
+        <select
+          v-model="filterModel.value"
+          class="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        >
+          <option value="">Tümü</option>
+          <option value="1">Lokal</option>
+          <option value="2">İhracat</option>
+        </select>
+      </template>
     </Column>
 
     <!-- Ödeme Durumu -->
-    <Column field="isPaid" header="Ödeme" style="min-width: 80px">
+    <Column field="isPaid" header="Ödeme" sortable style="min-width: 80px">
       <template #body="{ data }">
         <span
           class="px-2 py-1 text-xs font-medium rounded-full"
@@ -77,11 +166,20 @@
           {{ data.isPaid ? "Ödendi" : "Ödenmedi" }}
         </span>
       </template>
+      <template #filter="{ filterModel }">
+        <select
+          v-model="filterModel.value"
+          class="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        >
+          <option value="">Tümü</option>
+          <option value="true">Ödendi</option>
+          <option value="false">Ödenmedi</option>
+        </select>
+      </template>
     </Column>
 
     <!-- Toptan Satış -->
-    <Column field="isWholeSale" header="Toptan" style="min-width: 80px">
-      <template #body="{ data }">
+    <Column field="isWholeSale" header="Toptan" sortable style="min-width: 80px">      <template #body="{ data }">
         <span
           class="px-2 py-1 text-xs font-medium rounded-full"
           :class="data.isWholeSale ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'"
@@ -89,44 +187,76 @@
           {{ data.isWholeSale ? "Evet" : "Hayır" }}
         </span>
       </template>
+      <template #filter="{ filterModel }">
+        <select
+          v-model="filterModel.value"
+          class="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+        >
+          <option value="">Tümü</option>
+          <option value="true">Evet</option>
+          <option value="false">Hayır</option>
+        </select>
+      </template>
     </Column>
 
     <!-- Nakit Ödeme -->
-    <Column field="cashPaymentAmount" header="Nakit Ödeme" style="min-width: 120px">
+    <Column field="cashPaymentAmount" header="Nakit Ödeme" sortable style="min-width: 120px" dataType="numeric">
       <template #body="{ data }">
         {{ formatCurrency(data.cashPaymentAmount || 0, "€") }}
+      </template>
+      <template #filter="{ filterModel }">
+        <input
+          v-model="filterModel.value"
+          type="number"
+          step="0.01"
+          min="0"
+          placeholder="Min nakit ödeme..."
+          class="block w-full px-3 py-1 text-sm border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white"
+        />
       </template>
     </Column>
 
     <!-- Toplam Tutar -->
-    <Column header="Toplam Tutar" style="min-width: 120px">
+    <Column header="Toplam Tutar" sortable style="min-width: 120px" dataType="numeric">
       <template #body="{ data }">
         {{ formatCurrency(calculateInvoiceTotal(data), "€") }}
       </template>
     </Column>    <!-- İşlemler -->
     <Column header="İşlemler" style="min-width: 200px">
-      <template #body="{ data }">        <div class="flex gap-2">
-          <!-- Düzenle Butonu -->
+      <template #body="{ data }">
+        <div class="flex gap-2">
+          <!-- Edit Button -->
           <router-link
             :to="{
               name: data.saleInvoiceType === 2 ? 'update-export-sale' : 'update-local-sale',
               params: { id: data.id },
             }"
-            class="text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-3 py-1.5 focus:outline-none dark:focus:ring-yellow-900"
+            class="p-2 text-blue-600 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-lg transition-colors"
+            title="Düzenle"
           >
-            Düzenle
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
+              />
+            </svg>
           </router-link>
 
-          <!-- Sil Butonu -->
+          <!-- Delete Button -->
           <button
             @click="handleDelete(data)"
-            type="button"
-            class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-1.5 focus:outline-none dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+            class="p-2 text-red-600 hover:text-red-800 hover:bg-red-100 dark:hover:bg-red-900 rounded-lg transition-colors"
+            title="Sil"
           >
-            Sil
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fill-rule="evenodd"
+                d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9zM4 5a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 102 0v-1a1 1 0 10-2 0v1zm4 0a1 1 0 102 0v-1a1 1 0 10-2 0v1z"
+                clip-rule="evenodd"
+              />
+            </svg>
           </button>
 
-          <!-- Dropdown İşlemler -->
+          <!-- More Actions Dropdown -->
           <TableDropdownButton buttonText="İşlemler">
             <a
               href="#"
@@ -168,7 +298,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { FilterMatchMode, FilterOperator } from "@primevue/core";
 import { useRouter } from "vue-router";
 import { useConfirm } from "primevue/useconfirm";
 import { storeToRefs } from "pinia";
@@ -197,6 +328,50 @@ const { partners } = storeToRefs(partnerStore);
 // Modal state
 const showLedgerModal = ref(false);
 const selectedLedgerId = ref(null);
+
+// Filter state initialization
+const initFilters = () => {
+  filters.value = {
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    invoiceNo: { 
+      operator: FilterOperator.AND, 
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] 
+    },
+    invoiceDate: { 
+      operator: FilterOperator.AND, 
+      constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] 
+    },
+    'partner.name': { 
+      operator: FilterOperator.AND, 
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] 
+    },
+    saleInvoiceType: { 
+      operator: FilterOperator.AND, 
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] 
+    },
+    isPaid: { 
+      operator: FilterOperator.AND, 
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] 
+    },
+    isWholeSale: { 
+      operator: FilterOperator.AND, 
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] 
+    },
+    cashPaymentAmount: { 
+      operator: FilterOperator.AND, 
+      constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] 
+    },
+  };
+};
+
+// Filter state
+const filters = ref();
+initFilters();
+
+// Clear filters function
+const clearFilter = () => {
+  initFilters();
+};
 
 // Computed partner names mapping
 const partnerNames = computed(() => {
