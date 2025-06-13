@@ -20,8 +20,9 @@
     <td class="px-3 py-3 min-w-[200px]">
       <TableFieldSelect
         :fieldName="`purchaseInvoiceLines[${index}].purchaseAccountId`"
-        :options="optionAccountsSartsWithCode(1150,3)"
+        :options="optionAccountsSartsWithCode(1150, 3)"
         placeholder="Hesap No"
+        :disabled="true"
       />
     </td>
 
@@ -229,7 +230,7 @@ import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations.j
 
 // Define component options
 defineOptions({
-  inheritAttrs: false
+  inheritAttrs: false,
 });
 
 // Define emits for parent communication
@@ -253,7 +254,8 @@ const { optionProducts, products } = storeToRefs(productStore);
 const { optionWarehouses } = storeToRefs(warehouseStore);
 const { optionUnitOfMeasures } = storeToRefs(unitOfMeasureStore);
 const { optionVats } = storeToRefs(vatStore);
-const { parentAccountFilterOptions, optionAccountsSartsWithCode } = storeToRefs(accountStore);
+const { parentAccountFilterOptions, optionAccountsSartsWithCode } =
+  storeToRefs(accountStore);
 
 // Access parent form context
 const { setFieldValue, values: formValues } = useFormContext();

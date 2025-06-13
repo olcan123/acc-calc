@@ -13,14 +13,15 @@
       ]"
     >
       {{ labelName }}
-    </label>
-
-    <select
+    </label>    <select
       :id="fieldName"
       v-model="value"
+      :disabled="readonly"
       :class="[
         'block w-full p-2.5 text-sm rounded-lg focus:ring-2 focus:outline-none',
-        errorMessage
+        readonly
+          ? 'bg-gray-100 border border-gray-300 text-gray-500 cursor-not-allowed dark:bg-gray-600 dark:border-gray-500 dark:text-gray-400'
+          : errorMessage
           ? 'bg-red-50 border border-red-500 text-red-900 dark:bg-gray-700 focus:ring-red-500 focus:border-red-500 dark:text-red-500 dark:border-red-500'
           : value
           ? 'bg-green-50 border border-green-500 text-green-900 dark:bg-gray-700 focus:ring-green-500 focus:border-green-500 dark:text-green-400 dark:border-green-500'
@@ -62,6 +63,10 @@ const props = defineProps({
   options: {
     type: Array,
     default: () => [],
+  },
+  readonly: {
+    type: Boolean,
+    default: false,
   },
 });
 

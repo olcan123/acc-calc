@@ -22,6 +22,7 @@
         :fieldName="`saleInvoiceLines[${index}].saleAccountId`"
         :options="saleAccountFilterOptions()"
         placeholder="Hesap No"
+        :disabled="true"
       />
     </td>
 
@@ -50,14 +51,16 @@
         :options="optionUnitOfMeasures"
         placeholder="Birim"
       />
-    </td>    <!-- Description -->
+    </td>
+    <!-- Description -->
     <td class="px-3 py-3 min-w-[150px]">
       <TableFieldTextarea
         :fieldName="`saleInvoiceLines[${index}].description`"
         placeholder="Açıklama girin"
         :rows="2"
       />
-    </td><!-- VAT -->
+    </td>
+    <!-- VAT -->
     <td
       class="px-3 py-3 min-w-[80px] border-r-2 border-gray-300 dark:border-gray-600"
     >
@@ -176,13 +179,15 @@ import { useSaleCalculations } from "@/composables/useSaleCalculations.js";
 
 // Define component options
 defineOptions({
-  inheritAttrs: false
+  inheritAttrs: false,
 });
 
 // Check if this is an export sale using route
 const route = useRoute();
 const isExportSale = computed(() => {
-  return route.name === 'create-export-sale' || route.name === 'update-export-sale';
+  return (
+    route.name === "create-export-sale" || route.name === "update-export-sale"
+  );
 });
 
 // Stores
@@ -201,39 +206,38 @@ const { vats } = storeToRefs(vatStore);
 
 // Computed options for selects
 const optionProducts = computed(() => {
-  return products.value.map(product => ({
+  return products.value.map((product) => ({
     value: product.id,
     label: product.name,
   }));
 });
 
 const optionWarehouses = computed(() => {
-  return warehouses.value.map(warehouse => ({
+  return warehouses.value.map((warehouse) => ({
     value: warehouse.id,
     label: warehouse.name,
   }));
 });
 
 const optionUnitOfMeasures = computed(() => {
-  return unitOfMeasures.value.map(unit => ({
+  return unitOfMeasures.value.map((unit) => ({
     value: unit.id,
     label: unit.name,
   }));
 });
 
 const optionVats = computed(() => {
-  return vats.value.map(vat => ({
+  return vats.value.map((vat) => ({
     value: vat.id,
     label: `%${vat.rate} - ${vat.name}`,
   }));
 });
 
 const saleAccountFilterOptions = () => {
-  return accounts.value
-    .map(account => ({
-      value: account.id,
-      label: `${account.code} - ${account.name}`,
-    }));
+  return accounts.value.map((account) => ({
+    value: account.id,
+    label: `${account.code} - ${account.name}`,
+  }));
 };
 
 // Access parent form context
@@ -258,19 +262,31 @@ const onProductChange = (index, $event) => {
   const product = products.value.find((p) => p.id === productId);
   if (product) {
     // Auto-fill product-related fields when product is selected
-    setFieldValue(`saleInvoiceLines[${index}].saleAccountId`, product.saleAccountId);
-    setFieldValue(`saleInvoiceLines[${index}].unitOfMeasureId`, product.unitOfMeasureId);
-    
+    setFieldValue(
+      `saleInvoiceLines[${index}].saleAccountId`,
+      product.saleAccountId
+    );
+    setFieldValue(
+      `saleInvoiceLines[${index}].unitOfMeasureId`,
+      product.unitOfMeasureId
+    );
+
     // For export sales, always set VAT to 0% (vatId=1), otherwise use product's VAT
     if (isExportSale.value) {
       setFieldValue(`saleInvoiceLines[${index}].vatId`, 1);
     } else {
       setFieldValue(`saleInvoiceLines[${index}].vatId`, product.vatId);
     }
-    
-    setFieldValue(`saleInvoiceLines[${index}].unitPrice`, product.salePrice || 0);
-    setFieldValue(`saleInvoiceLines[${index}].description`, product.description || "");
-    
+
+    setFieldValue(
+      `saleInvoiceLines[${index}].unitPrice`,
+      product.salePrice || 0
+    );
+    setFieldValue(
+      `saleInvoiceLines[${index}].description`,
+      product.description || ""
+    );
+
     // Set warehouse from invoice data if available
     const warehouseId = formValues.saleInvoices?.[0]?.warehouseId;
     if (warehouseId && !formValues.saleInvoiceLines[index]?.warehouseId) {
