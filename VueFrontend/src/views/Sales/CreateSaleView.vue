@@ -173,13 +173,12 @@ const createInitialValues = () => {
         note: "",
         status: 1,
       },
-    ],
-    saleInvoiceLines: [
+    ],    saleInvoiceLines: [
       {
         productId: null,
         warehouseId: null,
         unitOfMeasureId: null,
-        vatId: null,
+        vatId: isExportSale.value ? 1 : null, // Set VAT to 0% for export sales
         saleAccountId: null,
         quantity: 1,
         unitPrice: 0,
@@ -242,7 +241,7 @@ const addNewLine = () => {
     productId: null,
     warehouseId: defaultWarehouseId.value,
     unitOfMeasureId: null,
-    vatId: null,
+    vatId: isExportSale.value ? 1 : null, // Set VAT to 0% for export sales
     saleAccountId: null,
     quantity: 1,
     unitPrice: 0,

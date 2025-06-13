@@ -50,17 +50,14 @@
         :options="optionUnitOfMeasures"
         placeholder="Birim"
       />
-    </td>
-
-    <!-- Description -->
+    </td>    <!-- Description -->
     <td class="px-3 py-3 min-w-[150px]">
-      <TableFieldTextInput
+      <TableFieldTextarea
         :fieldName="`saleInvoiceLines[${index}].description`"
         placeholder="Açıklama girin"
+        :rows="2"
       />
-    </td>
-
-    <!-- VAT -->
+    </td><!-- VAT -->
     <td
       class="px-3 py-3 min-w-[80px] border-r-2 border-gray-300 dark:border-gray-600"
     >
@@ -68,6 +65,7 @@
         :fieldName="`saleInvoiceLines[${index}].vatId`"
         :options="optionVats"
         placeholder="KDV"
+        :disabled="isExportSale"
         @change="handleVatChange(index, $event)"
       />
     </td>
@@ -161,13 +159,14 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, watch } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useFormContext, useFieldArray } from "vee-validate";
 import TableFieldNumberInput from "@/components/TableForm/TableFieldNumberInput.vue";
 import TableFieldSelect from "@/components/TableForm/TableFieldSelect.vue";
 import TableFieldTextInput from "@/components/TableForm/TableFieldTextInput.vue";
+import TableFieldTextarea from "@/components/TableForm/TableFieldTextarea.vue";
 import { useProductStore } from "@/stores/product.store";
 import { useWarehouseStore } from "@/stores/warehouse.store";
 import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";
@@ -183,7 +182,7 @@ defineOptions({
 // Check if this is an export sale using route
 const route = useRoute();
 const isExportSale = computed(() => {
-  return route.name === 'create-export-sale';
+  return route.name === 'create-export-sale' || route.name === 'update-export-sale';
 });
 
 // Stores
@@ -261,8 +260,16 @@ const onProductChange = (index, $event) => {
     // Auto-fill product-related fields when product is selected
     setFieldValue(`saleInvoiceLines[${index}].saleAccountId`, product.saleAccountId);
     setFieldValue(`saleInvoiceLines[${index}].unitOfMeasureId`, product.unitOfMeasureId);
-    setFieldValue(`saleInvoiceLines[${index}].vatId`, product.vatId);
+    
+    // For export sales, always set VAT to 0% (vatId=1), otherwise use product's VAT
+    if (isExportSale.value) {
+      setFieldValue(`saleInvoiceLines[${index}].vatId`, 1);
+    } else {
+      setFieldValue(`saleInvoiceLines[${index}].vatId`, product.vatId);
+    }
+    
     setFieldValue(`saleInvoiceLines[${index}].unitPrice`, product.salePrice || 0);
+    setFieldValue(`saleInvoiceLines[${index}].description`, product.description || "");
     
     // Set warehouse from invoice data if available
     const warehouseId = formValues.saleInvoices?.[0]?.warehouseId;
@@ -316,4 +323,30 @@ const handleTotalAmountChange = (index, event) => {
 const removeLine = (index) => {
   remove(index);
 };
+
+// Watch for export sale changes and set VAT to 0% (vatId=1)
+watch(
+  () => isExportSale.value,
+  (newValue) => {
+    if (newValue) {
+      // Set VAT to 0% for all existing lines
+      formValues.saleInvoiceLines?.forEach((line, index) => {
+        setFieldValue(`saleInvoiceLines[${index}].vatId`, 1);
+      });
+    }
+  },
+  { immediate: true }
+);
+
+// Watch for new lines being added to ensure VAT is set correctly
+watch(
+  () => formValues.saleInvoiceLines?.length,
+  (newLength, oldLength) => {
+    if (isExportSale.value && newLength > oldLength) {
+      // Set VAT to 0% for newly added lines
+      const newIndex = newLength - 1;
+      setFieldValue(`saleInvoiceLines[${newIndex}].vatId`, 1);
+    }
+  }
+);
 </script>

@@ -83,12 +83,10 @@
           />
         </div>
       </div>
-    </div>
-
-    <template #footer>
+    </div>    <template #footer>
       <button
         type="button"
-        @click="modalStore.closeInvoiceModal()"
+        @click="cancelInvoice"
         class="px-4 py-2 text-sm text-gray-800 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700"
       >
         İptal
@@ -105,9 +103,10 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, watchEffect } from "vue";
 import { storeToRefs } from "pinia";
 import { useFormContext } from "vee-validate";
+import { useRouter } from "vue-router";
 import BaseModalPersistent from "@/components/UI/Modal/BaseModalPersistent.vue";
 import FieldTextInput from "@/components/Form/FieldTextInput.vue";
 import FieldTextArea from "@/components/Form/FieldTextArea.vue";
@@ -121,7 +120,10 @@ import { useWarehouseStore } from "@/stores/warehouse.store";
 import { useModalStore } from "@/stores/modal.store";
 
 // Get form context from vee-validate
-const { values: formValues } = useFormContext();
+const { values: formValues, setFieldValue } = useFormContext();
+
+// Router
+const router = useRouter();
 
 // Stores
 const partnerStore = usePartnerStore();
@@ -133,8 +135,24 @@ const { optionPartners } = storeToRefs(partnerStore);
 const { optionAccountsSartsWithCode } = storeToRefs(accountStore);
 const { optionWarehouses } = storeToRefs(warehouseStore);
 
+// Helper function to get default customer account ID
+const getDefaultCustomerAccountId = () => {
+  return optionAccountsSartsWithCode.value(['1100.'])?.[0]?.value || null;
+};
+
+// Set default customer account ID for main sale invoice
+watchEffect(() => {
+  if (!formValues?.saleInvoices?.[0]?.customerAccountId) {
+    setFieldValue("saleInvoices[0].customerAccountId", getDefaultCustomerAccountId());
+  }
+});
 
 const saveInvoiceData = () => {
   modalStore.closeInvoiceModal();
+};
+
+const cancelInvoice = () => {
+  modalStore.closeInvoiceModal();
+  router.push({ name: 'table-sale' });
 };
 </script>

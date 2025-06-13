@@ -471,27 +471,28 @@ const handleEdit = (sale) => {
 
 const handleDelete = (sale) => {
   console.log("Deleting sale:", sale);
-  // confirm.require({
-  //   message: `"${sale.invoiceNo}" numaralı satış faturasını silmek istediğinizden emin misiniz?`,
-  //   header: "Silme Onayı",
-  //   icon: "pi pi-exclamation-triangle",
-  //   rejectProps: {
-  //     label: "İptal",
-  //     severity: "secondary",
-  //     outlined: true,
-  //   },
-  //   acceptProps: {
-  //     label: "Sil",
-  //     severity: "danger",
-  //   },
-  //   accept: async () => {
-  //     try {
-  //       await saleStore.deleteSale(sale.id);
-  //     } catch (error) {
-  //       console.error("Delete error:", error);
-  //     }
-  //   },
-  // });
+  confirm.require({
+    message: `"${sale.invoiceNo}" numaralı satış faturasını silmek istediğinizden emin misiniz?`,
+    header: "Silme Onayı",
+    icon: "pi pi-exclamation-triangle",
+    rejectProps: {
+      label: "İptal",
+      severity: "secondary",
+      outlined: true,
+    },
+    acceptProps: {
+      label: "Sil",
+      severity: "danger",
+    },
+    accept: async () => {
+      try {
+        await saleStore.deleteSale(sale.id);
+        console.log("Sale deleted successfully.");
+      } catch (error) {
+        console.error("Delete error:", error);
+      }
+    },
+  });
 };
 </script>
 

@@ -216,12 +216,10 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <template #footer>
+    </div>    <template #footer>
       <button
         type="button"
-        @click="modalStore.closeInvoiceModal()"
+        @click="cancelInvoice"
         class="px-4 py-2 text-sm text-gray-800 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-700"
       >
         İptal
@@ -240,7 +238,7 @@
 <script setup>
 import { computed, ref, watchEffect, inject, watch } from "vue";
 import { storeToRefs } from "pinia";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useFormContext, useFieldArray } from "vee-validate";
 import BaseModalPersistent from "@/components/UI/Modal/BaseModalPersistent.vue";
 import FieldTextInput from "@/components/Form/FieldTextInput.vue";
@@ -258,6 +256,7 @@ import { useVatStore } from "@/stores/vat.store";
 
 // Route to determine invoice type
 const route = useRoute();
+const router = useRouter();
 
 // Check if this is an import purchase
 const isImportPurchase = computed(() => {
@@ -329,6 +328,12 @@ const deleteExpense = (index) => {
 
 // Get expenses array from form values
 const expenses = computed(() => values.purchaseInvoiceExpenses || []);
+
+// Cancel function to navigate back to table
+const cancelInvoice = () => {
+  modalStore.closeInvoiceModal();
+  router.push({ name: 'table-purchase' });
+};
 
 // Set default vendor account ID for main purchase invoice
 watchEffect(() => {

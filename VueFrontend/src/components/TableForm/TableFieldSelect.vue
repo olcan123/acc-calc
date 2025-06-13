@@ -11,7 +11,8 @@
       :id="fieldName"
       v-model="value"
       @change="handleChange"
-      class="block w-full p-1.5 text-xs text-gray-900 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      :disabled="disabled"
+      class="block w-full p-1.5 text-xs text-gray-900 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed dark:disabled:bg-gray-600 dark:disabled:text-gray-400"
     >
       <option disabled value="">{{ placeholderName || "Seçiniz" }}</option>
       <option
@@ -51,6 +52,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
     // Seçeneklerin { value: ..., label: ... } formatında olması beklenir
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
 

@@ -290,7 +290,7 @@ const addNewLine = () => {
     productId: null,
     warehouseId: defaultWarehouseId.value,
     unitOfMeasureId: null,
-    vatId: null,
+    vatId: isExportSale.value ? 1 : null, // Set VAT to 0% for export sales
     saleAccountId: null,
     quantity: 1,
     unitPrice: 0,
