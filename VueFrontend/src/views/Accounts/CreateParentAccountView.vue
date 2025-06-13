@@ -37,13 +37,6 @@
     />
 
     <FieldSelect
-      fieldName="parentAccountId"
-      labelName="Üst Hesap"
-      placeholderName="Üst Hesap Seçin"
-      :options="optionAccounts"
-    />
-
-    <FieldSelect
       fieldName="accountType"
       labelName="Hesap Türü"
       placeholderName="Hesap Türü Seçin"

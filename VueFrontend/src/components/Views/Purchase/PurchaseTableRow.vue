@@ -20,7 +20,7 @@
     <td class="px-3 py-3 min-w-[200px]">
       <TableFieldSelect
         :fieldName="`purchaseInvoiceLines[${index}].purchaseAccountId`"
-        :options="parentAccountFilterOptions()"
+        :options="optionAccountsSartsWithCode(1150,3)"
         placeholder="Hesap No"
       />
     </td>
@@ -253,7 +253,7 @@ const { optionProducts, products } = storeToRefs(productStore);
 const { optionWarehouses } = storeToRefs(warehouseStore);
 const { optionUnitOfMeasures } = storeToRefs(unitOfMeasureStore);
 const { optionVats } = storeToRefs(vatStore);
-const { parentAccountFilterOptions } = storeToRefs(accountStore);
+const { parentAccountFilterOptions, optionAccountsSartsWithCode } = storeToRefs(accountStore);
 
 // Access parent form context
 const { setFieldValue, values: formValues } = useFormContext();

@@ -29,19 +29,19 @@ export const useAccountStore = defineStore("account", () => {
       }));
   });
   // Hesap tipleri için seçenekler
-  const accountTypeOptions = [
+  const accountTypeOptions = ref([
     { value: 1, label: "Varlık (Asset)" },
     { value: 2, label: "Yükümlülük (Liability)" },
     { value: 3, label: "Özsermaye (Equity)" },
     { value: 4, label: "Gelir (Revenue)" },
     { value: 5, label: "Gider (Expense)" },
-  ];
+  ]);
 
   // Normal bakiye tipleri için seçenekler
-  const normalBalanceOptions = [
+  const normalBalanceOptions = ref([
     { value: 1, label: "Borç (Debit)" },
     { value: 2, label: "Alacak (Credit)" },
-  ];
+  ]);
 
   // Sadece `isPostable: true` olanları temel alan computed özellik
   const parentAccountFilterOptions = computed(() => {
@@ -98,35 +98,43 @@ export const useAccountStore = defineStore("account", () => {
   });
 
 // Filter accounts by code prefixes and return as options (value/label format)
-const optionAccountsSartsWithCode = computed(() => {
-  return (startsWithCodes = []) => {
-    // Ensure startsWithCodes is always an array
-    const codesArray = Array.isArray(startsWithCodes) ? startsWithCodes : [startsWithCodes];
-    
-    // Filter accounts by postable status and code prefixes
-    const filteredAccounts = accounts.value.filter((account) => {
-      // Check if account is postable
-      if (account.isPostable !== true) {
-        return false;
-      }
-      
-      // Check if account has code
-      if (!account.code) {
-        return false;
-      }
-      
-      // Check if account code starts with any of the specified codes
-      const accountCode = account.code.toString();
-      return codesArray.some(code => accountCode.startsWith(code));
-    });
-    
-    // Map to option format with value and label
-    return filteredAccounts.map((account) => ({
-      value: account.id,
-      label: `${account.code} - ${account.name}`,
-    }));
-  };
-});
+  const optionAccountsSartsWithCode = computed(() => {
+    // Rest parametresi kullanılarak birden fazla argüman alınır
+    return (...startsWithCodes) => {
+      // Gelen argümanları bir diziye dönüştürün ve her birini string'e çevirin.
+      // Eğer hiç argüman verilmezse, boş bir dizi olur.
+      const codesArray = startsWithCodes.flat().map(String);
+
+      const filteredAccounts = accounts.value.filter((account) => {
+        // Her zaman isPostable olan hesapları filtrele
+        if (account.isPostable !== true) {
+          return false;
+        }
+
+        // Eğer codesArray boşsa, isPostable olan tüm hesapları döndür
+        if (codesArray.length === 0) {
+          return true; // isPostable zaten kontrol edildi, o yüzden buraya gelenler zaten true
+        }
+
+        // Hesap kodunun mevcut olup olmadığını kontrol et
+        if (!account.code) {
+          return false;
+        }
+
+        const accountCode = account.code.toString();
+
+        // Parametre olarak verilen tüm kod ön ekleriyle eşleşip eşleşmediğini kontrol et
+        // "3" için özel aralık veya başka bir özel durum yok, hepsi 'startsWith' kuralına tabi
+        return codesArray.some((code) => accountCode.startsWith(code));
+      });
+
+      // Map to option format with value and label
+      return filteredAccounts.map((account) => ({
+        value: account.id,
+        label: `${account.code} - ${account.name}`,
+      }));
+    };
+  });
 
 
   const fetchAccounts = async () => {
