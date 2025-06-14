@@ -233,10 +233,16 @@
           />
 
           <!-- Delete Button -->
-          <DeleteButton @click="handleDelete(data)" />
-
-          <!-- More Actions Dropdown -->
+          <DeleteButton @click="handleDelete(data)" />          <!-- More Actions Dropdown -->
           <TableDropdownButton buttonText="İşlemler">
+            <a
+              href="#"
+              @click.prevent="viewInvoice(data)"
+              class="dropdown-item"
+            >
+              📄 Faturayı Görüntüle
+            </a>
+
             <a
               href="#"
               @click.prevent="viewDetails(data)"
@@ -454,6 +460,14 @@ const viewLedgerDetails = (sale) => {
   } else {
     console.warn("Ledger information not found for sale:", sale.id);
   }
+};
+
+// Navigate to invoice view
+const viewInvoice = (sale) => {
+  router.push({
+    name: "sale-invoice",
+    params: { id: sale.id },
+  });
 };
 
 const duplicateSale = (sale) => {

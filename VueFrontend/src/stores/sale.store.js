@@ -55,6 +55,12 @@ export const useSaleStore = defineStore("sale", () => {
     }
   };
 
+  // ✅ Get Sale Invoice (alias for fetchSale for invoice component)
+  const getSaleInvoice = async (id) => {
+    await fetchSale(id);
+    return sale.value;
+  };
+
   // ✅ Add Sale Invoice with all related data
   const addSaleInvoice = async (data) => {
     loading.value = true;
@@ -202,6 +208,7 @@ export const useSaleStore = defineStore("sale", () => {
     // Actions
     fetchSales,
     fetchSale,
+    getSaleInvoice,
     addSaleInvoice,
     updateSale,
     deleteSale,
