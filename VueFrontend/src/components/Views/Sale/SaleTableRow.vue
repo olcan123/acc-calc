@@ -4,56 +4,45 @@
     v-for="(field, index) in fields"
     :key="`sale-line-${field.key}-${index}`"
   >
-    <!-- Unit Info Section -->
-
-    <!-- Product Selection -->
-    <td class="px-3 py-3 min-w-[200px]">
+    <!-- Unit Info Section -->    <!-- Product Selection -->
+    <td class="px-1 py-2 w-1/5 min-w-[200px]">
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].productId`"
         :options="optionProducts"
         placeholder="Ürün seçin"
         @change="onProductChange(index, $event)"
       />
-    </td>
-
-    <!-- Account Selection -->
-    <td class="px-3 py-3 min-w-[200px]">
+    </td>    <!-- Account Selection -->
+    <td class="px-1 py-2 w-40">
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].saleAccountId`"
         :options="saleAccountFilterOptions()"
         placeholder="Hesap No"
         :disabled="true"
       />
-    </td>
-
-    <!-- Warehouse Selection -->
-    <td class="px-3 py-3 min-w-[120px]">
+    </td>    <!-- Warehouse Selection -->
+    <td class="px-1 py-2 w-24">
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].warehouseId`"
         :options="optionWarehouses"
         placeholder="Depo seçin"
       />
-    </td>
-
-    <!-- Quantity -->
-    <td class="px-3 py-3 min-w-[80px]">
+    </td>    <!-- Quantity -->
+    <td class="px-1 py-2 min-w-[60px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].quantity`"
         placeholder="0"
         @input="handleQuantityChange(index, $event)"
       />
-    </td>
-
-    <!-- Unit of Measure -->
-    <td class="px-3 py-3 min-w-[100px]">
+    </td>    <!-- Unit of Measure -->
+    <td class="px-1 py-2 min-w-[60px]">
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].unitOfMeasureId`"
         :options="optionUnitOfMeasures"
         placeholder="Birim"
       />
-    </td>
-    <!-- Description -->
-    <td class="px-3 py-3 min-w-[150px]">
+    </td>    <!-- Description -->
+    <td class="px-1 py-2 min-w-[100px]">
       <TableFieldTextarea
         :fieldName="`saleInvoiceLines[${index}].description`"
         placeholder="Açıklama girin"
@@ -62,7 +51,7 @@
     </td>
     <!-- VAT -->
     <td
-      class="px-3 py-3 min-w-[80px] border-r-2 border-gray-300 dark:border-gray-600"
+      class="px-1 py-2 w-24 border-r-2 border-gray-300 dark:border-gray-600"
     >
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].vatId`"
@@ -73,20 +62,16 @@
       />
     </td>
 
-    <!-- Price → Amount Flow Section -->
-
-    <!-- Unit Price -->
-    <td class="px-3 py-3 min-w-[100px]">
+    <!-- Price → Amount Flow Section -->    <!-- Unit Price -->
+    <td class="px-1 py-2 min-w-[70px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].unitPrice`"
         placeholder="0.00"
         step="0.000001"
         @input="handleUnitPriceChange(index, $event)"
       />
-    </td>
-
-    <!-- Discount Rate -->
-    <td class="px-3 py-3 min-w-[80px]">
+    </td>    <!-- Discount Rate -->
+    <td class="px-1 py-2 min-w-[50px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].discountRate`"
         placeholder="0"
@@ -94,39 +79,31 @@
         :max="100"
         @input="handleDiscountRateChange(index, $event)"
       />
-    </td>
-
-    <!-- Total Price -->
-    <td class="px-3 py-3 min-w-[100px]">
+    </td>    <!-- Total Price -->
+    <td class="px-1 py-2 min-w-[70px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].totalPrice`"
         placeholder="0.00"
         step="0.000001"
         @input="handleTotalPriceChange(index, $event)"
       />
-    </td>
-
-    <!-- Amount (Tutar) -->
-    <td class="px-3 py-3 min-w-[100px]">
+    </td>    <!-- Amount (Tutar) -->
+    <td class="px-1 py-2 min-w-[70px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].amount`"
         placeholder="0.00"
         step="0.000001"
         @input="handleAmountChange(index, $event)"
       />
-    </td>
-
-    <!-- Discount Amount -->
-    <td class="px-3 py-3 min-w-[100px]">
+    </td>    <!-- Discount Amount -->
+    <td class="px-1 py-2 min-w-[60px]">
       <div
         class="p-2 bg-gray-50 dark:bg-gray-700 rounded text-center font-medium text-gray-800 dark:text-gray-200"
       >
         {{ field.value.discountAmount || "0.00" }}
       </div>
-    </td>
-
-    <!-- VAT Amount -->
-    <td class="px-3 py-3 min-w-[100px]">
+    </td>    <!-- VAT Amount -->
+    <td class="px-1 py-2 min-w-[60px]">
       <div
         class="p-2 bg-green-50 dark:bg-green-900 rounded text-center font-medium text-green-800 dark:text-green-200"
       >
@@ -136,7 +113,7 @@
 
     <!-- Total Amount (Final) -->
     <td
-      class="px-3 py-3 min-w-[120px] border-r-2 border-gray-300 dark:border-gray-600"
+      class="px-1 py-2 min-w-[80px] border-r-2 border-gray-300 dark:border-gray-600"
     >
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].totalAmount`"
@@ -147,7 +124,7 @@
     </td>
 
     <!-- Actions -->
-    <td class="px-3 py-3 min-w-[80px]">
+    <td class="px-1 py-2 min-w-[50px]">
       <button
         type="button"
         @click="removeLine(index)"

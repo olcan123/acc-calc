@@ -4,36 +4,34 @@
   >
     <tr>
       <!-- Unit Info Section -->
-      <th scope="col" class="px-3 py-3 min-w-[200px]">Ürün</th>
-      <th scope="col" class="px-3 py-3 min-w-[200px]">Hesap No</th>
-      <th scope="col" class="px-3 py-3 min-w-[120px]">Depo</th>
-      <th scope="col" class="px-3 py-3 min-w-[80px]">Miktar</th>
-      <th scope="col" class="px-3 py-3 min-w-[100px]">Birim</th>
-      <th scope="col" class="px-3 py-3 min-w-[150px]">Açıklama</th>
+      <th scope="col" class="px-1 py-2 w-1/5 min-w-[200px] text-xs">Ürün</th>
+      <th scope="col" class="px-1 py-2 w-40 text-xs">Hesap</th>
+      <th scope="col" class="px-1 py-2 w-24 text-xs">Depo</th>
+      <th scope="col" class="px-1 py-2 min-w-[60px] text-xs">Miktar</th>
+      <th scope="col" class="px-1 py-2 min-w-[60px] text-xs">Birim</th>
+      <th scope="col" class="px-1 py-2 min-w-[100px] text-xs">Açıklama</th>
       
       <th
         scope="col"
-        class="px-3 py-3 min-w-[80px] border-r-2 border-gray-300 dark:border-gray-600"
+        class="px-1 py-2 w-24 text-xs border-r-2 border-gray-300 dark:border-gray-600"
       >
         KDV
-      </th>
-
-      <!-- Price → Amount Flow Section -->
-      <th scope="col" class="px-3 py-3 min-w-[100px]">Birim Fiyat</th>
-      <th scope="col" class="px-3 py-3 min-w-[80px]">İskonto %</th>
-      <th scope="col" class="px-3 py-3 min-w-[100px]">Toplam Fiyat</th>
-      <th scope="col" class="px-3 py-3 min-w-[100px]">Tutar</th>
-      <th scope="col" class="px-3 py-3 min-w-[100px]">İskonto Tutarı</th>
-      <th scope="col" class="px-3 py-3 min-w-[100px]">KDV Tutarı</th>
+      </th>      <!-- Price → Amount Flow Section -->
+      <th scope="col" class="px-1 py-2 min-w-[70px] text-xs">B.Fiyat</th>
+      <th scope="col" class="px-1 py-2 min-w-[50px] text-xs">İsk%</th>
+      <th scope="col" class="px-1 py-2 min-w-[70px] text-xs">T.Fiyat</th>
+      <th scope="col" class="px-1 py-2 min-w-[70px] text-xs">Tutar</th>
+      <th scope="col" class="px-1 py-2 min-w-[60px] text-xs">İsk.Tut</th>
+      <th scope="col" class="px-1 py-2 min-w-[60px] text-xs">KDV Tut</th>
       <th
         scope="col"
-        class="px-3 py-3 min-w-[120px] border-r-2 border-gray-300 dark:border-gray-600"
+        class="px-1 py-2 min-w-[80px] text-xs border-r-2 border-gray-300 dark:border-gray-600"
       >
-        Toplam Tutar
+        Toplam
       </th>
 
       <!-- Actions Section -->
-      <th scope="col" class="px-3 py-3 min-w-[80px]">İşlem</th>
+      <th scope="col" class="px-1 py-2 min-w-[50px] text-xs">İşlem</th>
     </tr>
   </thead>
 </template>
