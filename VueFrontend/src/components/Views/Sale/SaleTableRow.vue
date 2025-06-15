@@ -4,7 +4,8 @@
     v-for="(field, index) in fields"
     :key="`sale-line-${field.key}-${index}`"
   >
-    <!-- Unit Info Section -->    <!-- Product Selection -->
+    <!-- Unit Info Section -->
+    <!-- Product Selection -->
     <td class="px-1 py-2 w-1/5 min-w-[200px]">
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].productId`"
@@ -12,7 +13,8 @@
         placeholder="Ürün seçin"
         @change="onProductChange(index, $event)"
       />
-    </td>    <!-- Account Selection -->
+    </td>
+    <!-- Account Selection -->
     <td class="px-1 py-2 w-40">
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].saleAccountId`"
@@ -20,28 +22,33 @@
         placeholder="Hesap No"
         :disabled="true"
       />
-    </td>    <!-- Warehouse Selection -->
+    </td>
+    <!-- Warehouse Selection -->
     <td class="px-1 py-2 w-24">
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].warehouseId`"
         :options="optionWarehouses"
         placeholder="Depo seçin"
+        :disabled="true"
       />
-    </td>    <!-- Quantity -->
+    </td>
+    <!-- Quantity -->
     <td class="px-1 py-2 min-w-[60px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].quantity`"
         placeholder="0"
         @input="handleQuantityChange(index, $event)"
       />
-    </td>    <!-- Unit of Measure -->
+    </td>
+    <!-- Unit of Measure -->
     <td class="px-1 py-2 min-w-[60px]">
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].unitOfMeasureId`"
         :options="optionUnitOfMeasures"
         placeholder="Birim"
       />
-    </td>    <!-- Description -->
+    </td>
+    <!-- Description -->
     <td class="px-1 py-2 min-w-[100px]">
       <TableFieldTextarea
         :fieldName="`saleInvoiceLines[${index}].description`"
@@ -50,9 +57,7 @@
       />
     </td>
     <!-- VAT -->
-    <td
-      class="px-1 py-2 w-24 border-r-2 border-gray-300 dark:border-gray-600"
-    >
+    <td class="px-1 py-2 w-24 border-r-2 border-gray-300 dark:border-gray-600">
       <TableFieldSelect
         :fieldName="`saleInvoiceLines[${index}].vatId`"
         :options="optionVats"
@@ -62,7 +67,8 @@
       />
     </td>
 
-    <!-- Price → Amount Flow Section -->    <!-- Unit Price -->
+    <!-- Price → Amount Flow Section -->
+    <!-- Unit Price -->
     <td class="px-1 py-2 min-w-[70px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].unitPrice`"
@@ -70,16 +76,19 @@
         step="0.000001"
         @input="handleUnitPriceChange(index, $event)"
       />
-    </td>    <!-- Discount Rate -->
-    <td class="px-1 py-2 min-w-[50px]">
+    </td>
+    <!-- //TODO Discount Rate -->
+    <!-- <td class="px-1 py-2 min-w-[50px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].discountRate`"
         placeholder="0"
         step="0.000001"
         :max="100"
         @input="handleDiscountRateChange(index, $event)"
+
       />
-    </td>    <!-- Total Price -->
+    </td>    -->
+    <!-- Total Price -->
     <td class="px-1 py-2 min-w-[70px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].totalPrice`"
@@ -87,7 +96,8 @@
         step="0.000001"
         @input="handleTotalPriceChange(index, $event)"
       />
-    </td>    <!-- Amount (Tutar) -->
+    </td>
+    <!-- Amount (Tutar) -->
     <td class="px-1 py-2 min-w-[70px]">
       <TableFieldNumberInput
         :fieldName="`saleInvoiceLines[${index}].amount`"
@@ -95,14 +105,16 @@
         step="0.000001"
         @input="handleAmountChange(index, $event)"
       />
-    </td>    <!-- Discount Amount -->
-    <td class="px-1 py-2 min-w-[60px]">
+    </td>
+    <!-- //TODO Discount Amount  -->
+    <!-- <td class="px-1 py-2 min-w-[60px]">
       <div
         class="p-2 bg-gray-50 dark:bg-gray-700 rounded text-center font-medium text-gray-800 dark:text-gray-200"
       >
         {{ field.value.discountAmount || "0.00" }}
       </div>
-    </td>    <!-- VAT Amount -->
+    </td> -->
+    <!-- VAT Amount -->
     <td class="px-1 py-2 min-w-[60px]">
       <div
         class="p-2 bg-green-50 dark:bg-green-900 rounded text-center font-medium text-green-800 dark:text-green-200"

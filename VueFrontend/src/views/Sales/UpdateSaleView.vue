@@ -82,12 +82,7 @@
         >
           <SaleTableHeader />
           <tbody>
-            <SaleTableRow
-              v-for="(line, index) in formValues.saleInvoiceLines"
-              :key="index"
-              :index="index"
-              @remove-line="removeLine"
-            />
+            <SaleTableRow />
           </tbody>
         </table>
       </div>
@@ -270,6 +265,8 @@ const loadSaleData = async () => {
               cashPaymentAmount: invoice.cashPaymentAmount || 0,
               note: invoice.note || "",
               status: invoice.status || 1,
+              warehouseId:
+                sale.value.saleInvoiceLines?.[0]?.warehouseId || null,
             },
           ],
           saleInvoiceLines: sale.value.saleInvoiceLines || [],
@@ -364,6 +361,9 @@ onMounted(async () => {
 
     // Load sale data
     await loadSaleData();
+
+    // Open the invoice modal after data is loaded
+    modalStore.openInvoiceModal();
   } catch (error) {
     toast.error("Veri yüklenirken bir hata oluştu");
   }

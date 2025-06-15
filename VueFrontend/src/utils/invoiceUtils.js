@@ -2,21 +2,21 @@
 
 export const formatDate = (date) => {
   if (!date) return ''
-  return new Intl.DateTimeFormat('tr-TR').format(new Date(date))
+  return new Intl.DateTimeFormat('de-DE').format(new Date(date))
 }
 
 export const formatCurrency = (amount) => {
   if (amount === null || amount === undefined) return '0,00 ₺'
-  return new Intl.NumberFormat('tr-TR', {
+  return new Intl.NumberFormat('de-DE', {
     style: 'currency',
-    currency: 'TRY',
+    currency: 'EUR',
     minimumFractionDigits: 2
   }).format(amount)
 }
 
 export const formatNumber = (number) => {
   if (number === null || number === undefined) return '0'
-  return new Intl.NumberFormat('tr-TR', {
+  return new Intl.NumberFormat('de-DE', {
     minimumFractionDigits: 0,
     maximumFractionDigits: 2
   }).format(number)
@@ -33,7 +33,7 @@ export const numberToWords = (number) => {
   if (number < 0) return 'eksi ' + numberToWords(-number)
   
   // For simplicity, just return the formatted number
-  return formatNumber(number).replace(' ₺', '')
+  return formatNumber(number).replace(' €', '')
 }
 
 // Print utilities

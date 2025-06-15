@@ -103,14 +103,7 @@ export function usePurchaseCalculations(vatStore) {  /**
     // o değeri exact olarak koru ve diğer değerleri ona göre hesapla
     const isDatabaseLoad = !skipField && manualTotalAmount !== null && manualTotalAmount !== undefined;
     
-    // DEBUG: Database load kontrolü
-    if (isDatabaseLoad) {
-      console.log('💾 Database precision protection active:', {
-        manualTotalAmount: manualTotalAmount,
-        skipField: skipField,
-        mode: 'DATABASE_LOAD'
-      });
-    }
+
 
     // Basic amount calculation
     const convertedUnitPrice = convertCurrency(unitPrice, exchangeRate);
@@ -182,11 +175,7 @@ export function usePurchaseCalculations(vatStore) {  /**
       totalPrice = quantity > 0 ? totalAmount / quantity : 0;
       vatTaxAmount = totalAmount - costAmount;
       
-      console.log('💾 Database values preserved:', {
-        originalTotalAmount: manualTotalAmount,
-        preservedTotalAmount: totalAmount,
-        calculatedVatTaxAmount: vatTaxAmount
-      });
+
     } else {
       // PRECISION FIX: Consistent hesaplama yöntemi kullan
       // Her ikisini de aynı mantıkla hesapla: costAmount * (1 + vatRate)
@@ -195,13 +184,7 @@ export function usePurchaseCalculations(vatStore) {  /**
       // VAT amount'u tutarlı şekilde hesapla
       vatTaxAmount = totalAmount - costAmount;
       
-      // DEBUG: Precision kontrolü
-      console.log('🔢 Forward calculation:', {
-        costAmount: costAmount,
-        vatRate: vatRate,
-        calculation: `${costAmount} * (1 + ${vatRate}) = ${totalAmount}`,
-        vatTaxAmount: vatTaxAmount
-      });
+
     }    return {
       // PRECISION FIX: Sadece display için formatla, internal calculations raw tutulsun
       amount: formatPrecision(amount, 4),
@@ -253,14 +236,7 @@ export function usePurchaseCalculations(vatStore) {  /**
     // PRECISION FIX: totalAmount koruması sadece manuel değişiklikler için
     const shouldPreserveTotalAmount = changedField === "totalAmount";
       // DEBUG: updateCalculations kontrolü
-    console.log('🔄 updateCalculations called:', {
-      changedField: changedField,
-      preserveTotalAmount: shouldPreserveTotalAmount,
-      currentTotalAmount: lineData.totalAmount,
-      calculatedTotalAmount: calculated.totalAmount,
-      rawCalculated: calculated._raw
-    });
-
+ 
     // Sadece değişmeyen alanları güncelle (kullanıcı input'u korunur)
     const fieldsToUpdate = {
       amount: calculated.amount,
@@ -282,7 +258,6 @@ export function usePurchaseCalculations(vatStore) {  /**
     // CRITICAL FIX: totalAmount koruması sadece user input durumunda
     if (shouldPreserveTotalAmount) {
       delete fieldsToUpdate.totalAmount;
-      console.log('🛡️ totalAmount protected from update');
     }
 
     // Tüm hesaplanmış değerleri güncelle
@@ -434,12 +409,7 @@ export function usePurchaseCalculations(vatStore) {  /**
     // ÖNCE: Kullanıcının exact değerini kaydet (hiç formatlamadan)
     const exactUserValue = parseFloat(newTotalAmount);
     
-    // DEBUG: User input kontrolü
-    console.log('🎯 User totalAmount input:', {
-      input: newTotalAmount,
-      parsed: exactUserValue,
-      type: typeof newTotalAmount
-    });
+
 
     // Discount rate'i sıfırla (total amount manuel değiştirildiğinde)
     setFieldValue(`purchaseInvoiceLines[${index}].discountRate`, 0);
@@ -495,20 +465,6 @@ export function usePurchaseCalculations(vatStore) {  /**
 
     // SON: Total Amount'ı kullanıcının exact değeriyle set et
     setFieldValue(`purchaseInvoiceLines[${index}].totalAmount`, exactUserValue);    // DEBUG: Final değerleri kontrol et - RAW VALUES
-    console.log('🏁 Final reverse calculation result (RAW):', {
-      userInput: exactUserValue,
-      newAmount: newAmount,
-      newCostAmount: newCostAmount,
-      newUnitPrice: newUnitPrice,
-      formattedUnitPrice: formatPrecision(newUnitPrice, 6),
-      calculatedVAT: exactUserValue - newCostAmount,
-      verification: `${newCostAmount} * (1 + ${vatRate}) = ${newCostAmount * (1 + vatRate)}`,
-      expectedFromCalculator: {
-        amount: 423.728813559322,
-        vatAmount: 76.27118644067797,
-        total: 500.00
-      }
-    });
 
     // Diğer hesaplamaları güncelle (totalAmount değişikliğini hariç tut)
     setTimeout(() => {

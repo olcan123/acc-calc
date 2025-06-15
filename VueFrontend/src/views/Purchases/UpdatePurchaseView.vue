@@ -288,6 +288,7 @@ const loadPurchaseData = async () => {
           importPartnerDocDate: formatDateForForm(
             purchase.importPartnerDocDate
           ),
+          warehouseId: purchase.purchaseInvoiceLines?.[0]?.warehouseId || null,
         },
       ],
       purchaseInvoiceLines:

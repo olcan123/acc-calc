@@ -25,7 +25,6 @@ export function useSaleCalculations(vats) {
     const vat = vats.value.find((v) => v.id === vatId);
     return vat ? vat.rate / 100 : 0;
   };
-
   /**
    * Temel hesaplamaları yapan ana fonksiyon
    * @param {Object} lineData - Fatura satırı verisi
@@ -46,8 +45,11 @@ export function useSaleCalculations(vats) {
     // VAT Amount = (Amount - Discount Amount) × VAT Rate
     const vatTaxAmount = formatPrecision((amount - discountAmount) * vatRate, 4);
 
-    // Total Price = Unit Price + (Unit Price × VAT Rate) - KDV dahil birim fiyat
-    const totalPrice = formatPrecision(unitPrice + (unitPrice * vatRate), 2);
+    // Total Price = (Unit Price - Discount per unit) + VAT per unit
+    // First calculate discounted unit price, then add VAT
+    const discountPerUnit = formatPrecision(unitPrice * (discountRate / 100), 4);
+    const discountedUnitPrice = formatPrecision(unitPrice - discountPerUnit, 4);
+    const totalPrice = formatPrecision(discountedUnitPrice + (discountedUnitPrice * vatRate), 2);
 
     // Total Amount = Amount - Discount Amount + VAT Amount
     const totalAmount = formatPrecision(amount - discountAmount + vatTaxAmount, 2);
@@ -142,7 +144,7 @@ export function useSaleCalculations(vats) {
     updateCalculations(setFieldValue, index, currentValues, "amount");
   };  /**
    * Total Price değiştiğinde hesaplama (KDV dahil fiyattan KDV hariç hesaplama)
-   * Total Price = Unit Price + VAT olduğu için ters hesaplama yapar
+   * Total Price now includes discount effect, so we need to reverse calculate
    */
   const onTotalPriceChange = (
     setFieldValue,
@@ -155,10 +157,15 @@ export function useSaleCalculations(vats) {
     const vatRate = getVatRate(vatId);
     const discountRate = parseFloat(currentValues.saleInvoiceLines?.[index]?.discountRate) || 0;
     
-    // Total Price = Unit Price + (Unit Price × VAT Rate)
-    // Total Price = Unit Price × (1 + VAT Rate)
-    // Unit Price = Total Price / (1 + VAT Rate)
-    const newUnitPrice = parseFloat(newTotalPrice) / (1 + vatRate);
+    // Total Price = (Unit Price - Discount per unit) + VAT on discounted price
+    // Total Price = Unit Price × (1 - Discount Rate / 100) × (1 + VAT Rate)
+    // Unit Price = Total Price / ((1 - Discount Rate / 100) × (1 + VAT Rate))
+    
+    const discountMultiplier = 1 - (discountRate / 100);
+    const vatMultiplier = 1 + vatRate;
+    const totalMultiplier = discountMultiplier * vatMultiplier;
+    
+    const newUnitPrice = parseFloat(newTotalPrice) / totalMultiplier;
     const newAmount = newUnitPrice * quantity;
     
     // Discount Amount = Amount × (Discount Rate / 100)

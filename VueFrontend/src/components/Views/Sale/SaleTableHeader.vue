@@ -18,10 +18,10 @@
         KDV
       </th>      <!-- Price → Amount Flow Section -->
       <th scope="col" class="px-1 py-2 min-w-[70px] text-xs">B.Fiyat</th>
-      <th scope="col" class="px-1 py-2 min-w-[50px] text-xs">İsk%</th>
+      <!-- //TODO -  <th scope="col" class="px-1 py-2 min-w-[50px] text-xs">İsk%</th> -->
       <th scope="col" class="px-1 py-2 min-w-[70px] text-xs">T.Fiyat</th>
       <th scope="col" class="px-1 py-2 min-w-[70px] text-xs">Tutar</th>
-      <th scope="col" class="px-1 py-2 min-w-[60px] text-xs">İsk.Tut</th>
+      <!--//TODO -  <th scope="col" class="px-1 py-2 min-w-[60px] text-xs">İsk.Tut</th> -->
       <th scope="col" class="px-1 py-2 min-w-[60px] text-xs">KDV Tut</th>
       <th
         scope="col"
