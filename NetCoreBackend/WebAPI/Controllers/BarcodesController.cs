@@ -19,6 +19,13 @@ namespace WebAPI.Controllers
             _barcodeService = barcodeService;
         }
 
+        [HttpGet]
+        public IActionResult GetList()
+        {
+            var result = _barcodeService.GetList();
+            return result.Success ? Ok(result) : BadRequest(result);
+        }
+
 
         [HttpDelete("id/{id}")]
         public IActionResult Delete(int id)

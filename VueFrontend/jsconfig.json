@@ -7,9 +7,5 @@
   "exclude": [
     "node_modules", 
     "dist",
-    "**/*_redesigned.vue",
-    "**/*_backup.vue",
-    "**/*_old.vue",
-    "**/*_temp.vue"
   ]
 }
