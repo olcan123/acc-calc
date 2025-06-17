@@ -3,17 +3,15 @@
     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
     v-for="(field, index) in fields"
     :key="`purchase-line-${field.key}-${index}`"  >
-    <!-- Unit Info Section -->
-
-    <!-- Product Selection -->
+    <!-- Unit Info Section -->    <!-- Product Selection -->
     <td class="px-1 py-2 w-1/5 min-w-[200px]">
-      <TableFieldSelect
+      <TableAutoCompleteField
         :fieldName="`purchaseInvoiceLines[${index}].productId`"
         :options="optionProducts"
         placeholder="Ürün seçin"
         @change="onProductChange(index, $event)"
       />
-    </td>    <!-- Account Selection -->
+    </td><!-- Account Selection -->
     <td class="px-1 py-2 w-40">
       <TableFieldSelect
         :fieldName="`purchaseInvoiceLines[${index}].purchaseAccountId`"
@@ -218,6 +216,7 @@ import { storeToRefs } from "pinia";
 import { useFormContext, useFieldArray } from "vee-validate";
 import TableFieldNumberInput from "@/components/TableForm/TableFieldNumberInput.vue";
 import TableFieldSelect from "@/components/TableForm/TableFieldSelect.vue";
+import TableAutoCompleteField from "@/components/TableForm/TableAutoCompleteField.vue";
 import { useProductStore } from "@/stores/product.store";
 import { useWarehouseStore } from "@/stores/warehouse.store";
 import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";

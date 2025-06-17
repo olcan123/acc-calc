@@ -4,13 +4,13 @@
     v-for="(field, index) in fields"
     :key="`sale-line-${field.key}-${index}`"
   >
-    <!-- Unit Info Section -->
-    <!-- Product Selection -->
+    <!-- Unit Info Section -->    <!-- Product Selection -->
     <td class="px-1 py-2 w-1/5 min-w-[200px]">
-      <TableFieldSelect
+      <TableAutoCompleteField
         :fieldName="`saleInvoiceLines[${index}].productId`"
         :options="optionProducts"
         placeholder="Ürün seçin"
+        :showLabel="false"
         @change="onProductChange(index, $event)"
       />
     </td>
@@ -157,7 +157,7 @@ import { storeToRefs } from "pinia";
 import { useFormContext, useFieldArray } from "vee-validate";
 import TableFieldNumberInput from "@/components/TableForm/TableFieldNumberInput.vue";
 import TableFieldSelect from "@/components/TableForm/TableFieldSelect.vue";
-import TableFieldTextInput from "@/components/TableForm/TableFieldTextInput.vue";
+import TableAutoCompleteField from "@/components/TableForm/TableAutoCompleteField.vue";
 import TableFieldTextarea from "@/components/TableForm/TableFieldTextarea.vue";
 import { useProductStore } from "@/stores/product.store";
 import { useWarehouseStore } from "@/stores/warehouse.store";
