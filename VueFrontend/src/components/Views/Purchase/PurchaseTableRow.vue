@@ -2,8 +2,21 @@
   <tr
     class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
     v-for="(field, index) in fields"
-    :key="`purchase-line-${field.key}-${index}`"  >
-    <!-- Unit Info Section -->    <!-- Product Selection -->
+    :key="`purchase-line-${field.key}-${index}`"
+  >
+    <!-- Unit Info Section -->
+
+    <!-- Barcode -->
+    <td class="px-1 py-2 w-1/5 min-w-[120px]">
+      <TableAutoCompleteField
+        :fieldName="`purchaseInvoiceLines[${index}].barcode`"
+        :options="optionBarcodes"
+        placeholder="Barkod"
+        @change="onChangeBarcodeWithProduct(index, $event)"
+      />
+    </td>
+
+    <!-- Product Selection -->
     <td class="px-1 py-2 w-1/5 min-w-[200px]">
       <TableAutoCompleteField
         :fieldName="`purchaseInvoiceLines[${index}].productId`"
@@ -11,7 +24,8 @@
         placeholder="Ürün seçin"
         @change="onProductChange(index, $event)"
       />
-    </td><!-- Account Selection -->
+    </td>
+    <!-- Account Selection -->
     <td class="px-1 py-2 w-40">
       <TableFieldSelect
         :fieldName="`purchaseInvoiceLines[${index}].purchaseAccountId`"
@@ -70,9 +84,7 @@
     </td>
 
     <!-- VAT -->
-    <td
-      class="px-1 py-2 w-24 border-r-2 border-gray-300 dark:border-gray-600"
-    >
+    <td class="px-1 py-2 w-24 border-r-2 border-gray-300 dark:border-gray-600">
       <TableFieldSelect
         :fieldName="`purchaseInvoiceLines[${index}].vatId`"
         :options="optionVats"
@@ -222,6 +234,7 @@ import { useWarehouseStore } from "@/stores/warehouse.store";
 import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";
 import { useAccountStore } from "@/stores/account.store";
 import { useVatStore } from "@/stores/vat.store";
+import { useBarcodeStore } from "@/stores/barcode.store";
 import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations.js";
 
 // Define component options
@@ -239,6 +252,7 @@ const isImportPurchase = computed(() => {
 });
 
 // Stores
+const barcodeStore = useBarcodeStore();
 const productStore = useProductStore();
 const warehouseStore = useWarehouseStore();
 const unitOfMeasureStore = useUnitOfMeasureStore();
@@ -250,8 +264,8 @@ const { optionProducts, products } = storeToRefs(productStore);
 const { optionWarehouses } = storeToRefs(warehouseStore);
 const { optionUnitOfMeasures } = storeToRefs(unitOfMeasureStore);
 const { optionVats } = storeToRefs(vatStore);
-const { parentAccountFilterOptions, optionAccountsSartsWithCode } =
-  storeToRefs(accountStore);
+const { optionAccountsSartsWithCode } = storeToRefs(accountStore);
+const { optionBarcodes } = storeToRefs(barcodeStore);
 
 // Access parent form context
 const { setFieldValue, values: formValues } = useFormContext();

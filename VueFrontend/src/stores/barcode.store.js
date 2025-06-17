@@ -17,10 +17,26 @@ export const useBarcodeStore = defineStore("barcode", () => {
 
   const optionBarcodes = computed(() => {
     return barcodes.value.map((barcode) => ({
-      value: barcode.id,
+      value: barcode.productId,
       label: barcode.code,
     }));
   });
+
+
+  const fetchBarcodes = async () => {
+    loading.value = true;
+    try {
+      const response = await axiosInstance.get("barcodes");
+      barcodes.value = response.data.data;
+      message.value = response.data.message;
+    } catch (err) {
+      error.value = err;
+      toast.error("Barkodlar yüklenirken bir hata oluştu");
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const deleteBarcode = async (id) => {
     loading.value = true;
     console.log("Deleting barcode with ID:", productStore.product.barcodes);
@@ -45,6 +61,7 @@ export const useBarcodeStore = defineStore("barcode", () => {
     error,
     optionBarcodes,
     deleteBarcode,
+    fetchBarcodes,
   };
 });
 

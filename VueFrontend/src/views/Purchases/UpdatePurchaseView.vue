@@ -109,6 +109,7 @@ import { useAccountStore } from "@/stores/account.store";
 import { useModalStore } from "@/stores/modal.store";
 import { useCurrencyStore } from "@/stores/currency.store";
 import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations";
+import { useBarcodeStore } from "@/stores/barcode.store";
 import { useToast } from "vue-toastification";
 
 // Components
@@ -129,6 +130,7 @@ const unitOfMeasureStore = useUnitOfMeasureStore();
 const vatStore = useVatStore();
 const accountStore = useAccountStore();
 const modalStore = useModalStore();
+const barcodeStore = useBarcodeStore();
 const currencyStore = useCurrencyStore();
 
 // Route and router
@@ -367,6 +369,7 @@ async function fetchData() {
       vatStore.fetchVats(),
       accountStore.fetchAccounts(),
       currencyStore.fetchCurrencies(),
+      barcodeStore.fetchBarcodes(),
     ]);
   } catch (error) {
     console.error("Veri çekme sırasında bir hata oluştu:", error);

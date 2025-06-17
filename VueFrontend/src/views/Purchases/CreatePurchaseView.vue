@@ -89,6 +89,7 @@ import { useAccountStore } from "@/stores/account.store";
 import { useModalStore } from "@/stores/modal.store";
 import { useCurrencyStore } from "@/stores/currency.store";
 import { usePurchaseCalculations } from "@/composables/usePurchaseCalculations";
+import { useBarcodeStore } from "@/stores/barcode.store";
 
 // Components
 import {
@@ -109,6 +110,7 @@ const vatStore = useVatStore();
 const accountStore = useAccountStore();
 const modalStore = useModalStore();
 const currencyStore = useCurrencyStore();
+const barcodeStore = useBarcodeStore();
 
 // Route to determine invoice type
 const route = useRoute();
@@ -237,6 +239,7 @@ async function fetchData() {
       unitOfMeasureStore.fetchUnitOfMeasures(),
       vatStore.fetchVats(),
       accountStore.fetchAccounts(),
+      barcodeStore.fetchBarcodes(),
     ]);
     // Tüm veriler başarıyla çekildikten sonra yapılacak işlemler
   } catch (error) {
