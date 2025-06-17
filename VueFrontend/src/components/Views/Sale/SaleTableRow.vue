@@ -4,7 +4,18 @@
     v-for="(field, index) in fields"
     :key="`sale-line-${field.key}-${index}`"
   >
-    <!-- Unit Info Section -->    <!-- Product Selection -->
+    <!-- Unit Info Section -->
+    <!-- Barcode -->
+    <td class="px-1 py-2 w-1/5 min-w-[120px]">
+      <TableAutoCompleteField
+        :fieldName="`saleInvoiceLines[${index}].barcode`"
+        :options="optionBarcodes"
+        placeholder="Barkod"
+        :showLabel="false"
+        @change="onChangeBarcodeWithProduct(index, $event)"
+      />
+    </td>
+    <!-- Product Selection -->
     <td class="px-1 py-2 w-1/5 min-w-[200px]">
       <TableAutoCompleteField
         :fieldName="`saleInvoiceLines[${index}].productId`"
@@ -164,6 +175,7 @@ import { useWarehouseStore } from "@/stores/warehouse.store";
 import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";
 import { useAccountStore } from "@/stores/account.store";
 import { useVatStore } from "@/stores/vat.store";
+import { useBarcodeStore } from "@/stores/barcode.store";
 import { useSaleCalculations } from "@/composables/useSaleCalculations.js";
 
 // Define component options
@@ -180,6 +192,7 @@ const isExportSale = computed(() => {
 });
 
 // Stores
+const barcodeStore = useBarcodeStore();
 const productStore = useProductStore();
 const warehouseStore = useWarehouseStore();
 const unitOfMeasureStore = useUnitOfMeasureStore();
@@ -192,6 +205,7 @@ const { warehouses } = storeToRefs(warehouseStore);
 const { unitOfMeasures } = storeToRefs(unitOfMeasureStore);
 const { accounts } = storeToRefs(accountStore);
 const { vats } = storeToRefs(vatStore);
+const { optionBarcodes } = storeToRefs(barcodeStore);
 
 // Computed options for selects
 const optionProducts = computed(() => {
@@ -246,6 +260,26 @@ const {
 } = useSaleCalculations(vats);
 
 // Event handlers
+const onChangeBarcodeWithProduct = (index, $event) => {
+  // The barcode value contains the productId (from barcode.productId)
+  const productId = Number($event.target.value);
+  
+  if (productId) {
+    // Set the productId to the form
+    setFieldValue(`saleInvoiceLines[${index}].productId`, productId);
+    
+    // Create a mock event for onProductChange to trigger all product-related logic
+    const mockProductEvent = {
+      target: {
+        value: productId
+      }
+    };
+    
+    // Call onProductChange to auto-fill all product-related fields
+    onProductChange(index, mockProductEvent);
+  }
+};
+
 const onProductChange = (index, $event) => {
   const productId = Number($event.target.value);
   const product = products.value.find((p) => p.id === productId);

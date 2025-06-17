@@ -120,6 +120,7 @@ import { useWarehouseStore } from "@/stores/warehouse.store";
 import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";
 import { useVatStore } from "@/stores/vat.store";
 import { useAccountStore } from "@/stores/account.store";
+import { useBarcodeStore } from "@/stores/barcode.store";
 import { useModalStore } from "@/stores/modal.store";
 import { useCurrencyStore } from "@/stores/currency.store";
 
@@ -150,6 +151,7 @@ const vatStore = useVatStore();
 const accountStore = useAccountStore();
 const modalStore = useModalStore();
 const currencyStore = useCurrencyStore();
+const barcodeStore = useBarcodeStore();
 
 // Reactive data from stores
 const { loading, sale } = storeToRefs(saleStore);
@@ -357,6 +359,7 @@ onMounted(async () => {
       vatStore.fetchVats(),
       accountStore.fetchAccounts(),
       currencyStore.fetchCurrencies(),
+      barcodeStore.fetchBarcodes(),
     ]);
 
     // Load sale data

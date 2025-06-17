@@ -286,6 +286,26 @@ const {
 } = usePurchaseCalculations(vatStore);
 
 // Event handlers
+const onChangeBarcodeWithProduct = (index, $event) => {
+  // The barcode value contains the productId (from barcode.productId)
+  const productId = Number($event.target.value);
+  
+  if (productId) {
+    // Set the productId to the form
+    setFieldValue(`purchaseInvoiceLines[${index}].productId`, productId);
+    
+    // Create a mock event for onProductChange to trigger all product-related logic
+    const mockProductEvent = {
+      target: {
+        value: productId
+      }
+    };
+    
+    // Call onProductChange to auto-fill all product-related fields
+    onProductChange(index, mockProductEvent);
+  }
+};
+
 const onProductChange = (index, $event) => {
   const productId = Number($event.target.value);
   const product = products.value.find((p) => p.id === productId);

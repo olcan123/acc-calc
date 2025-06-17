@@ -101,6 +101,7 @@ import { useWarehouseStore } from "@/stores/warehouse.store";
 import { useUnitOfMeasureStore } from "@/stores/unit-of-measure.store";
 import { useVatStore } from "@/stores/vat.store";
 import { useAccountStore } from "@/stores/account.store";
+import { useBarcodeStore } from "@/stores/barcode.store";
 import { useModalStore } from "@/stores/modal.store";
 
 // Composables
@@ -128,6 +129,7 @@ const warehouseStore = useWarehouseStore();
 const unitOfMeasureStore = useUnitOfMeasureStore();
 const vatStore = useVatStore();
 const accountStore = useAccountStore();
+const barcodeStore = useBarcodeStore();
 const modalStore = useModalStore();
 
 // Reactive data from stores
@@ -225,6 +227,7 @@ async function fetchData() {
       unitOfMeasureStore.fetchUnitOfMeasures(),
       vatStore.fetchVats(),
       accountStore.fetchAccounts(),
+      barcodeStore.fetchBarcodes(),
     ]);
   } catch (error) {
     console.error("Veri çekme sırasında bir hata oluştu:", error);
