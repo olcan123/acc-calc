@@ -1,0 +1,44 @@
+services:
+  # SQL Server Database for Development
+  sqlserver-dev:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: acc-calc-sqlserver-dev
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=AccCalc123!
+      - MSSQL_PID=Express
+    ports:
+      - "1434:1433"  # Different port to avoid conflict with local SQL Server
+    volumes:
+      - sqlserver_dev_data:/var/opt/mssql
+    networks:
+      - acc-calc-dev-network
+    restart: unless-stopped
+
+  # .NET Core Backend API for Development
+  backend-dev:
+    build:
+      context: ./NetCoreBackend
+      dockerfile: Dockerfile
+    container_name: acc-calc-backend-dev
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+    ports:
+      - "5001:5001"
+    depends_on:
+      - sqlserver-dev
+    networks:
+      - acc-calc-dev-network
+    restart: unless-stopped
+    volumes:
+      # Mount your development appsettings to preserve local configs
+      - ./NetCoreBackend/WebAPI/appsettings.Development.json:/app/appsettings.Development.json:ro
+
+volumes:
+  sqlserver_dev_data:
+    driver: local
+
+networks:
+  acc-calc-dev-network:
+    driver: bridge
