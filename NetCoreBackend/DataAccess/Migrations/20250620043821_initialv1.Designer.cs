@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(FcdAccContext))]
-    [Migration("20250608144231_SaleAddTotalAmount")]
-    partial class SaleAddTotalAmount
+    [Migration("20250620043821_initialv1")]
+    partial class initialv1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
