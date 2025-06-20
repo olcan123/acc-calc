@@ -1,7 +1,10 @@
 # Build stage
-FROM node:20-alpine3.19 AS build
+FROM node:22-alpine AS build
 
 WORKDIR /app
+
+# Update packages for security
+RUN apk update && apk upgrade && apk add --no-cache dumb-init
 
 # Copy package files
 COPY package*.json ./
@@ -25,7 +28,7 @@ ENV NODE_ENV=production
 RUN pnpm run build --mode production
 
 # Production stage
-FROM nginx:1.25-alpine
+FROM nginx:alpine
 
 # Copy built app to nginx
 COPY --from=build /app/dist /usr/share/nginx/html
