@@ -1,10 +1,9 @@
 <template>
   <thead
-    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
-  >    <tr>
+    class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"  >    <tr>
       <!-- Unit Info Section -->
-      <th scope="col" class="px-1 py-2 w-1/5 min-w-[120px] text-xs">Barkod</th>
-      <th scope="col" class="px-1 py-2 w-1/5 min-w-[200px] text-xs">Ürün</th>
+      <th scope="col" class="px-1 py-2 w-1/8 min-w-[100px] text-xs">Barkod</th>
+      <th scope="col" class="px-1 py-2 w-1/5 min-w-[150px] text-xs">Ürün</th>
       <th scope="col" class="px-1 py-2 w-40 text-xs">Hesap</th>
       <th scope="col" class="px-1 py-2 w-24 text-xs">Depo</th>
       <th scope="col" class="px-1 py-2 min-w-[60px] text-xs">Miktar</th>
