@@ -23,6 +23,9 @@ RUN dotnet publish WebAPI/WebAPI.csproj -c Release -o /app/out --no-restore
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
 
+# Install curl for healthcheck
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 # Create non-root user for security
 RUN addgroup --system --gid 1001 dotnetgroup
 RUN adduser --system --uid 1001 --ingroup dotnetgroup dotnetuser

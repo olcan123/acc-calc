@@ -6,7 +6,7 @@
   >
     <!-- Unit Info Section -->
     <!-- Barcode -->
-    <td class="px-1 py-2 w-1/5 min-w-[120px]">
+    <td class="px-1 py-2 w-1/8 min-w-[100px]">
       <TableAutoCompleteField
         :fieldName="`saleInvoiceLines[${index}].barcode`"
         :options="optionBarcodes"
@@ -16,7 +16,7 @@
       />
     </td>
     <!-- Product Selection -->
-    <td class="px-1 py-2 w-1/5 min-w-[200px]">
+    <td class="px-1 py-2 w-1/5 min-w-[150px]">
       <TableAutoCompleteField
         :fieldName="`saleInvoiceLines[${index}].productId`"
         :options="optionProducts"

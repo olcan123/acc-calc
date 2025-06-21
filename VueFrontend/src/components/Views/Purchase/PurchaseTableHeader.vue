@@ -5,8 +5,8 @@
   >
     <tr>
       <!-- Unit Info Section -->
-      <th scope="col" class="px-1 py-1 w-1/5 min-w-[120px]">Barkod</th>
-      <th scope="col" class="px-1 py-1 w-1/5 min-w-[200px]">Ürün</th>
+      <th scope="col" class="px-1 py-1 w-1/8 min-w-[100px]">Barkod</th>
+      <th scope="col" class="px-1 py-1 w-1/5 min-w-[150px]">Ürün</th>
       <th scope="col" class="px-1 py-1 w-40">Hesap</th>
       <th scope="col" class="px-1 py-1 w-24">Depo</th>
       <th scope="col" class="px-1 py-1 min-w-[60px]">Miktar</th>

@@ -20,7 +20,7 @@ namespace DataAccess.Concrate.EfMapping
             builder.Property(a => a.Name).IsRequired().HasMaxLength(100);
             builder.Property(a => a.Description).HasMaxLength(500);
             builder.Property(a => a.IsActive).HasDefaultValue(true);
-            builder.Property(a => a.IsPostable).HasDefaultValue(true);
+      //      builder.Property(a => a.IsPostable).HasDefaultValue(true);
 
             // Relationship configuration
             builder.HasOne(a => a.ParentAccount)
@@ -604,7 +604,7 @@ namespace DataAccess.Concrate.EfMapping
         AccountType = AccountTypeOption.Asset,
         NormalBalance = NormalBalanceOption.Debit,
         IsActive = true,
-        IsPostable = false, // Sipas kodit të dhënë nga përdoruesi
+        IsPostable = true, // Sipas kodit të dhënë nga përdoruesi
         ParentAccountId = 1,
         Created = defaultDate,
         Modified = defaultDate
@@ -618,7 +618,7 @@ namespace DataAccess.Concrate.EfMapping
         AccountType = AccountTypeOption.Asset,
         NormalBalance = NormalBalanceOption.Debit,
         IsActive = true,
-        IsPostable = false, // Sipas kodit të dhënë nga përdoruesi
+        IsPostable = true, // Sipas kodit të dhënë nga përdoruesi
         ParentAccountId = 1,
         Created = defaultDate,
         Modified = defaultDate
