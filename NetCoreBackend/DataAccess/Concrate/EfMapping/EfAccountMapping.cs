@@ -17,14 +17,9 @@ namespace DataAccess.Concrate.EfMapping
 
             // Property configurations
             builder.Property(a => a.Code).IsRequired().HasMaxLength(20);
-            builder.Property(a => a.Name).IsRequired().HasMaxLength(100);
-            builder.Property(a => a.Description).HasMaxLength(500);
+            builder.Property(a => a.Name).IsRequired().HasMaxLength(100);            builder.Property(a => a.Description).HasMaxLength(500);
             builder.Property(a => a.IsActive).HasDefaultValue(true);
-<<<<<<< HEAD
-     //       builder.Property(a => a.IsPostable).HasDefaultValue(true);
-=======
-      //      builder.Property(a => a.IsPostable).HasDefaultValue(true);
->>>>>>> dockerv2
+            // builder.Property(a => a.IsPostable).HasDefaultValue(true);
 
             // Relationship configuration
             builder.HasOne(a => a.ParentAccount)

@@ -66,7 +66,6 @@ NetCoreBackend/*.userosscache
 NetCoreBackend/*.sln.docstates
 
 # appsettings - development dışındakileri ignore et
-NetCoreBackend/WebAPI/appsettings.json
 NetCoreBackend/WebAPI/appsettings.Production.json
 NetCoreBackend/WebAPI/appsettings.Staging.json
 

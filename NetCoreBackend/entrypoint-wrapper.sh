@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 # entrypoint-wrapper.sh - Custom entrypoint for SQL Server with database initialization
 
 # Start SQL Server in the background
