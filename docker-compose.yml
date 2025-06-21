@@ -1,0 +1,78 @@
+services:
+  # SQL Server Database
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: acc-calc-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=AccCalc123!
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+      - ./NetCoreBackend/init-database.sql:/docker-entrypoint-initdb.d/init-database.sql:ro
+      - ./NetCoreBackend/entrypoint-wrapper.sh:/entrypoint-wrapper.sh:ro
+    command: ["/bin/bash", "/entrypoint-wrapper.sh"]
+    networks:
+      - acc-calc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools18/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "AccCalc123!", "-Q", "SELECT 1 FROM sys.databases WHERE name='NetCoreBackend'", "-C"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 80s
+
+  # .NET Core Backend API
+  backend:
+    build:
+      context: ./NetCoreBackend
+      dockerfile: Dockerfile
+    container_name: acc-calc-backend
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:5000
+    ports:
+      - "5000:5000"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - acc-calc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Vue.js Frontend
+  frontend:
+    build:
+      context: ./VueFrontend
+      dockerfile: Dockerfile
+    container_name: acc-calc-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - acc-calc-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  sqlserver_data:
+    driver: local
+
+networks:
+  acc-calc-network:
+    driver: bridge

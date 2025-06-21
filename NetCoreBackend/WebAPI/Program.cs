@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -93,6 +94,9 @@ LinqToDBForEFTools.Initialize();
 
 var app = builder.Build();
 
+// Initialize database with migrations
+DataAccess.Concrate.EntityFramework.DatabaseInitializer.InitializeDatabase();
+
 // Swagger UI Geli�tirme Ortam�nda Aktif Edildi
 if (app.Environment.IsDevelopment())
 {
@@ -126,8 +130,11 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Health check endpoint
+app.MapGet("/health", () => "OK");
+
 app.MapRazorPages();
-app.MapControllers(); // API Controller'lar�n� etkinle�tirir
+app.MapControllers(); // API Controller'ları etkinleştirir
 
 app.Run();
 

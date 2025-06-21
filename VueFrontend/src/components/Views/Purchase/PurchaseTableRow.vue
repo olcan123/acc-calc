@@ -4,7 +4,13 @@
     v-for="(field, index) in fields"
     :key="`purchase-line-${field.key}-${index}`"
   >
+<<<<<<< HEAD
     <!-- Unit Info Section -->    <!-- Barcode -->
+=======
+    <!-- Unit Info Section -->
+
+    <!-- Barcode -->
+>>>>>>> dockerv2
     <td class="px-1 py-2 w-1/8 min-w-[100px]">
       <TableAutoCompleteField
         :fieldName="`purchaseInvoiceLines[${index}].barcode`"
